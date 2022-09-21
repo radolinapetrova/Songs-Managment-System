@@ -3,7 +3,8 @@
 # runtime for each build is more reliable since the runtime is completely 
 # isolated from any previous builds. 
 
-variables: GRADLE_OPTS: "-Dorg.gradle.daemon=false" 
+variables:
+   GRADLE_OPTS: "-Dorg.gradle.daemon=false" 
 stages:
   - build
   - test
