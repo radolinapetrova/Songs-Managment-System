@@ -10,10 +10,10 @@ stages:
   - test
 
 build:
- stage: build 
- script:
-   - ./gradlew assemble 
-  test:
+   stage: build 
+   script:
+    - ./gradlew assemble 
+test:
    stage: test
    script:
-    - ./gradlew test
+     - ./gradlew test
