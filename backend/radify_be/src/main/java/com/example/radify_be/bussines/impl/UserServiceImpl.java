@@ -1,13 +1,9 @@
 package com.example.radify_be.bussines.impl;
 
-import com.example.radify_be.bussines.AccessTokenDecoder;
-import com.example.radify_be.bussines.AccessTokenEncoder;
 import com.example.radify_be.bussines.UserService;
 import com.example.radify_be.bussines.exceptions.InvalidCredentialsException;
-import com.example.radify_be.bussines.impl.converters.PlaylistConverter;
 import com.example.radify_be.bussines.impl.converters.UserConverter;
 import com.example.radify_be.model.AccessToken;
-import com.example.radify_be.model.Playlist;
 import com.example.radify_be.model.User;
 import com.example.radify_be.model.requests.LoginRequest;
 import com.example.radify_be.persistence.UserRepository;
@@ -16,10 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -28,9 +22,6 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository repository;
     private final PasswordEncoder passwordEncoder;
-    private final AccessTokenEncoder encoder;
-    private final AccessTokenDecoder decoder;
-
 
     @Override
     public void register(UserEntity user){
@@ -40,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getById(Integer id){
-           return repository.findById(id).orElse(null);
+        return repository.findById(id).orElse(null);
     }
 
     @Override
@@ -54,20 +45,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public String login(LoginRequest request){
 
-        User user =  UserConverter.convert(repository.findByUsername(request.getUsername()));
-        if (user.equals(null)){
-            throw new InvalidCredentialsException();
-        }
-
-        if (!passwordMatch(request.getPassword(), user.getAccount().getPassword())){
-            throw new InvalidCredentialsException();
-        }
-
-        return generateAccessToken(user);
-    }
 
 
     private boolean passwordMatch(String rawPass, String encodedPass) {
@@ -75,9 +53,8 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private String generateAccessToken(User user){
-        return encoder.encode(AccessToken.builder().subject(user.getAccount().getUsername()).userId(user.getId()).role(user.getRole()).build());
-    }
+
+
 
 
 

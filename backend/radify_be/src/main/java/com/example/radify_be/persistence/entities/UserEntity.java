@@ -2,6 +2,7 @@ package com.example.radify_be.persistence.entities;
 
 
 import com.example.radify_be.model.Role;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,6 +33,7 @@ public class UserEntity {
     private String email;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(nullable = false)

@@ -10,7 +10,6 @@ public interface UserService {
 
     void register(UserEntity user);
     void validateEmail(String email) throws Exception;
-    String login(LoginRequest request);
 
     UserEntity getById(Integer id);
 

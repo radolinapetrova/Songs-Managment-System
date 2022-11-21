@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity createUser(@RequestBody CreateUserRequest userRequest) {
-        userService.register(UserEntity.builder().first_name(userRequest.getFirst_name()).last_name(userRequest.getLast_name()).role(Role.USER).username(userRequest.getUsername()).email(userRequest.getEmail()).password(userRequest.getPassword()).build());
+        userService.register(UserEntity.builder().fName(userRequest.getFirst_name()).lName(userRequest.getLast_name()).role(Role.USER).username(userRequest.getUsername()).email(userRequest.getEmail()).password(userRequest.getPassword()).build());
         return ResponseEntity.ok().body("Account created");
     }
 
