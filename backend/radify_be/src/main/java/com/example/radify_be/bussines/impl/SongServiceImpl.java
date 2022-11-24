@@ -1,34 +1,30 @@
 package com.example.radify_be.bussines.impl;
 
 import com.example.radify_be.bussines.SongService;
-import com.example.radify_be.bussines.impl.converters.SongConverter;
-import com.example.radify_be.model.Song;
-import com.example.radify_be.persistence.SongRepository;
-import com.example.radify_be.persistence.entities.SongEntity;
-import lombok.AllArgsConstructor;
+import com.example.radify_be.domain.Song;
+import com.example.radify_be.persistence.SongRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SongServiceImpl implements SongService {
 
-    SongRepository repository;
+    private final SongRepo repository;
 
     @Override
     public List<Song> getSongsByTitle(String title){
         Pageable pageable = PageRequest.of(0, 5);
-        return repository.findAllByTitle(title, pageable).stream().map(SongConverter::convert).collect(Collectors.toList());
-        //return null;
+        return repository.findAllByTitle(title, pageable);
     }
 
     @Override
-    public SongEntity createSong(SongEntity song){
+    public Song createSong(Song song){
         return repository.save(song);
     }
 }

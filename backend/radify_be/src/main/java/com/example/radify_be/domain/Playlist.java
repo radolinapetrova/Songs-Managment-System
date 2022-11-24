@@ -1,4 +1,4 @@
-package com.example.radify_be.model;
+package com.example.radify_be.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

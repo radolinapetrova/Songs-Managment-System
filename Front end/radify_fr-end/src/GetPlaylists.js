@@ -24,7 +24,7 @@ export default function GetPlaylists() {
         //         console.log(res.data.songs)
         //     }).catch(err => console.log(err))
     }
-
+ 
     let playlistsArr = Array.from(playlists);
 
     const mapPlaylists = () => {

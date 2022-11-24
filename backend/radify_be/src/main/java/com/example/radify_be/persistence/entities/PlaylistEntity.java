@@ -16,10 +16,14 @@ import java.util.List;
 @Table(name = "playlists")
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class PlaylistEntity {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Integer id;
 
     @Column(nullable = false)
@@ -36,7 +40,7 @@ public class PlaylistEntity {
     @Column(nullable = false)
     public String dateOfCreation;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @JoinTable(name="user_playlists",
     joinColumns = @JoinColumn(
@@ -49,7 +53,7 @@ public class PlaylistEntity {
     ))
     private List<UserEntity> users;
 
-    @ManyToAny(metaColumn = @Column(name = "idk"), fetch = FetchType.LAZY)
+    @ManyToMany
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @JoinTable(name="playlist_songs",
             joinColumns = @JoinColumn(

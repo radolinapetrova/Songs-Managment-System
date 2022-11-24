@@ -1,4 +1,4 @@
-package com.example.radify_be.model.requests;
+package com.example.radify_be.controller.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

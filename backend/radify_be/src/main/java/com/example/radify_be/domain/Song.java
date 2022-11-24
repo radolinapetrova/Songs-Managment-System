@@ -1,19 +1,21 @@
-package com.example.radify_be.model.requests;
+package com.example.radify_be.domain;
 
-
-import com.example.radify_be.model.Artist;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateSongRequest {
+public class Song {
+    private Integer id;
     private String title;
     private Integer seconds;
-    private String genre;
-    private List<Artist> artists;
+    public String genre;
+    List<Artist> artists;
 }

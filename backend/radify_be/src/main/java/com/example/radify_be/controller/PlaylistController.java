@@ -2,17 +2,19 @@ package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.PlaylistService;
 import com.example.radify_be.bussines.UserService;
-import com.example.radify_be.bussines.impl.converters.DateConverter;
-import com.example.radify_be.model.requests.CreatePlaylistRequest;
-import com.example.radify_be.persistence.entities.PlaylistEntity;
-import com.example.radify_be.persistence.entities.UserEntity;
+import com.example.radify_be.controller.requests.AddSongRequest;
+import com.example.radify_be.domain.Playlist;
+import com.example.radify_be.domain.Song;
+import com.example.radify_be.domain.User;
+import com.example.radify_be.controller.requests.CreatePlaylistRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -28,12 +30,19 @@ public class PlaylistController {
     @PostMapping
     public ResponseEntity createNewPlaylist(@RequestBody CreatePlaylistRequest request){
         //Creating a list for the users and adding the creator as the first one
-        List<UserEntity> users = new ArrayList<>();
+        List<User> users = new ArrayList<>();
         //Retrieving all the information about the creator
-        UserEntity user = userService.getById(request.getUserId());
+        User user = userService.getById(request.getUserId());
         users.add(user);
-        service.createPlaylist(PlaylistEntity.builder().title(request.getTitle()).is_public(request.isPublic()).dateOfCreation(DateConverter.convert(Calendar.getInstance().getTime())).creator(user).users(users).build());
+        service.createPlaylist(convert(request, users, user));
         return ResponseEntity.status(HttpStatus.CREATED).body("Playlist created");
+    }
+
+
+    @PutMapping
+    public ResponseEntity addSongToPlaylist(@RequestBody AddSongRequest request){
+        service.addSongToPlaylist(service.findById(request.getPlaylistId()), Song.builder().id(request.getSongId()).build());
+        return ResponseEntity.ok().body("Idk if it worked tbh");
     }
 
 
@@ -41,5 +50,22 @@ public class PlaylistController {
     public ResponseEntity getUserPlaylists(@PathVariable(value = "id") Integer id){
             return ResponseEntity.ok(service.getUserPlaylists(id));
     }
+
+    @DeleteMapping
+    public ResponseEntity deletePlaylist(@RequestBody Integer id){
+        try {
+            service.deletePlaylist(id);
+            return ResponseEntity.ok().body("Successful deletion of the playlist");
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+        }
+    }
+
+    private Playlist convert(CreatePlaylistRequest request, List<User> users, User user){
+        return Playlist.builder().title(request.getTitle()).isPublic(request.isPublic()).dateOfCreation(new java.util.Date()).creator(user).users(users).build();
+    }
+
+
 
 }

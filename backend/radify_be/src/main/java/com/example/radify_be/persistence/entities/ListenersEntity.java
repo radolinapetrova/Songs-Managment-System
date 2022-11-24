@@ -1,13 +1,13 @@
 package com.example.radify_be.persistence.entities;
 
-import com.example.radify_be.domain.Artist;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Date;
 
 @Data
 @Builder
@@ -15,21 +15,13 @@ import java.util.List;
 @Table(name = "artists")
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArtistEntity {
+public class ListenersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Access(AccessType.PROPERTY)
     private Integer id;
 
-    @Column(name = "f_name", nullable = false)
-    private String fName;
-
-    @Column(name = "l_name")
-    private String lName;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "artists")
-    List<SongEntity> songs;
+    Date date;
 
 
 

@@ -3,6 +3,7 @@ import axios from "axios";
 import {Form} from "react-router-dom";
 import "./Account.css"
 import {useNavigate} from 'react-router-dom';
+import qs from 'qs';
 
 export default function LogIn() {
 
@@ -19,17 +20,24 @@ export default function LogIn() {
             e.preventDefault();
 
             try {
-                axios.post("http://localhost:8080/users/login", data).then(res => console.log(res.data));
+
+                axios.post('http://localhost:8080/login', data, {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    }}).then(res => sessionStorage.setItem("token", JSON.stringify(res.data.access_token)));
                 navigate('/');
             } catch (err) {
                 if (err.response.status === 403) {
-                    alert("Unfortunately, it seems that, sadly, you have netered wrong credentials, regretably");
+                    alert("Unfortunately, it seems that, sadly, you have, regretably, entered wrong credentials :(");
                 } else {
                     alert("Idk what went wrong");
                 }
             } finally {
                 
             }
+
+
+
 
 
         }

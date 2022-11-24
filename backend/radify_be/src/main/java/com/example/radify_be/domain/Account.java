@@ -1,13 +1,14 @@
-package com.example.radify_be.model.requests;
+package com.example.radify_be.domain;
 
-import com.example.radify_be.model.Role;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class LoginRequest {
+@Builder
+public class Account {
     private String username;
+    private String email;
     private String password;
-    private Role role;
 }

@@ -19,6 +19,7 @@ public class SongEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     public Integer id;
 
     @Column(nullable = false)
