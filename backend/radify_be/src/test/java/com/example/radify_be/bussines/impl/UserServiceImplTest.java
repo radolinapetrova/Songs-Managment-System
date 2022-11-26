@@ -1,13 +1,15 @@
 package com.example.radify_be.bussines.impl;
 
+import com.example.radify_be.domain.Account;
 import com.example.radify_be.domain.Role;
+import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
-import com.example.radify_be.persistence.entities.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 
 import java.util.Optional;
 
@@ -36,16 +38,16 @@ class UserServiceImplTest {
 
     @Test
     void getById() {
-         UserEntity user = UserEntity.builder().id(1).role(Role.USER).fName("Stelka").lName("Petelka").username("stelitka").password("4321").build();
-
-        when(userRepositoryMock.findById(1))
-                .thenReturn(Optional.of(user));
-
-        //UserEntity actualResult = userService.getById(1);
-
+//         User user = User.builder().id(1).role(Role.USER).fName("Stelka").lName("Petelka").account(Account.builder().username("stelitka").password("4321").build()).password().build();
+//
+//        when(userRepositoryMock.findById(1))
+//                .thenReturn(Optional.of(user));
+//
+//        User actualResult = userService.getById(1);
+//
 //        assertEquals(actualResult, user);
 //
-//        verify(userRepositoryMock).findById(1);
+//        verify(userRepositoryMock).findById(1);1
     }
 
     @Test

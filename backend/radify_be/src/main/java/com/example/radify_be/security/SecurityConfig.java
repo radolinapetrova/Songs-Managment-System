@@ -24,6 +24,7 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and();
+        http.cors().disable();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/login", "/users/**").permitAll();
@@ -41,8 +42,8 @@ public class SecurityConfig  {
             public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry
                         .addMapping("/**")
-                        .allowedOrigins("https://localhost:3000")
-                        .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");
+                        .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                        .allowedOrigins("https://localhost:3000");
 
             }
         };

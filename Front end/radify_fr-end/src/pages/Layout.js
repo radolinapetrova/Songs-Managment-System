@@ -8,7 +8,8 @@ const Layout = () => {
             <nav>
                 <Link className="link" to="/">Home</Link>
                 <Link className="link" to="/playlists">Playlists</Link>
-                <Link className="link" to="/account">Account</Link>
+                <Link className="link" to="/login">Account</Link>
+                
             </nav>
             <Outlet/>
         </div>

@@ -14,7 +14,7 @@ export default function Navigation() {
                 <Route path="/" element={<Layout/>}>
                     <Route index element={<Homepage/>}/>
                     <Route path="playlists" element={<Playlists/>} />
-                    <Route path="account" element={<Account/>}/>
+                    <Route path="login" element={<Account/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>

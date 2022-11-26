@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
-@Slf4j
+
 @RequiredArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -33,7 +33,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        log.info("Username is: {} \r\n Password is {}",username,password);
 
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);

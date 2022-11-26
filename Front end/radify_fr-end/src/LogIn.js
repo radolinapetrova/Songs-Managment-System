@@ -3,15 +3,17 @@ import axios from "axios";
 import {Form} from "react-router-dom";
 import "./Account.css"
 import {useNavigate} from 'react-router-dom';
-import qs from 'qs';
 
 export default function LogIn() {
 
 
+    var qs = require("qs");
+
     const [data, setData] = useState({
-        email: "",
+        username: "",
         password: ""
     })
+
 
     const navigate = useNavigate();
 
@@ -21,10 +23,14 @@ export default function LogIn() {
 
             try {
 
-                axios.post('http://localhost:8080/login', data, {
+                axios.post('http://localhost:8080/login', {username: data.username, password: data.password}, {
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    }}).then(res => sessionStorage.setItem("token", JSON.stringify(res.data.access_token)));
+                        // "Content-Type": "application/x-www-form-urlencoded",
+                        "Access-Control-Allow-Origin": "*",
+
+            }
+                    }
+                ).then((res) => sessionStorage.setItem("token", res.data));
                 navigate('/');
             } catch (err) {
                 if (err.response.status === 403) {
@@ -33,7 +39,7 @@ export default function LogIn() {
                     alert("Idk what went wrong");
                 }
             } finally {
-                
+
             }
 
 
