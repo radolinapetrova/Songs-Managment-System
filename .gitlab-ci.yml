@@ -12,8 +12,10 @@ stages:
 build:
    stage: build 
    script:
+    - cd backend
     - ./gradlew assemble 
 test:
    stage: test
    script:
+     - cd backend
      - ./gradlew test
