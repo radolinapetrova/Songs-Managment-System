@@ -12,10 +12,10 @@ stages:
 build:
    stage: build 
    script:
-    - cd backend
+    - cd backend/radify_be
     - ./gradlew assemble 
 test:
    stage: test
    script:
-     - cd backend
+     - cd backend/radify_be
      - ./gradlew test
