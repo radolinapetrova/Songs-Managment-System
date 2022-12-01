@@ -8,8 +8,10 @@ import com.example.radify_be.persistence.entities.ArtistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +43,29 @@ public class SongRepoImpl implements SongRepo {
     }
 
     @Override
-    public List<Song> findAllByTitle(String title, Pageable pageable){
-        return repo.findAllByTitle(title, pageable).stream().map(song -> songConverter(song)).collect(Collectors.toList());
+    public List<Song> findAllByTitle(String title){
+        return repo.findAllByTitle(title).stream().map(song -> songConverter(song)).collect(Collectors.toList());
     }
+
+
+    @Override
+    public List<Song> findAll(){
+        List<Song> songs = new ArrayList<>();
+
+        for (SongEntity s : repo.findAll()){
+            songs.add(songConverter(s));
+        }
+        return songs;
+    }
+
+//    @Override
+//    public List<Song> findAllByPlaylistId(Integer id){
+//            List<Song> songs = new ArrayList<>();
+//
+//            for(SongEntity s: repo.findAllByPlaylistId(id)){
+//                songs.add(songConverter(s));
+//            }
+//
+//            return songs;
+//    }
 }

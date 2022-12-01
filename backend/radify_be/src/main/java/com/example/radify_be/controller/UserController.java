@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin("http://localhost:3000")
 @AllArgsConstructor
 public class UserController {
 
@@ -33,10 +33,6 @@ public class UserController {
 
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity login (@RequestBody LoginRequest loginRequest){
-//        return ResponseEntity.ok(userService.login(loginRequest));
-//    }
 
     @DeleteMapping("{id}")
     public ResponseEntity deleteUser(@PathVariable(value = "id") Integer id){

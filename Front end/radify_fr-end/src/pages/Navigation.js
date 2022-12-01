@@ -1,7 +1,7 @@
 import React from "react";
 import Homepage from "./Homepage";
 import Playlists from "./Playlists";
-import Account from "./Account";
+import AuthPage from "./AuthPage";
 import Layout from "./Layout";
 
 
@@ -14,7 +14,7 @@ export default function Navigation() {
                 <Route path="/" element={<Layout/>}>
                     <Route index element={<Homepage/>}/>
                     <Route path="playlists" element={<Playlists/>} />
-                    <Route path="login" element={<Account/>}/>
+                    <Route path="login" element={<AuthPage/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>

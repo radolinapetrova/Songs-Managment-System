@@ -28,44 +28,63 @@ public class PlaylistController {
 
 
     @PostMapping
-    public ResponseEntity createNewPlaylist(@RequestBody CreatePlaylistRequest request){
+    public ResponseEntity createNewPlaylist(@RequestBody CreatePlaylistRequest request) {
         //Creating a list for the users and adding the creator as the first one
         List<User> users = new ArrayList<>();
         //Retrieving all the information about the creator
         User user = userService.getById(request.getUserId());
         users.add(user);
-        service.createPlaylist(convert(request, users, user));
+        service.createPlaylist(convert(request, user, users));
         return ResponseEntity.status(HttpStatus.CREATED).body("Playlist created");
     }
 
 
     @PutMapping
-    public ResponseEntity addSongToPlaylist(@RequestBody AddSongRequest request){
+    public ResponseEntity addSongToPlaylist(@RequestBody AddSongRequest request) {
         service.addSongToPlaylist(service.findById(request.getPlaylistId()), Song.builder().id(request.getSongId()).build());
         return ResponseEntity.ok().body("Idk if it worked tbh");
     }
 
 
     @GetMapping("user/{id}")
-    public ResponseEntity getUserPlaylists(@PathVariable(value = "id") Integer id){
-            return ResponseEntity.ok(service.getUserPlaylists(id));
+    public ResponseEntity getUserPlaylists(@PathVariable(value = "id") Integer id) {
+        List<Playlist> playlists = service.getUserPlaylists(id);
+        return ResponseEntity.ok(playlists);
     }
 
-    @DeleteMapping
-    public ResponseEntity deletePlaylist(@RequestBody Integer id){
+    @GetMapping("{id}")
+    public ResponseEntity getPlaylistById(@PathVariable(value = "id") Integer id) {
+        Playlist playlist = service.findById(id);
+
+        if (playlist == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Orr nohrrr");
+        }
+        return ResponseEntity.ok().body(playlist);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity deletePlaylist(@PathVariable(value = "id") Integer id) {
         try {
             service.deletePlaylist(id);
             return ResponseEntity.ok().body("Successful deletion of the playlist");
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
     }
 
-    private Playlist convert(CreatePlaylistRequest request, List<User> users, User user){
-        return Playlist.builder().title(request.getTitle()).isPublic(request.isPublic()).dateOfCreation(new java.util.Date()).creator(user).users(users).build();
+    @GetMapping("all/{userId}")
+    public ResponseEntity getAllPlaylists(@PathVariable(value = "userId") Integer userId){
+        List<Playlist> playlists = service.getAllPublicAndUser(userId);
+
+        if (playlists.isEmpty()){
+            return ResponseEntity.ok().body("No playlists, or u did smth wronggg");
+        }
+        return ResponseEntity.ok().body(playlists);
     }
 
+    private Playlist convert(CreatePlaylistRequest request, User user, List<User> users) {
+        return Playlist.builder().title(request.getTitle()).isPublic(request.isPublic()).dateOfCreation(new java.util.Date()).songs(new ArrayList<>()).creator(user).users(users).build();
+    }
 
 
 }

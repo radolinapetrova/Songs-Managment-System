@@ -1,7 +1,6 @@
 package com.example.radify_be.controller.requests;
 
 
-import com.example.radify_be.domain.Artist;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +14,5 @@ public class CreateSongRequest {
     private String title;
     private Integer seconds;
     private String genre;
-    private List<Artist> artists;
+    private List<Integer> artistsIds;
 }

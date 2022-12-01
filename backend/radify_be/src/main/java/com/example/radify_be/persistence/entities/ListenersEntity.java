@@ -9,19 +9,19 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
-@Builder
-@Entity
-@Table(name = "artists")
-@AllArgsConstructor
-@NoArgsConstructor
+//@Data
+//@Builder
+//@Entity
+//@Table(name = "artists")
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class ListenersEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    Date date;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Integer id;
+//
+//    Date date;
 
 
 

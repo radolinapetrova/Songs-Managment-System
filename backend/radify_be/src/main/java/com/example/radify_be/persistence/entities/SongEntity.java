@@ -20,13 +20,13 @@ public class SongEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Access(AccessType.PROPERTY)
-    public Integer id;
+    private Integer id;
 
     @Column(nullable = false)
-    public String title;
+    private String title;
 
     @Column(nullable = false)
-    public Integer seconds;
+    private Integer seconds;
 
 
     @Column(nullable = false)
@@ -44,5 +44,9 @@ public class SongEntity {
                     referencedColumnName = "id"
             ))
     private List<ArtistEntity> artists;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "songs")
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    private List<PlaylistEntity> playlists;
 
 }

@@ -1,11 +1,12 @@
 import React from "react";
-import GetSongs from "../GetSongs";
+import Songs from '../Songs'
 
 
 export default function Homepage() {
     return (
-        <p>Homepageeee</p>
+        <div>
+           <Songs/>
+        </div>
     )
 
-    // return <GetSongs/>
 }

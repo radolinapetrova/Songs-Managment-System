@@ -12,8 +12,10 @@ import java.util.List;
 
 
 @Repository
-public interface SongDBRepository extends JpaRepository<SongEntity, Integer>, PagingAndSortingRepository<SongEntity, Integer> {
+public interface SongDBRepository extends JpaRepository<SongEntity, Integer>/*, PagingAndSortingRepository<SongEntity, Integer>*/ {
 
     @Query("SELECT s from SongEntity s WHERE s.title LIKE %:title%")
-    public List<SongEntity> findAllByTitle(String title, Pageable pageable);
+    List<SongEntity> findAllByTitle(String title);
+
+
 }

@@ -19,12 +19,22 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public List<Song> getSongsByTitle(String title){
-        Pageable pageable = PageRequest.of(0, 5);
-        return repository.findAllByTitle(title, pageable);
+        return repository.findAllByTitle(title);
     }
+
+//    @Override
+//    public List<Song> getAllPlaylistSongs(Integer id) {
+//        return repository.findAllByPlaylistId(id);
+//    }
 
     @Override
     public Song createSong(Song song){
         return repository.save(song);
+    }
+
+    @Override
+    public List<Song> getAllSongs(){
+
+        return repository.findAll();
     }
 }

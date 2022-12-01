@@ -15,7 +15,6 @@ export default function Register() {
     const [msg, setMsg] = useState("")
 
     const handleSubmit = (e) => {
-
         e.preventDefault();
         axios.post("http://localhost:8080/users", data).then(res => setMsg(res.data));
 

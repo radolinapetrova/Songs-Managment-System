@@ -1,6 +1,7 @@
 package com.example.radify_be.bussines;
 
 import com.example.radify_be.domain.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {
 
@@ -8,7 +9,8 @@ public interface UserService {
     void validateEmail(String email) throws Exception;
 
     User getById(Integer id);
-    public void deleteUser(Integer id) throws Exception;
+    void deleteUser(Integer id) throws Exception;
+
 
 
 }

@@ -4,14 +4,24 @@ import "./Playlist.css"
 
 export default function CreatePlaylist() {
 
+    var decode = require('jwt-claims');
+
     const [data, setData] = useState({
         title: "",
         isPublic: false,
-        userId: 3
+        userId: 0
     })
+
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const token = window.sessionStorage.getItem('token');
+        const claims = decode(token);
+
+        setData(prevState => ({...prevState, userId: claims.id}))
+        console.log(data)
         axios.post("http://localhost:8080/playlists", data).then(res => console.log(res.data))
     }
 
@@ -27,11 +37,12 @@ export default function CreatePlaylist() {
                 </div>
                 <div>
                     <input type="radio" name="public"
-                           onChange={(e) => setData(prevState => ({...prevState, isPublic: e.target.value}))} required/>
+                           onChange={(e) => setData(prevState => ({...prevState, isPublic: true}))} required/>
                     <label>Public </label>
                 </div>
                 <div>
-                    <input type="radio" name="public" required/>
+                    <input type="radio" name="public"
+                           onChange={(e) => setData(prevState => ({...prevState, isPublic: false}))} required/>
                     <label>Private </label>
                 </div>
                 <button onClick={handleSubmit}>Create new playlist</button>

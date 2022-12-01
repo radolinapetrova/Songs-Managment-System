@@ -8,8 +8,12 @@ import java.util.List;
 
 @Repository
 public interface SongRepo {
-    public Song save(Song song);
+    Song save(Song song);
 
-    public List<Song> findAllByTitle(String title, Pageable pageable);
+    List<Song> findAllByTitle(String title);
+
+    List<Song> findAll();
+
+
 
 }

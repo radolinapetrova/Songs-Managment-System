@@ -6,6 +6,8 @@ import com.example.radify_be.domain.Role;
 import com.example.radify_be.domain.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+
 
 
 import javax.persistence.*;
@@ -45,11 +47,8 @@ public class UserEntity {
     private Role role;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL  )
     List<PlaylistEntity> playlists;
 
-    public User convert(){
-        return User.builder().id(this.id).role(this.role).fName(this.fName).lName(this.lName)
-                .account(Account.builder().username(this.username).password(this.password).email(this.email).build()).build();
-    }
 
 }

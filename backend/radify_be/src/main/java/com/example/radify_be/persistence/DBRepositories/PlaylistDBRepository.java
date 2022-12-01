@@ -12,9 +12,10 @@ import java.util.List;
 @Repository
 public interface PlaylistDBRepository extends JpaRepository<PlaylistEntity, Integer>, PagingAndSortingRepository<PlaylistEntity, Integer> {
 
-    //public List<PlaylistEntity> findByTitle(String title, Pageable pageable);
 
-    public List<PlaylistEntity> getReferencesByUsersId(Integer userId);
+    List<PlaylistEntity> getReferencesByUsersId(Integer id);
+
+    List<PlaylistEntity> getAllByCreatorIdOrIsPublic(Integer creatorId, boolean isPublic);
 
 
 }

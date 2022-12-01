@@ -19,17 +19,13 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public Playlist getPlaylistSongs(Integer playlistId) {
-        //Playlist playlist = PlaylistConverter.convert(repo.getReferenceById(playlistId));
-        //custom method for getting all the songs with certain playlist id
-//        List<String> songs = songsRepository.findAllByPlaylistId(playlistId).stream().map(PlaylistSongsEntity::getSongId).collect(Collectors.toList());
-//        playlist.setSongs(songs);
-        //return playlist;
+
         return null;
     }
 
     @Override
-    public Playlist createPlaylist(Playlist playlist) {
-        return repo.save(playlist);
+    public void createPlaylist(Playlist playlist) {
+        repo.save(playlist);
     }
 
 
@@ -55,5 +51,11 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public Playlist findById(Integer id){
         return repo.findById(id);
+    }
+
+
+    @Override
+    public List<Playlist> getAllPublicAndUser(Integer id){
+        return repo.getAllPublicAndUser(id);
     }
 }

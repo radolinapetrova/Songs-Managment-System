@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,7 +20,7 @@ public class ArtistEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Access(AccessType.PROPERTY)
+    @Access(AccessType.PROPERTY)
     private Integer id;
 
     @Column(name = "f_name", nullable = false)
@@ -29,6 +30,7 @@ public class ArtistEntity {
     private String lName;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "artists")
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
     List<SongEntity> songs;
 
 

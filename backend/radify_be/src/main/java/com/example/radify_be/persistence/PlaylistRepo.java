@@ -8,14 +8,16 @@ import java.util.List;
 
 @Repository
 public interface PlaylistRepo {
-    public Playlist save(Playlist playlist);
+    void save(Playlist playlist);
 
-    public void deleteById(Integer id);
+    void deleteById(Integer id);
 
-    public boolean existsById(Integer id);
+    boolean existsById(Integer id);
 
-    public List<Playlist> getAllByUserId(Integer id);
+    List<Playlist> getAllByUserId(Integer id);
 
-    public Playlist findById(Integer id);
+    Playlist findById(Integer id);
+
+    List<Playlist> getAllPublicAndUser(Integer id);
 
 }

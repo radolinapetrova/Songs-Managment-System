@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {Form} from "react-router-dom";
-import "./Account.css"
+import "../Account.css"
 import {useNavigate} from 'react-router-dom';
 
 export default function LogIn() {
@@ -14,24 +14,31 @@ export default function LogIn() {
         password: ""
     })
 
+    useEffect(() => {
+
+    }, [])
+
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
 
             e.preventDefault();
 
             try {
+                console.log(data.username);
+                console.log(data.password);
+                const params = new URLSearchParams();
+                params.append('username', data.username);
+                params.append('password', data.password);
 
-                axios.post('http://localhost:8080/login', {username: data.username, password: data.password}, {
-                    headers: {
-                        // "Content-Type": "application/x-www-form-urlencoded",
-                        "Access-Control-Allow-Origin": "*",
 
-            }
-                    }
-                ).then((res) => sessionStorage.setItem("token", res.data));
+                var res = await axios.post('http://localhost:8080/login',params
+                )
+                sessionStorage.setItem("token", res.data.access_token)
+
                 navigate('/');
+
             } catch (err) {
                 if (err.response.status === 403) {
                     alert("Unfortunately, it seems that, sadly, you have, regretably, entered wrong credentials :(");

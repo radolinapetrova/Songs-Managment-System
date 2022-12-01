@@ -4,6 +4,7 @@ import com.example.radify_be.bussines.UserService;
 import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.UserRepo;
 
+import com.example.radify_be.security.CustomUser;
 import com.example.radify_be.security.PasswordEncoderConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -64,12 +65,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         User user = repo.findByUsername(username);
+        if (user == null){
+            throw new UsernameNotFoundException("User not found in the database!");
+        }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
-        return new org.springframework.security.core.userdetails.User(user.getAccount().getUsername(),user.getAccount().getPassword(),authorities);
+        //return new org.springframework.security.core.userdetails.User(user.getAccount().getUsername(),user.getAccount().getPassword(),authorities);
+        return new CustomUser(user.getId(), user.getAccount().getUsername(),user.getAccount().getPassword(),authorities);
     }
 }

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.*;
 import java.util.List;
@@ -30,15 +29,15 @@ public class PlaylistEntity {
     private String title;
 
     @Column(nullable = false)
-    public boolean is_public;
+    private boolean isPublic;
 
 
     @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
     @OneToOne
-    public UserEntity creator;
+    private UserEntity creator;
 
     @Column(nullable = false)
-    public String dateOfCreation;
+    private String dateOfCreation;
 
     @ManyToMany
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
