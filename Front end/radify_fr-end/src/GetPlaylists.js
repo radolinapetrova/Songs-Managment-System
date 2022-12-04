@@ -28,12 +28,16 @@ export default function GetPlaylists() {
             }).catch(err => console.log(err))
     }
 
-    const getSongs = () => {
-        // axios.get('http://localhost:8080/songs/2')
-        //     .then(res => {
-        //         setSongs(res.data.songs)
-        //         console.log(res.data.songs)
-        //     }).catch(err => console.log(err))
+    const getSongs = (id) => {
+        axios.get(`http://localhost:8080/songs/playlist/${id}`)
+            .then(res => {
+                setSongs(res.data)
+                console.log(res.data)
+                mapSongs()
+            }).catch(err => console.log(err))
+
+
+
     }
 
     let playlistsArr = Array.from(playlists);
@@ -45,8 +49,20 @@ export default function GetPlaylists() {
                 {playlistsArr.map((playlist) => (
                     <div key={playlist.id} className="playlist">
                         <div className="playlist" onClick={function (e) {
-                            getSongs();
+                            getSongs(playlist.id);
                         }}>Title: {playlist.title}</div>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+    const mapSongs = () => {
+        return (
+            <div className="userPl">
+                <p>Playlist songs</p>
+                {songs.map((playlist) => (
+                    <div key={playlist.id} className="playlist">
+                        <div className="playlist">Title: {playlist.title}</div>
                     </div>
                 ))}
             </div>

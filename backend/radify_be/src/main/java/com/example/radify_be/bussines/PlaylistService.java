@@ -6,7 +6,7 @@ import com.example.radify_be.domain.Song;
 import java.util.List;
 
 public interface PlaylistService {
-    void createPlaylist(Playlist playlist);
+    Playlist createPlaylist(Playlist playlist);
 
     Playlist getPlaylistSongs(Integer playlistId);
 

@@ -42,13 +42,13 @@ public class SongController {
 
     @GetMapping("playlist/{id}")
     public ResponseEntity getPlaylistSongs(@PathVariable(value = "id") Integer id) {
-//            List<Song> songs = service.getAllPlaylistSongs(id);
-//
-//            if (songs.size() == 0){
-//                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(":(");
-//            }
-//            return ResponseEntity.ok().body(songs);
-        return null;
+            List<Song> songs = service.getAllPlaylistSongs(id);
+
+            if (songs.size() == 0){
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(":(");
+            }
+            return ResponseEntity.ok().body(songs);
+
     }
 
     private Song convert(CreateSongRequest request) {

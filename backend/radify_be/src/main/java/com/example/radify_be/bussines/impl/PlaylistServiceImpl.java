@@ -24,8 +24,8 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void createPlaylist(Playlist playlist) {
-        repo.save(playlist);
+    public Playlist createPlaylist(Playlist playlist) {
+        return repo.save(playlist);
     }
 
 

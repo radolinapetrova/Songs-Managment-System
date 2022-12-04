@@ -12,6 +12,6 @@ public interface SongService {
 
     public List<Song> getAllSongs();
 
-    //List<Song> getAllPlaylistSongs(Integer id);
+    List<Song> getAllPlaylistSongs(Integer id);
 
 }

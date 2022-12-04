@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import GetAllSongs from './GetAllSongs'
+import GetAllPlaylists from './GetAllPlaylists'
 
 
 export default function Songs() {
@@ -10,9 +11,12 @@ export default function Songs() {
 
 
     const filter = () => {
-        if (results === []) {
+        if (results) {
             return (
-                <GetAllSongs/>
+                <div>
+                    <GetAllSongs/>
+                    <GetAllPlaylists/>
+                </div>
             )
         } else {
 

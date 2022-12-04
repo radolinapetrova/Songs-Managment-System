@@ -2,9 +2,11 @@ package com.example.radify_be.persistence.impl;
 
 import com.example.radify_be.domain.Artist;
 import com.example.radify_be.domain.Song;
+import com.example.radify_be.persistence.DBRepositories.PlaylistDBRepository;
 import com.example.radify_be.persistence.DBRepositories.SongDBRepository;
 import com.example.radify_be.persistence.SongRepo;
 import com.example.radify_be.persistence.entities.ArtistEntity;
+import com.example.radify_be.persistence.entities.PlaylistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class SongRepoImpl implements SongRepo {
 
     private final SongDBRepository repo;
+    private final PlaylistDBRepository playlistRepo;
 
     private Song songConverter(SongEntity song){
         List<Integer> artists = song.getArtists().stream().map(ArtistEntity::getId).collect(Collectors.toList());
@@ -58,14 +61,16 @@ public class SongRepoImpl implements SongRepo {
         return songs;
     }
 
-//    @Override
-//    public List<Song> findAllByPlaylistId(Integer id){
-//            List<Song> songs = new ArrayList<>();
-//
-//            for(SongEntity s: repo.findAllByPlaylistId(id)){
-//                songs.add(songConverter(s));
-//            }
-//
-//            return songs;
-//    }
+    @Override
+    public List<Song> findAllByPlaylists(Integer id){
+            List<Song> songs = new ArrayList<>();
+
+        PlaylistEntity playlist = playlistRepo.findById(id).orElse(null);
+
+            for(SongEntity s: repo.findAllByPlaylists(playlist)){
+                songs.add(songConverter(s));
+            }
+
+            return songs;
+    }
 }

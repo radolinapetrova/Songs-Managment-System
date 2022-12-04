@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {
 
-    void register (User user) throws Exception;
+    User register (User user) throws Exception;
     void validateEmail(String email) throws Exception;
 
     User getById(Integer id);

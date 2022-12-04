@@ -4,8 +4,8 @@ import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.domain.Song;
 import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.DBRepositories.PlaylistDBRepository;
+import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
 import com.example.radify_be.persistence.PlaylistRepo;
-import com.example.radify_be.persistence.converters.UserConverter;
 import com.example.radify_be.persistence.entities.PlaylistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import com.example.radify_be.persistence.entities.UserEntity;
@@ -25,54 +25,35 @@ import java.util.stream.Collectors;
 public class PlaylistRepoImpl implements PlaylistRepo {
 
     private final PlaylistDBRepository repo;
+    private final UserDBRepository userRepo;
 
 
     private PlaylistEntity playlistEntityConverter(Playlist playlist) {
         List<Integer> songs = playlist.getSongs().stream().map(Song::getId).collect(Collectors.toList());
 
-        List<UserEntity> users = new ArrayList<>();
-        List<User> models = playlist.getUsers();
-
-        for (int i = 0; i < models.size(); i++) {
-            users.add(UserConverter.userEntityConverter(models.get(i)));
-        }
-
-        //List<UserEntity> playlists = playlist.getUsers().stream().map(UserConverter::userEntityConverter).collect(Collectors.toList());
-        PlaylistEntity pl = PlaylistEntity.builder()
+       return PlaylistEntity.builder()
                 .id(playlist.getId())
                 .title(playlist.getTitle())
                 .isPublic(playlist.isPublic())
                 .songs(songs.stream().map(id -> SongEntity.builder().id(id).build()).collect(Collectors.toList()))
-                .users(users)
                 .creator(UserEntity.builder().id(playlist.getCreator().getId()).build())
                 .dateOfCreation(convert(playlist.getDateOfCreation())).build();
-
-        //pl.setUsers(users);
-        return pl;
     }
 
     private Playlist playlistConverter(PlaylistEntity playlist) {
 
         List<Integer> songs = playlist.getSongs().stream().map(SongEntity::getId).collect(Collectors.toList());
 
-        List<User> users = new ArrayList<>();
-        List<UserEntity> entities = playlist.getUsers();
-
-        for (int i = 0; i < entities.size(); i++) {
-            users.add(UserConverter.userConverter(entities.get(i)));
-        }
         try {
-            Playlist pl =  Playlist.builder()
+            return Playlist.builder()
                     .id(playlist.getId())
                     .title(playlist.getTitle())
                     .isPublic(playlist.isPublic())
                     .creator(User.builder().id(playlist.getCreator().getId()).build())
                     .dateOfCreation(convert(playlist.getDateOfCreation()))
                     .songs(songs.stream().map(id -> Song.builder().id(id).build()).collect(Collectors.toList()))
-                    .users(users)
                     .build();
-            //pl.setUsers(users);
-            return pl;
+
         } catch (ParseException e) {
             return null;
         }
@@ -89,10 +70,12 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     }
 
     @Override
-    public void save(Playlist playlist) {
+    public Playlist save(Playlist playlist) {
         PlaylistEntity entity = playlistEntityConverter(playlist);
-        System.out.println(entity.toString());
-         repo.saveAndFlush(entity);
+        List<UserEntity> users = List.of(userRepo.findById(entity.getCreator().getId()).orElse(null));
+        entity.setUsers(users);
+
+         return playlistConverter(repo.save(entity));
     }
 
     @Override
@@ -119,7 +102,7 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     public List<Playlist> getAllPublicAndUser(Integer id){
         List<Playlist> playlists = new ArrayList<>();
 
-        for (PlaylistEntity pl : repo.getAllByCreatorIdOrIsPublic(id, true)){
+        for (PlaylistEntity pl : repo.getReferencesByUsersIdOrIsPublic(id, true)){
             playlists.add(playlistConverter(pl));
         }
 

@@ -14,13 +14,16 @@ export default function CreatePlaylist() {
 
 
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
 
         const token = window.sessionStorage.getItem('token');
         const claims = decode(token);
 
         setData(prevState => ({...prevState, userId: claims.id}))
+
         console.log(data)
         axios.post("http://localhost:8080/playlists", data).then(res => console.log(res.data))
     }

@@ -14,17 +14,17 @@ export default function Playlists() {
     })
 
 
-    if (isAuthorized){
+    // if (isAuthorized){
         return (
             <div>
                 <GetPlaylist/>
                 <CreatePlaylist/>
             </div>
         )
-    }
-    else{
-        return <p>Log in first :)</p>
-    }
+    // }
+    // else{
+    //     return <p>Log in first :)</p>
+    // }
 
 
 

@@ -22,10 +22,10 @@ public class SongServiceImpl implements SongService {
         return repository.findAllByTitle(title);
     }
 
-//    @Override
-//    public List<Song> getAllPlaylistSongs(Integer id) {
-//        return repository.findAllByPlaylistId(id);
-//    }
+    @Override
+    public List<Song> getAllPlaylistSongs(Integer id) {
+        return repository.findAllByPlaylists(id);
+    }
 
     @Override
     public Song createSong(Song song){

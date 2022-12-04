@@ -1,6 +1,7 @@
 package com.example.radify_be.bussines.impl;
 
 import com.example.radify_be.bussines.UserService;
+import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.UserRepo;
 
@@ -29,10 +30,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void register(User user) throws Exception {
+    public User register(User user) throws InvalidInputException {
         validateEmail(user.getAccount().getEmail());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
-        repo.save(user);
+        return repo.save(user);
     }
 
     @Override
@@ -41,13 +42,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void validateEmail(String email) throws Exception {
+    public void validateEmail(String email) throws InvalidInputException {
 
         Pattern pattern = Pattern.compile("^(.+)@(\\S+)$");
         Matcher match = pattern.matcher(email);
 
         if (!match.matches()) {
-            throw new Exception("Wrong email");
+            throw new InvalidInputException();
         }
     }
 
@@ -60,9 +61,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    public User updateUser(User user) throws Exception {
-        return repo.save(user);
-    }
+//    public User updateUser(
+//    User user) throws Exception {
+//        return repo.save(user);
+//    }
 
 
 
@@ -77,7 +79,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
-        //return new org.springframework.security.core.userdetails.User(user.getAccount().getUsername(),user.getAccount().getPassword(),authorities);
         return new CustomUser(user.getId(), user.getAccount().getUsername(),user.getAccount().getPassword(),authorities);
     }
 }

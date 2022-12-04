@@ -2,8 +2,8 @@ package com.example.radify_be.persistence.DBRepositories;
 
 
 import com.example.radify_be.persistence.entities.PlaylistEntity;
-import com.example.radify_be.persistence.entities.SongEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +15,12 @@ public interface PlaylistDBRepository extends JpaRepository<PlaylistEntity, Inte
 
     List<PlaylistEntity> getReferencesByUsersId(Integer id);
 
-    List<PlaylistEntity> getAllByCreatorIdOrIsPublic(Integer creatorId, boolean isPublic);
+    List<PlaylistEntity> getReferencesByUsersIdOrIsPublic(Integer id, boolean isPublic);
+
+    @Query("SELECT p from PlaylistEntity p WHERE p.isPublic = true OR p.users p.title LIKE %:title%")
+    List<PlaylistEntity> getReferencesByUsersIdOrIsPublicAndTitle(Integer id, boolean isPublic, String title);
+
+
 
 
 }

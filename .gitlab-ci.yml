@@ -8,20 +8,21 @@ variables:
 stages:
   - build
   - test
+  - .post
 
 build:
    stage: build 
    script:
     - cd backend/radify_be
-    - ./gradlew assemble 
+    - .\gradlew assemble 
 test:
    stage: test
    script:
      - cd backend/radify_be
-     - ./gradlew test
+     - .\gradlew test
 
-.post:
-   stage: sonarqube
+sonarqube:
+   stage: .post
    script:
       - cd backend/radify_be
       - .\gradlew sonarqube

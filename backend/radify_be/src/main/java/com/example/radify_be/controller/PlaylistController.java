@@ -32,7 +32,8 @@ public class PlaylistController {
         //Creating a list for the users and adding the creator as the first one
         List<User> users = new ArrayList<>();
         //Retrieving all the information about the creator
-        User user = userService.getById(request.getUserId());
+        //User user = userService.getById(request.getUserId());
+        User user = User.builder().id(request.getUserId()).build();
         users.add(user);
         service.createPlaylist(convert(request, user, users));
         return ResponseEntity.status(HttpStatus.CREATED).body("Playlist created");

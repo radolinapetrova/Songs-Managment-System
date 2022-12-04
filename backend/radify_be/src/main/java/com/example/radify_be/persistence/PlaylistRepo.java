@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PlaylistRepo {
-    void save(Playlist playlist);
+    Playlist save(Playlist playlist);
 
     void deleteById(Integer id);
 
