@@ -4,19 +4,12 @@ import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import com.example.radify_be.domain.Account;
 import com.example.radify_be.domain.Role;
 import com.example.radify_be.domain.User;
-import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
 import com.example.radify_be.persistence.UserRepo;
-import com.example.radify_be.persistence.entities.UserEntity;
-import com.example.radify_be.security.PasswordEncoderConfig;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

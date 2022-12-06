@@ -17,8 +17,8 @@ public interface PlaylistDBRepository extends JpaRepository<PlaylistEntity, Inte
 
     List<PlaylistEntity> getReferencesByUsersIdOrIsPublic(Integer id, boolean isPublic);
 
-    @Query("SELECT p from PlaylistEntity p WHERE p.isPublic = true OR p.users p.title LIKE %:title%")
-    List<PlaylistEntity> getReferencesByUsersIdOrIsPublicAndTitle(Integer id, boolean isPublic, String title);
+//    @Query("SELECT p from PlaylistEntity p WHERE p.isPublic = true OR p.users p.title LIKE %:title%")
+//    List<PlaylistEntity> getReferencesByUsersIdOrIsPublicAndTitle(Integer id, boolean isPublic, String title);
 
 
 
