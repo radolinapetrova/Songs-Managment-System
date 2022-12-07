@@ -4,6 +4,7 @@ import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.domain.Song;
 import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.DBRepositories.PlaylistDBRepository;
+import com.example.radify_be.persistence.DBRepositories.SongDBRepository;
 import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
 import com.example.radify_be.persistence.PlaylistRepo;
 import com.example.radify_be.persistence.entities.PlaylistEntity;
@@ -27,15 +28,17 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     private final PlaylistDBRepository repo;
     private final UserDBRepository userRepo;
 
+    private final SongDBRepository songRepo;
+
 
     private PlaylistEntity playlistEntityConverter(Playlist playlist) {
-        List<Integer> songs = playlist.getSongs().stream().map(Song::getId).collect(Collectors.toList());
+        //List<Integer> songs = playlist.getSongs().stream().map(Song::getId).collect(Collectors.toList());
 
        return PlaylistEntity.builder()
                 .id(playlist.getId())
                 .title(playlist.getTitle())
                 .isPublic(playlist.isPublic())
-                .songs(songs.stream().map(id -> SongEntity.builder().id(id).build()).collect(Collectors.toList()))
+                //.songs(songs.stream().map(id -> SongEntity.builder().id(id).build()).collect(Collectors.toList()))
                 .creator(UserEntity.builder().id(playlist.getCreator().getId()).build())
                 .dateOfCreation(convert(playlist.getDateOfCreation())).build();
     }
@@ -113,6 +116,35 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     @Override
     public Playlist findById(Integer id) {
         return playlistConverter(repo.findById(id).orElse(null));
+    }
+
+
+    @Override
+    public List<Playlist> findByTitle(String title, Integer id){
+
+        List<Playlist> playlists = new ArrayList<>();
+
+        for (PlaylistEntity pl : repo.getReferencesByTitleContainingOrUsersIdOrIsPublic(title, id, true)){
+            playlists.add(playlistConverter(pl));
+        }
+        return playlists;
+    }
+
+    @Override
+    public void update(Integer playlistId, Integer songId){
+
+        PlaylistEntity playlist = repo.findById(playlistId).orElse(null);
+
+        SongEntity song = songRepo.findById(songId).orElse(null);
+
+        List<SongEntity> songs = playlist.getSongs();
+        songs.add(song);
+
+        playlist.setSongs(songs);
+
+
+        repo.save(playlist);
+
     }
 
 }

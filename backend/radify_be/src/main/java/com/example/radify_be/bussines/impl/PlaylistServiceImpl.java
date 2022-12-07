@@ -43,9 +43,9 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void addSongToPlaylist(Playlist playlist, Song song){
-        playlist.getSongs().add(song);
-        repo.save(playlist);
+    public void addSongToPlaylist(Integer playlist, Integer song){
+        //playlist.getSongs().add(song);
+        repo.update(playlist, song);
     }
 
     @Override
@@ -57,5 +57,10 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public List<Playlist> getAllPublicAndUser(Integer id){
         return repo.getAllPublicAndUser(id);
+    }
+
+    @Override
+    public List<Playlist> getAllByTitle(Integer id, String title){
+        return repo.findByTitle(title, id);
     }
 }

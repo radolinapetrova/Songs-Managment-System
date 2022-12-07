@@ -12,9 +12,11 @@ public interface PlaylistService {
 
     List<Playlist> getUserPlaylists(Integer id);
     void deletePlaylist(Integer id) throws Exception;
-    void addSongToPlaylist(Playlist playlist, Song song);
+    void addSongToPlaylist(Integer playlist, Integer song);
 
     Playlist findById(Integer id);
+
+    List<Playlist> getAllByTitle(Integer id, String title);
 
     List<Playlist> getAllPublicAndUser(Integer id);
 }

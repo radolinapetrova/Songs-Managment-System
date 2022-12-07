@@ -9,8 +9,6 @@ import com.example.radify_be.persistence.entities.ArtistEntity;
 import com.example.radify_be.persistence.entities.PlaylistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ public class SongRepoImpl implements SongRepo {
 
     @Override
     public List<Song> findAllByTitle(String title){
-        return repo.findAllByTitle(title).stream().map(song -> songConverter(song)).collect(Collectors.toList());
+        return repo.findAllByTitleContaining(title).stream().map(song -> songConverter(song)).collect(Collectors.toList());
     }
 
 
@@ -67,7 +65,7 @@ public class SongRepoImpl implements SongRepo {
 
         PlaylistEntity playlist = playlistRepo.findById(id).orElse(null);
 
-            for(SongEntity s: repo.findAllByPlaylists(playlist)){
+            for(SongEntity s: repo.findAllByPlaylistsId(id)){
                 songs.add(songConverter(s));
             }
 

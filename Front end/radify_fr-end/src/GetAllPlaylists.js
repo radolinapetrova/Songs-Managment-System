@@ -2,9 +2,11 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import jwt from 'jwt-decode';
 
-var decode = require('jwt-claims');
+
 
 export default function GetAllPlaylists () {
+
+    var decode = require('jwt-claims');
 
     const [playlists, setPlaylists] = useState([])
     const token = window.sessionStorage.getItem('token');
@@ -26,9 +28,6 @@ export default function GetAllPlaylists () {
 
 
     function getSongs(id){
-
-
-
         axios.get(`http://localhost:8080/playlists/all/${id}`)
             .then(res => {
                 setPlaylists(res.data)

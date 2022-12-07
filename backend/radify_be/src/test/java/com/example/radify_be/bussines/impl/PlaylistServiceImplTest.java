@@ -3,19 +3,17 @@ package com.example.radify_be.bussines.impl;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.PlaylistRepo;
-import com.example.radify_be.persistence.UserRepo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,10 +29,8 @@ class PlaylistServiceImplTest {
 
     private List<Playlist> getMockData(){
         User user = User.builder().id(1).fName("Radka").build();
-        User user2 = User.builder().id(2).fName("Stela").build();
 
         Playlist playlist = Playlist.builder().id(1).title("Da go duhat bednite").isPublic(false).creator(user).users(List.of(user)).dateOfCreation(new Date()).build();
-        Playlist playlist2 = Playlist.builder().id(2).title("Luksat me uspokoqva").isPublic(false).creator(user).users(List.of(user2)).dateOfCreation(new Date()).build();
         Playlist playlist3 = Playlist.builder().id(3).title("Hrana za prostoludieto").isPublic(true).creator(user).users(List.of(user)).dateOfCreation(new Date()).build();
 
         return List.of(playlist3, playlist);
@@ -43,16 +39,21 @@ class PlaylistServiceImplTest {
     @Test
     void getPlaylistSongs() {
 
+
+
     }
 
+
+    //Happy flow
     @Test
-    void createPlaylist() {
+    void createPlaylist_shouldReturnTheNewPlaylist() {
         User user = User.builder().id(1).fName("Radka").build();
-        List<User> users = new ArrayList<>();
-        users.add(user);
+        List<User> users = List.of(user);
+
         Playlist playlist = Playlist.builder().id(1).title("Da go duhat bednite").isPublic(true).creator(user).users(users).dateOfCreation(new Date()).build();
 
-        when(playlistRepoMock.save(playlist))
+
+        when(playlistRepoMock.save(any(Playlist.class)))
                 .thenReturn(playlist);
 
         Playlist result = service.createPlaylist(playlist);
@@ -63,8 +64,40 @@ class PlaylistServiceImplTest {
 
     }
 
+    //HAPPY FLOW
     @Test
-    void getUserPlaylists() {
+    void getUserPlaylist_shouldReturnUsersPlaylists(){
+
+        List<Playlist> playlists = getMockData();
+
+
+        when(playlistRepoMock.getAllByUserId(1))
+                .thenReturn(playlists);
+
+        List<Playlist> results = service.getUserPlaylists(1);
+
+        assertEquals(playlists, results);
+
+        verify(playlistRepoMock).getAllByUserId(1);
+    }
+
+    //UNHAPPY FLOW
+    @Test
+    void getUserPlaylist_shouldReturnNull_When(){
+
+        when(playlistRepoMock.getAllByUserId(2))
+                .thenReturn(null);
+
+        List<Playlist> results = service.getUserPlaylists(2);
+
+        assertEquals(null, results);
+
+        verify(playlistRepoMock).getAllByUserId(2);
+    }
+
+    //HAPPY FLOW
+    @Test
+    void getUserPlaylists_shouldReturnThePlaylists() {
 
         List<Playlist> playlists = getMockData();
 
@@ -79,9 +112,29 @@ class PlaylistServiceImplTest {
 
     }
 
+    //HAPPY FLOW
     @Test
-    void deletePlaylist() {
+    void deletePlaylist() throws Exception {
 
+
+        List<Playlist> playlists = getMockData();
+
+        when(playlistRepoMock.findById(1))
+                .thenReturn(null);
+
+//        try{
+            service.deletePlaylist(1);
+//        }
+//        catch (Exception e){
+//
+//        }
+
+        Playlist result = service.findById(1);
+    }
+
+    //UNHAPPY FLOW
+    @Test
+    void deletePlaylist_shouldThrowException() {
 
     }
 
@@ -89,10 +142,38 @@ class PlaylistServiceImplTest {
     void addSongToPlaylist() {
     }
 
+
+    //HAPPY FLOW
     @Test
-    void findById() {
+    void findById_shouldReturnThePlaylist() {
+        User user = User.builder().id(1).fName("Radka").build();
+        List<User> users = List.of(user);
 
+        Playlist playlist = Playlist.builder().id(1).title("Da go duhat bednite").isPublic(true).creator(user).users(users).dateOfCreation(new Date()).build();
 
+        when(playlistRepoMock.findById(1))
+                .thenReturn(playlist);
+
+        Playlist result = service.findById(1);
+
+        assertEquals(playlist, result);
+
+        verify(playlistRepoMock).findById(1);
+
+    }
+
+    //UNHAPPY FLOW
+    @Test
+    void findById_shouldReturnNull() {
+
+        when(playlistRepoMock.findById(any(Integer.class)))
+                .thenReturn(null);
+
+        Playlist result = service.findById(1);
+
+        assertEquals(null, result);
+
+        verify(playlistRepoMock).findById(1);
     }
 
 

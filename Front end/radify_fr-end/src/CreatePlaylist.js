@@ -22,6 +22,8 @@ export default function CreatePlaylist() {
         const token = window.sessionStorage.getItem('token');
         const claims = decode(token);
 
+        axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
+
         setData(prevState => ({...prevState, userId: claims.id}))
 
         console.log(data)

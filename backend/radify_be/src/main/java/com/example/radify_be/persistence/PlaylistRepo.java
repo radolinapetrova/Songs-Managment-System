@@ -20,4 +20,8 @@ public interface PlaylistRepo {
 
     List<Playlist> getAllPublicAndUser(Integer id);
 
+    List<Playlist> findByTitle(String title, Integer id);
+
+    void update(Integer playlistId, Integer songId);
+
 }
