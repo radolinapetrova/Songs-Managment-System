@@ -2,6 +2,7 @@ package com.example.radify_be.persistence.impl;
 
 import com.example.radify_be.domain.Artist;
 import com.example.radify_be.domain.Song;
+import com.example.radify_be.persistence.DBRepositories.ArtistDBRepository;
 import com.example.radify_be.persistence.DBRepositories.PlaylistDBRepository;
 import com.example.radify_be.persistence.DBRepositories.SongDBRepository;
 import com.example.radify_be.persistence.SongRepo;
@@ -20,7 +21,9 @@ import java.util.stream.Collectors;
 public class SongRepoImpl implements SongRepo {
 
     private final SongDBRepository repo;
-    private final PlaylistDBRepository playlistRepo;
+
+    private final ArtistRepoImpl artistRepo;
+
 
     private Song songConverter(SongEntity song){
         List<Integer> artists = song.getArtists().stream().map(ArtistEntity::getId).collect(Collectors.toList());
@@ -34,7 +37,10 @@ public class SongRepoImpl implements SongRepo {
     }
 
     private SongEntity songEntityConverter(Song song){
-        return SongEntity.builder().id(song.getId()).build();
+
+        List<ArtistEntity> artists = artistRepo.getArtists(song.getArtists().stream().map(Artist::getId).collect(Collectors.toList()));
+
+        return SongEntity.builder().title(song.getTitle()).genre(song.getGenre()).seconds(song.getSeconds()).artists(artists).build();
     }
 
 

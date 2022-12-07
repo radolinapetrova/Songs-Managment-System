@@ -2,6 +2,7 @@ package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.SongService;
 import com.example.radify_be.controller.requests.CreateSongRequest;
+import com.example.radify_be.domain.Artist;
 import com.example.radify_be.domain.Song;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -19,8 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SongController {
 
-    @Autowired
-    SongService service;
+    @Autowired SongService service;
 
     @PostMapping
     public ResponseEntity addSong(@RequestBody CreateSongRequest request) {
@@ -52,8 +53,8 @@ public class SongController {
     }
 
     private Song convert(CreateSongRequest request) {
+        List<Artist> artists = request.getArtistsIds().stream().map(id -> Artist.builder().id(id).build()).collect(Collectors.toList());
 
-        //return Song.builder().title(request.getTitle()).genre(request.getGenre()).seconds(request.getSeconds()).artists(request.getArtistsIds()).build();
-        return null;
+        return Song.builder().title(request.getTitle()).genre(request.getGenre()).seconds(request.getSeconds()).artists(artists).build();
     }
 }
