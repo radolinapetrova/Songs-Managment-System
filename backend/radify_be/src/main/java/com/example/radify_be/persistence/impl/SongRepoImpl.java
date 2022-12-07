@@ -63,7 +63,7 @@ public class SongRepoImpl implements SongRepo {
     public List<Song> findAllByPlaylists(Integer id){
             List<Song> songs = new ArrayList<>();
 
-        PlaylistEntity playlist = playlistRepo.findById(id).orElse(null);
+//        PlaylistEntity playlist = playlistRepo.findById(id).orElse(null);
 
             for(SongEntity s: repo.findAllByPlaylistsId(id)){
                 songs.add(songConverter(s));
