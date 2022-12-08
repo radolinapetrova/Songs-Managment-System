@@ -24,4 +24,6 @@ public interface PlaylistRepo {
 
     void update(Integer playlistId, Integer songId);
 
+    void delete(Integer playlistId, Integer songId);
+
 }

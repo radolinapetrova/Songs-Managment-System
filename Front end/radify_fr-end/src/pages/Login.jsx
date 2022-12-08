@@ -33,7 +33,7 @@ export default function LogIn() {
                 params.append('password', data.password);
 
 
-                var res = await axios.post('http://localhost:8080/login',params
+                var res = await axios.post('http://localhost:8080/login', params
                 )
                 sessionStorage.setItem("token", res.data.access_token)
 
@@ -48,11 +48,6 @@ export default function LogIn() {
             } finally {
 
             }
-
-
-
-
-
         }
     ;
 

@@ -1,6 +1,7 @@
 package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.UserService;
+import com.example.radify_be.controller.requests.UpdateUserRequest;
 import com.example.radify_be.domain.Account;
 import com.example.radify_be.domain.Role;
 import com.example.radify_be.domain.User;
@@ -43,6 +44,16 @@ public class UserController {
         catch(Exception e){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity getUser(@PathVariable(value = "id")Integer id){
+        return ResponseEntity.ok().body(userService.getById(id));
+    }
+
+    @PutMapping
+    public ResponseEntity updateUser(@RequestBody UpdateUserRequest request){
+        return null;
     }
 
 

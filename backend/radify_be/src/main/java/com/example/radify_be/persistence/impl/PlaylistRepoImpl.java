@@ -130,6 +130,8 @@ public class PlaylistRepoImpl implements PlaylistRepo {
         return playlists;
     }
 
+
+    
     @Override
     public void update(Integer playlistId, Integer songId){
 
@@ -138,13 +140,32 @@ public class PlaylistRepoImpl implements PlaylistRepo {
         SongEntity song = songRepo.findById(songId).orElse(null);
 
         List<SongEntity> songs = playlist.getSongs();
-        songs.add(song);
 
-        playlist.setSongs(songs);
+        if(!songs.stream().anyMatch(s -> s.getId().equals(songId))){
+            songs.add(song);
+
+            playlist.setSongs(songs);
+
+            repo.save(playlist);
+        }
+    }
 
 
-        repo.save(playlist);
+    @Override
+    public void delete(Integer playlistId, Integer songId){
+        PlaylistEntity playlist = repo.findById(playlistId).orElse(null);
 
+        SongEntity song = songRepo.findById(songId).orElse(null);
+
+        List<SongEntity> songs = playlist.getSongs();
+
+        if(songs.stream().anyMatch(s -> s.getId().equals(songId))){
+            songs.remove(song);
+
+            playlist.setSongs(songs);
+
+            repo.save(playlist);
+        }
     }
 
 }

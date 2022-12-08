@@ -49,6 +49,11 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
+    public void removeSongsFromPlaylist(Integer playlist, Integer song){
+        repo.delete(playlist, song);
+    }
+
+    @Override
     public Playlist findById(Integer id){
         return repo.findById(id);
     }

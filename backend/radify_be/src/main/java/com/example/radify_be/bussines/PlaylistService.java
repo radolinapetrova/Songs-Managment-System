@@ -19,4 +19,6 @@ public interface PlaylistService {
     List<Playlist> getAllByTitle(Integer id, String title);
 
     List<Playlist> getAllPublicAndUser(Integer id);
+
+    void removeSongsFromPlaylist(Integer playlist, Integer song);
 }

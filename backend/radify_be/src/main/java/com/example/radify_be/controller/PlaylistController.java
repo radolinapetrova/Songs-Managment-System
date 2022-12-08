@@ -25,18 +25,15 @@ import java.util.List;
 public class PlaylistController {
 
     private final PlaylistService service;
-    private final UserService userService;
 
 
     @PostMapping
     public ResponseEntity createNewPlaylist(@RequestBody CreatePlaylistRequest request) {
         //Creating a list for the users and adding the creator as the first one
-        List<User> users = new ArrayList<>();
-        //Retrieving all the information about the creator
-        //User user = userService.getById(request.getUserId());
+
         User user = User.builder().id(request.getUserId()).build();
-        users.add(user);
-        service.createPlaylist(convert(request, user, users));
+
+        service.createPlaylist(convert(request, user, List.of(user)));
         return ResponseEntity.status(HttpStatus.CREATED).body("Playlist created");
     }
 
@@ -44,6 +41,13 @@ public class PlaylistController {
     @PutMapping
     public ResponseEntity addSongToPlaylist(@RequestBody AddSongRequest request) {
         service.addSongToPlaylist(request.getPlaylistId(), request.getSongId());
+        return ResponseEntity.ok().body("Idk if it worked tbh");
+    }
+
+
+    @DeleteMapping
+    public ResponseEntity deleteSongsFromPlaylist(@RequestBody AddSongRequest request){
+        service.removeSongsFromPlaylist(request.getPlaylistId(), request.getSongId());
         return ResponseEntity.ok().body("Idk if it worked tbh");
     }
 
