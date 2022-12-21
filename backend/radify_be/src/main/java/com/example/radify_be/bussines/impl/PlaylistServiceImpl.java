@@ -1,12 +1,12 @@
 package com.example.radify_be.bussines.impl;
 
 import com.example.radify_be.bussines.PlaylistService;
+import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
 import com.example.radify_be.domain.Playlist;
-import com.example.radify_be.domain.Song;
 import com.example.radify_be.persistence.PlaylistRepo;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -19,7 +19,6 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public Playlist getPlaylistSongs(Integer playlistId) {
-
         return null;
     }
 
@@ -35,37 +34,37 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void deletePlaylist(Integer id) throws Exception {
+    public void deletePlaylist(Integer id) throws RuntimeException {
+        //if a user that didn't create the playlist tries to delete it
+       // if (!pl.getCreator().getId().equals(id)) {
+            //throw new UnauthorizedAction();
+       // }
         repo.deleteById(id);
-        if (repo.existsById(id)){
-            throw new Exception("Unsuccessful deletion of playlist");
-        }
     }
 
     @Override
-    public void addSongToPlaylist(Integer playlist, Integer song){
-        //playlist.getSongs().add(song);
+    public void addSongToPlaylist(Integer playlist, Integer song) throws RuntimeException {
         repo.update(playlist, song);
     }
 
     @Override
-    public void removeSongsFromPlaylist(Integer playlist, Integer song){
+    public void removeSongsFromPlaylist(Integer playlist, Integer song) {
         repo.delete(playlist, song);
     }
 
     @Override
-    public Playlist findById(Integer id){
+    public Playlist findById(Integer id) {
         return repo.findById(id);
     }
 
 
     @Override
-    public List<Playlist> getAllPublicAndUser(Integer id){
+    public List<Playlist> getAllPublicAndUser(Integer id) {
         return repo.getAllPublicAndUser(id);
     }
 
     @Override
-    public List<Playlist> getAllByTitle(Integer id, String title){
+    public List<Playlist> getAllByTitle(Integer id, String title) {
         return repo.findByTitle(title, id);
     }
 }

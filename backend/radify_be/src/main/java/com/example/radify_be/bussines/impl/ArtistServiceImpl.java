@@ -6,6 +6,8 @@ import com.example.radify_be.persistence.ArtistRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ArtistServiceImpl implements ArtistService {
@@ -25,5 +27,10 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public void deleteById(Integer id) {
         repo.deleteById(id);
+    }
+
+    @Override
+    public List<Artist> getAll() {
+        return repo.getAll();
     }
 }

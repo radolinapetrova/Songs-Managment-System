@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -35,17 +36,19 @@ public class ArtistRepoImpl implements ArtistRepo {
         return repo.findByIdIn(ids);
     }
 
+    @Override
+    public List<Artist> getAll(){
+        return repo.findAll().stream().map(a -> artistConverter(a)).collect(Collectors.toList());
+    }
+
 
 
     private Artist artistConverter(ArtistEntity artist){
 
-//        List<Song> songs = new ArrayList<>();
-//        for(SongEntity s : artist.getSongs()){
-//            songs.add(Song.builder().id(s.getId()).build());
-//        }
-
-        return Artist.builder().id(artist.getId()).fName(artist.getFName()).lName(artist.getLName())
-                //.songs(songs)
+        return Artist.builder()
+                .id(artist.getId())
+                .fName(artist.getFName())
+                .lName(artist.getLName())
                 .build();
     }
 

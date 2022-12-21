@@ -1,7 +1,6 @@
 package com.example.radify_be.bussines;
 
 import com.example.radify_be.domain.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {
 

@@ -49,4 +49,9 @@ public class SongEntity {
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     private List<PlaylistEntity> playlists;
 
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "song")
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    List<ListenersEntity> listeners;
+
 }

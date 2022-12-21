@@ -23,7 +23,7 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity createUser(@RequestBody CreateUserRequest userRequest) {
+    public ResponseEntity<String> createUser(@RequestBody CreateUserRequest userRequest) {
         try {
             userService.register(converter(userRequest));
             return ResponseEntity.ok().body("Account created");

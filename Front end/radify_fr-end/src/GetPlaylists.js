@@ -2,10 +2,12 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './Playlist.css';
 import jwt from 'jwt-decode';
+import {useSearchParams, Link} from "react-router-dom";
 
 export default function GetPlaylists() {
     const [playlists, setPlaylists] = useState([]);
     const [songs, setSongs] = useState([]);
+    const [playlistId, setPlaylistId] = useState("");
     var decode = require('jwt-claims');
 
 
@@ -13,6 +15,11 @@ export default function GetPlaylists() {
     useEffect(() => {
         getPlaylists();
     }, [])
+
+    //
+    // useEffect(() => {
+    //     getSongs()
+    // }, [playlistId])
 
     const getPlaylists = () => {
 
@@ -28,8 +35,8 @@ export default function GetPlaylists() {
             }).catch(err => console.log(err))
     }
 
-    const getSongs = (id) => {
-        axios.get(`http://localhost:8080/songs/playlist/${id}`)
+    const getSongs = () => {
+        axios.get(`http://localhost:8080/songs/playlist/${playlistId}`)
             .then(res => {
                 setSongs(res.data)
                 console.log(res.data)
@@ -47,22 +54,23 @@ export default function GetPlaylists() {
             <div className="userPl">
                 <p>Playlists</p>
                 {playlistsArr.map((playlist) => (
-                    <div key={playlist.id} className="playlist">
-                        <div className="playlist" onClick={function (e) {
-                            getSongs(playlist.id);
-                        }}>Title: {playlist.title}</div>
+                    <div key={playlist.id} className="playlist" >
+
+                        <Link to={"/playlist/" + playlist.id} className="playlist" >Title: {playlist.title}</Link>
                     </div>
                 ))}
             </div>
         )
     }
+
+
     const mapSongs = () => {
         return (
             <div className="userPl">
                 <p>Playlist songs</p>
                 {songs.map((playlist) => (
                     <div key={playlist.id} className="playlist">
-                        <div className="playlist">Title: {playlist.title}</div>
+                        <div className="playlist" >Title: {playlist.title}</div>
                     </div>
                 ))}
             </div>

@@ -14,5 +14,7 @@ public interface ArtistRepo {
     Artist findById(Integer id);
 
     List<ArtistEntity> getArtists(List<Integer> ids);
+
+    List<Artist> getAll();
 }
 

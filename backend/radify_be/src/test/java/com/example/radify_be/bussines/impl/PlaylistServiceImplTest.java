@@ -1,5 +1,6 @@
 package com.example.radify_be.bussines.impl;
 
+import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.PlaylistRepo;
@@ -27,7 +28,7 @@ class PlaylistServiceImplTest {
     private PlaylistServiceImpl service;
 
 
-    private List<Playlist> getMockData(){
+    private List<Playlist> getMockData() {
         User user = User.builder().id(1).fName("Radka").build();
 
         Playlist playlist = Playlist.builder().id(1).title("Da go duhat bednite").isPublic(false).creator(user).users(List.of(user)).dateOfCreation(new Date()).build();
@@ -40,18 +41,14 @@ class PlaylistServiceImplTest {
     void getPlaylistSongs() {
 
 
-
     }
 
 
-    //Happy flow
+    //HAPPY FLOW
     @Test
     void createPlaylist_shouldReturnTheNewPlaylist() {
-        User user = User.builder().id(1).fName("Radka").build();
-        List<User> users = List.of(user);
 
-        Playlist playlist = Playlist.builder().id(1).title("Da go duhat bednite").isPublic(true).creator(user).users(users).dateOfCreation(new Date()).build();
-
+        Playlist playlist = getMockData().get(0);
 
         when(playlistRepoMock.save(any(Playlist.class)))
                 .thenReturn(playlist);
@@ -66,7 +63,7 @@ class PlaylistServiceImplTest {
 
     //HAPPY FLOW
     @Test
-    void getUserPlaylist_shouldReturnUsersPlaylists(){
+    void getUserPlaylist_shouldReturnUsersPlaylists() {
 
         List<Playlist> playlists = getMockData();
 
@@ -83,7 +80,7 @@ class PlaylistServiceImplTest {
 
     //UNHAPPY FLOW
     @Test
-    void getUserPlaylist_shouldReturnNull_When(){
+    void getUserPlaylist_shouldReturnNull_WhenUserDoesntHavePlaylists() {
 
         when(playlistRepoMock.getAllByUserId(2))
                 .thenReturn(null);
@@ -95,51 +92,47 @@ class PlaylistServiceImplTest {
         verify(playlistRepoMock).getAllByUserId(2);
     }
 
-    //HAPPY FLOW
-    @Test
-    void getUserPlaylists_shouldReturnThePlaylists() {
-
-        List<Playlist> playlists = getMockData();
-
-        when(playlistRepoMock.getAllByUserId(1))
-                .thenReturn(playlists);
-
-        List<Playlist> results = service.getUserPlaylists(1);
-
-        assertEquals(playlists, results);
-
-        verify(playlistRepoMock).getAllByUserId(1);
-
-    }
 
     //HAPPY FLOW
     @Test
-    void deletePlaylist() throws Exception {
-
+    void deletePlaylist_shouldReturnNull_whenCheckedForExistById() {
 
         List<Playlist> playlists = getMockData();
 
-        when(playlistRepoMock.findById(1))
+
+        when(playlistRepoMock.findById(any(Integer.class)))
                 .thenReturn(null);
 
-//        try{
-            service.deletePlaylist(1);
-//        }
-//        catch (Exception e){
-//
-//        }
+        //playlist with id 1
+        service.deletePlaylist(1);
+
 
         Playlist result = service.findById(1);
+
+        assertEquals(null, result);
+
+        assertDoesNotThrow(() -> service.deletePlaylist(1));
     }
+
+
 
     //UNHAPPY FLOW
     @Test
-    void deletePlaylist_shouldThrowException() {
+    void deletePlaylist_shouldThrowException() throws UnauthorizedAction {
+        List<Playlist> playlists = getMockData();
+        when(playlistRepoMock.existsById(any(Integer.class)))
+                .thenReturn(true);
 
+         assertThrows(UnauthorizedAction.class, () -> service.deletePlaylist(2));
+
+         //Boolean result = service.ex
+
+        //verify(playlistRepoMock).deleteById(1);
     }
 
     @Test
     void addSongToPlaylist() {
+
     }
 
 
@@ -164,7 +157,7 @@ class PlaylistServiceImplTest {
 
     //UNHAPPY FLOW
     @Test
-    void findById_shouldReturnNull() {
+    void findById_shouldReturnNull_whenThePlaylistDoesntExist() {
 
         when(playlistRepoMock.findById(any(Integer.class)))
                 .thenReturn(null);
@@ -178,8 +171,10 @@ class PlaylistServiceImplTest {
 
 
 
+    //HAPPY FLOW
     @Test
-    void getAllPublicAndUser() {
+    void getAllPublicAndUser_shouldReturnAllPublicAndUsersPlaylist() {
+        //Get mock playlists, that include one public and one private user playlist
         List<Playlist> playlists = getMockData();
 
         when(playlistRepoMock.getAllPublicAndUser(1))
@@ -190,5 +185,22 @@ class PlaylistServiceImplTest {
         assertEquals(results, playlists);
 
         verify(playlistRepoMock).getAllPublicAndUser(1);
+    }
+
+    //KINDA UNHAPPY FLOW
+    @Test
+    void getAllPublicAndUser_shouldReturnAllPublicPlaylists_whenUserIsNotAuthorized() {
+        //Get the only public playlist in the collection
+        List<Playlist> playlists = List.of(getMockData().get(1));
+
+        //Pass zero as the user id, because they are not authorized
+        when(playlistRepoMock.getAllPublicAndUser(0))
+                .thenReturn(playlists);
+
+        List<Playlist> results = service.getAllPublicAndUser(0);
+
+        assertEquals(results, playlists);
+
+        verify(playlistRepoMock).getAllPublicAndUser(0);
     }
 }
