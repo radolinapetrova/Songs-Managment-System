@@ -105,29 +105,7 @@ class PlaylistControllerTest {
 
 
 
-    @Test
-    public void testDeletePlaylist() throws Exception {
-        doNothing().when(playlistService).deletePlaylist((Integer) any());
-
-        DeletePlaylistRequest deletePlaylistRequest = new DeletePlaylistRequest();
-        LocalDateTime atStartOfDayResult = LocalDate.of(1970, 1, 1).atStartOfDay();
-        Date dateOfCreation = Date.from(atStartOfDayResult.atZone(ZoneId.of("UTC")).toInstant());
-        User creator = new User();
-        ArrayList<User> users = new ArrayList<>();
-        deletePlaylistRequest.setPlaylist(new Playlist(1, "Dr", true, dateOfCreation, creator, users, new ArrayList<>()));
-        deletePlaylistRequest.setUserId(123);
-        String content = (new ObjectMapper()).writeValueAsString(deletePlaylistRequest);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/playlists/id")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content);
-        MockMvcBuilders.standaloneSetup(playlistController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
-                .andExpect(MockMvcResultMatchers.content().string("Successful deletion of the playlist"));
-    }
-
+  
 
 
     @Test
