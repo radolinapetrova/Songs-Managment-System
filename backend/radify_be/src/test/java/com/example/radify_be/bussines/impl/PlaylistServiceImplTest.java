@@ -89,8 +89,6 @@ class PlaylistServiceImplTest {
         verify(playlistRepo).getAllByUserId((Integer) org.mockito.Mockito.any());
     }
 
-
-    //HAPPY FLOW
     @org.junit.Test
     void getUserPlaylist_shouldReturnUsersPlaylists() {
 
@@ -159,11 +157,6 @@ class PlaylistServiceImplTest {
     }
 
 
-
-
-
-
-    //HAPPY FLOW
     @Test
     void findById_shouldReturnThePlaylist() {
         User user = User.builder().id(1).fName("Radka").build();
