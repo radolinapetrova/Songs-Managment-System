@@ -1,6 +1,5 @@
 package com.example.radify_be.persistence.DBRepositories;
 
-import com.example.radify_be.persistence.entities.PlaylistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -2,12 +2,9 @@ package com.example.radify_be.persistence.impl;
 
 import com.example.radify_be.domain.Artist;
 import com.example.radify_be.domain.Song;
-import com.example.radify_be.persistence.DBRepositories.ArtistDBRepository;
-import com.example.radify_be.persistence.DBRepositories.PlaylistDBRepository;
 import com.example.radify_be.persistence.DBRepositories.SongDBRepository;
 import com.example.radify_be.persistence.SongRepo;
 import com.example.radify_be.persistence.entities.ArtistEntity;
-import com.example.radify_be.persistence.entities.PlaylistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -26,6 +23,10 @@ public class SongRepoImpl implements SongRepo {
 
 
     private Song songConverter(SongEntity song){
+
+        if(song.equals(null)){
+            return null;
+        }
         List<Integer> artists = song.getArtists().stream().map(ArtistEntity::getId).collect(Collectors.toList());
         return Song.builder()
                 .id(song.getId())

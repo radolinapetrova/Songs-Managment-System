@@ -1,12 +1,10 @@
 package com.example.radify_be.bussines.impl;
 
 import com.example.radify_be.bussines.PlaylistService;
-import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.persistence.PlaylistRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -35,10 +33,6 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public void deletePlaylist(Integer id) throws RuntimeException {
-        //if a user that didn't create the playlist tries to delete it
-       // if (!pl.getCreator().getId().equals(id)) {
-            //throw new UnauthorizedAction();
-       // }
         repo.deleteById(id);
     }
 

@@ -1,11 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {redirect, useParams, useNavigate} from "react-router-dom";
+import {useParams, useNavigate, Link} from "react-router-dom";
 import axios from 'axios';
 import "./Playlist.css";
+import decode from "jwt-claims";
 
 
 export default function PlaylistInfo() {
 
+    let decode = require('jwt-claims');
+    const token = window.sessionStorage.getItem('token');
+    let claims = decode(token);
 
     let {id} = useParams();
     const [playlist, setPlaylist] = useState({
@@ -20,7 +24,7 @@ export default function PlaylistInfo() {
 
     useEffect(() => {
         getPlaylist()
-         getPlaylistSongs()
+        getPlaylistSongs()
     }, [])
 
 
@@ -42,12 +46,10 @@ export default function PlaylistInfo() {
             }).catch(err => console.log(err))
 
 
-
-
     }
 
 
-    function getPlaylistSongs(){
+    function getPlaylistSongs() {
         axios.get(`http://localhost:8080/songs/playlist/${id}`)
             .then(res => {
                 setPlaylist(prevState => ({
@@ -60,18 +62,14 @@ export default function PlaylistInfo() {
     }
 
 
-
-
-
-
     const mapSongs = () => {
         console.log(playlist)
         return (
             <div className="songs">
                 <p>Playlist songs</p>
-                {playlist.songs.map((playlist) => (
-                    <div key={playlist.id} className="playlist">
-                        <p className="singlePlaylist">Title: {playlist.title}</p>
+                {playlist.songs.map((song) => (
+                    <div key={song.id} className="playlist">
+                        <Link to={"/song/" + song.id} className="singlePlaylist">{song.title}</Link>
                     </div>
                 ))}
             </div>
@@ -81,7 +79,7 @@ export default function PlaylistInfo() {
     function getPlaylistInfo() {
         return (
             <>
-                <p>Playlist info</p>
+                <p className="title">Playlist info</p>
 
                 <p>Title: {playlist.title}</p>
                 <p>Date: {playlist.dateOfCreation.substring(0, 10)}</p>
@@ -91,22 +89,26 @@ export default function PlaylistInfo() {
     }
 
 
+    function deletePlaylist() {
+        if (claims.id == playlist.creator.id) {
+            axios.delete(`http://localhost:8080/playlists/${id}`)
+                .then(res => console.log(res.data))
 
-    function deletePlaylist(){
+            navigate('/');
+        } else {
+           alert("No..");
+        }
 
-        axios.delete(`http://localhost:8080/playlists/${id}`)
-            .then(res => console.log(res.data))
-
-        navigate('/');
     }
 
     return (
 
-        <>
+        <div className="info">
             {getPlaylistInfo()}
             {mapSongs()}
+
             <button onClick={deletePlaylist}>Delete playlist</button>
-        </>
+        </div>
     )
 
 }

@@ -1,7 +1,5 @@
 package com.example.radify_be.persistence.impl;
 
-
-import com.example.radify_be.domain.Song;
 import com.example.radify_be.persistence.DBRepositories.ListenersDBRepository;
 import com.example.radify_be.persistence.DBRepositories.SongDBRepository;
 import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
@@ -10,7 +8,6 @@ import com.example.radify_be.persistence.entities.ListenersEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import com.example.radify_be.persistence.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 
 import java.text.DateFormat;

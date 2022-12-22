@@ -1,14 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './Playlist.css';
-import jwt from 'jwt-decode';
-import Playlist from "./Playlist";
-import {useSearchParams, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 export default function GetPlaylists() {
     const [playlists, setPlaylists] = useState([]);
-    const [songs, setSongs] = useState([]);
-    var decode = require('jwt-claims');
+    let decode = require('jwt-claims');
 
 
 
@@ -26,34 +23,12 @@ export default function GetPlaylists() {
 
 
         if(claims.roles == "USER"){
+            console.log("yassss")
             axios.get(`http://localhost:8080/playlists/user/${claims.id}`)
                 .then(res => {
                     setPlaylists(res.data)
                 }).catch(err => console.log(err))
         }
-
-
-
-    }
-
-    const getSongs = (id) => {
-        axios.get(`http://localhost:8080/songs/playlist/${id}`)
-            .then(res => {
-                setSongs(res.data)
-                console.log(res.data)
-                mapSongs()
-            }).catch(err => console.log(err))
-
-
-
-    }
-
-    function get(id){
-        console.log("here")
-        console.log(id)
-        return (
-            <Playlist id = {id}/>
-        )
     }
 
     let playlistsArr = Array.from(playlists);
@@ -61,22 +36,10 @@ export default function GetPlaylists() {
     const mapPlaylists = () => {
         return (
             <div className="userPl">
-                <p>Playlists</p>
+                <p className="title">Playlists</p>
                 {playlistsArr.map((playlist) => (
                     <div key={playlist.id} className="playlist">
-                        <Link to={"/playlist/" + playlist.id} className="singlePlaylist" >Title: {playlist.title}</Link>
-                    </div>
-                ))}
-            </div>
-        )
-    }
-    const mapSongs = () => {
-        return (
-            <div className="userPl">
-                <p>Playlist songs</p>
-                {songs.map((playlist) => (
-                    <div key={playlist.id} className="playlist">
-                        <div className="playlist">Title: {playlist.title}</div>
+                        <Link to={"/playlist/" + playlist.id} className="singlePlaylist" >{playlist.title}</Link>
                     </div>
                 ))}
             </div>

@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -33,7 +34,7 @@ public class PlaylistRepoImpl implements PlaylistRepo {
 
     private PlaylistEntity playlistEntityConverter(Playlist playlist) {
 
-       return PlaylistEntity.builder()
+        return PlaylistEntity.builder()
                 .id(playlist.getId())
                 .title(playlist.getTitle())
                 .isPublic(playlist.isPublic())
@@ -76,7 +77,7 @@ public class PlaylistRepoImpl implements PlaylistRepo {
         List<UserEntity> users = List.of(userRepo.findById(entity.getCreator().getId()).orElse(null));
         entity.setUsers(users);
 
-         return playlistConverter(repo.save(entity));
+        return playlistConverter(repo.save(entity));
     }
 
     @Override
@@ -100,10 +101,10 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     }
 
     @Override
-    public List<Playlist> getAllPublicAndUser(Integer id){
+    public List<Playlist> getAllPublicAndUser(Integer id) {
         List<Playlist> playlists = new ArrayList<>();
 
-        for (PlaylistEntity pl : repo.getReferencesByUsersIdOrIsPublic(id, true)){
+        for (PlaylistEntity pl : repo.getReferencesByUsersIdOrIsPublic(id, true)) {
             playlists.add(playlistConverter(pl));
         }
 
@@ -113,25 +114,28 @@ public class PlaylistRepoImpl implements PlaylistRepo {
 
     @Override
     public Playlist findById(Integer id) {
-        return playlistConverter(repo.findById(id).orElse(null));
+        Optional<PlaylistEntity> playlist = repo.findById(id);
+        if(!playlist.equals(null)){
+            return playlistConverter(playlist.orElse(PlaylistEntity.builder().build()));
+        }
+        return null;
     }
 
 
     @Override
-    public List<Playlist> findByTitle(String title, Integer id){
+    public List<Playlist> findByTitle(String title, Integer id) {
 
         List<Playlist> playlists = new ArrayList<>();
 
-        for (PlaylistEntity pl : repo.getReferencesByTitleContainingOrUsersIdOrIsPublic(title, id, true)){
+        for (PlaylistEntity pl : repo.getReferencesByTitleContainingOrUsersIdOrIsPublic(title, id, true)) {
             playlists.add(playlistConverter(pl));
         }
         return playlists;
     }
 
 
-
     @Override
-    public void update(Integer playlistId, Integer songId){
+    public void update(Integer playlistId, Integer songId) {
 
         PlaylistEntity playlist = repo.findById(playlistId).orElse(null);
 
@@ -139,30 +143,34 @@ public class PlaylistRepoImpl implements PlaylistRepo {
 
         List<SongEntity> songs = playlist.getSongs();
 
-        if(!songs.stream().anyMatch(s -> s.getId().equals(songId))){
-            songs.add(song);
+        if(!playlist.equals(null)){
+            if (!songs.stream().anyMatch(s -> s.getId().equals(songId))) {
+                songs.add(song);
 
-            playlist.setSongs(songs);
+                playlist.setSongs(songs);
 
-            repo.save(playlist);
+                repo.save(playlist);
+            }
         }
     }
 
 
     @Override
-    public void delete(Integer playlistId, Integer songId){
+    public void delete(Integer playlistId, Integer songId) {
         PlaylistEntity playlist = repo.findById(playlistId).orElse(null);
 
         SongEntity song = songRepo.findById(songId).orElse(null);
 
         List<SongEntity> songs = playlist.getSongs();
 
-        if(songs.stream().anyMatch(s -> s.getId().equals(songId))){
-            songs.remove(song);
+        if(!playlist.equals(null)){
+            if (songs.stream().anyMatch(s -> s.getId().equals(songId))) {
+                songs.remove(song);
 
-            playlist.setSongs(songs);
+                playlist.setSongs(songs);
 
-            repo.save(playlist);
+                repo.save(playlist);
+            }
         }
     }
 

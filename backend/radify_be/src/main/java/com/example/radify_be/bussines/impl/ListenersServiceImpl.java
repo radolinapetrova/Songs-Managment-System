@@ -5,9 +5,6 @@ import com.example.radify_be.persistence.ListenersRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ListenersServiceImpl implements ListenersService {

@@ -1,11 +1,12 @@
 .playlist{
-    background-color: #2B211E;
+    background-color: black;
     color: white;
-    width: 400px;
+    width: auto;
     height: 50px;
     text-align: center;
     margin: 20px;
     display: flex;
+    justify-content: center;
 }
 
 
@@ -17,7 +18,35 @@
 }
 
 .userPl{
-    max-width: 200px;
-    height: 600px;
+    min-width: 200px;
+    width: auto;
+    height: auto;
+    padding-bottom: 30px;
     margin-right: auto;
+    background-color: grey;
+    margin: 20px;
 }
+
+.userPl > title{
+    font-size: 30px;
+    font-family: Verdana;
+    font-weight: bold;
+}
+
+.singlePlaylist{
+    color: white;
+    text-decoration: none;
+    text-align: center;
+}
+
+
+.title{
+    font-size: 30px;
+}
+
+.info{
+    margin-left: 20px;
+}
+
+
+

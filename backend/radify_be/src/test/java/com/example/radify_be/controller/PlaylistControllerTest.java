@@ -31,7 +31,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doNothing;
 
 
 import static org.mockito.Mockito.when;
@@ -51,7 +50,7 @@ class PlaylistControllerTest {
     private MockMvc mockMvc;
 
     @org.junit.Test
-    public void testGetUserPlaylists() throws Exception {
+    public void testGetUserPlaylists_shouldReturnEmptyArray_whenUserIsInvalid() throws Exception {
         when(playlistService.getUserPlaylists((Integer) any())).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playlists/user/{id}", 1);
         MockMvcBuilders.standaloneSetup(playlistController)
@@ -76,8 +75,7 @@ class PlaylistControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.content()
                         .string(
-                                "[{\"id\":null,\"title\":null,\"dateOfCreation\":null,\"creator\":null,\"users\":null,\"songs\":null,\"public"
-                                        + "\":false}]"));
+                                "[{\"id\":1,\"title\":\"Dr\",\"dateOfCreation\":0,\"creator\":{\"id\":1,\"account\":null,\"role\":null,\"fname\":null,\"lname\":null},\"users\":[],\"songs\":[],\"public\":true}]"));
     }
 
 
@@ -99,7 +97,7 @@ class PlaylistControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.content()
                         .string(
-                                "[{\"id\":1,\"title\":\"Dr\",\"dateOfCreation\":0,\"creator\":{\"id\":1,\"account\":null,\"role\":null,\"lname\":null,\"fname\":null},\"users\":[],\"songs\":[],\"public\":true}]"));
+                                "[{\"id\":1,\"title\":\"Dr\",\"dateOfCreation\":0,\"creator\":{\"id\":1,\"account\":null,\"role\":null,\"fname\":null,\"lname\":null},\"users\":[],\"songs\":[],\"public\":true}]"));
     }
 
 
@@ -165,7 +163,7 @@ class PlaylistControllerTest {
 
 
     @Test
-    public void testAddSongToPlaylist() throws Exception {
+    public void testAddSongToPlaylist_shoulReturnConfirmationMessage() throws Exception {
       AddSongRequest addSongRequest = new AddSongRequest();
       addSongRequest.setPlaylistId(123);
       addSongRequest.setSongId(123);
@@ -183,7 +181,7 @@ class PlaylistControllerTest {
 
 
     @Test
-    public void testCreateNewPlaylist() throws Exception {
+    public void testCreateNewPlaylist_shouldReturnConfirmationMessage_whenPlaylistIsCreated() throws Exception {
       CreatePlaylistRequest createPlaylistRequest = new CreatePlaylistRequest();
       createPlaylistRequest.setPublic(true);
       createPlaylistRequest.setTitle("Dr");
@@ -202,7 +200,7 @@ class PlaylistControllerTest {
 
 
     @Test
-    public void testGetAllPlaylists() throws Exception {
+    public void testGetAllPlaylists_shouldReturnOkStatus() throws Exception {
       when(playlistService.getAllPublicAndUser((Integer) any())).thenReturn(new ArrayList<>());
       MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playlists/all/{userId}", 123);
       MockMvcBuilders.standaloneSetup(playlistController)
@@ -213,7 +211,7 @@ class PlaylistControllerTest {
 
 
     @org.junit.Test
-    public void testGetAllPlaylists2() throws Exception {
+    public void testGetAllPlaylists_shouldReturnNull_whenUserIsInvalid() throws Exception {
       ArrayList<Playlist> playlistList = new ArrayList<>();
       playlistList.add(new Playlist());
       when(playlistService.getAllPublicAndUser((Integer) any())).thenReturn(playlistList);
@@ -231,7 +229,7 @@ class PlaylistControllerTest {
 
 
     @org.junit.Test
-    public void testGetAllPlaylists3() throws Exception {
+    public void testGetAllPlaylists_shoulReturnAllPlaylists() throws Exception {
       ArrayList<Playlist> playlistList = new ArrayList<>();
       LocalDateTime atStartOfDayResult = LocalDate.of(1970, 1, 1).atStartOfDay();
       Date dateOfCreation = Date.from(atStartOfDayResult.atZone(ZoneId.of("UTC")).toInstant());
@@ -253,7 +251,7 @@ class PlaylistControllerTest {
 
 
     @org.junit.Test
-    public void testGetPlaylistById() throws Exception {
+    public void testGetPlaylistById_shouldReturnNull_whenUserIsInvalid() throws Exception {
       when(playlistService.findById((Integer) any())).thenReturn(new Playlist());
       MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playlists/{id}", 1);
       MockMvcBuilders.standaloneSetup(playlistController)
@@ -269,7 +267,7 @@ class PlaylistControllerTest {
 
 
     @org.junit.Test
-    public void testGetPlaylistById3() throws Exception {
+    public void testGetPlaylistById_shouldReturnThePlaylist() throws Exception {
       LocalDateTime atStartOfDayResult = LocalDate.of(1970, 1, 1).atStartOfDay();
       Date dateOfCreation = Date.from(atStartOfDayResult.atZone(ZoneId.of("UTC")).toInstant());
       User creator = new User();

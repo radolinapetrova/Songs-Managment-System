@@ -1,7 +1,23 @@
 .playlists{
-
+display: flex;
 }
+
+.userPl{
+    width: 600px;
+}
+
 
 .createPlaylist{
 
+    margin-left: 50px;
+    margin-top: 35px;
+    background-color: grey;
+    height: 200px;
+    padding: 20px;
+}
+
+
+.userPl .title{
+    color: black;
+    font-size: 30px;
 }

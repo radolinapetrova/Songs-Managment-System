@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from "react";
 import Register from "../Register";
 import "../Account.css";
-import Login from "./Login"
-import {useNavigate} from 'react-router-dom';
+import Login from "./Login";
 
 export default function AuthPage() {
 
@@ -10,22 +9,25 @@ export default function AuthPage() {
 
 
     useEffect(() => {
-        if (window.sessionStorage.getItem('token')){
+        if (window.sessionStorage.getItem('token')) {
             setIsAuth(true)
         }
     })
 
-    function logout(){
+    function logout() {
         sessionStorage.clear()
         setIsAuth(false)
     }
 
 
-
-    if(isAuth){
-       return <button onClick={logout}>Logout</button>
-    }
-    else{
+    if (isAuth) {
+        return (
+            <>
+                {/*<Account/>*/}
+                <button onClick={logout}>Logout</button>
+            </>
+        )
+    } else {
         return (
             <div className="authForm">
                 <div><Login/></div>
@@ -33,8 +35,6 @@ export default function AuthPage() {
             </div>
         )
     }
-
-
 
 
 }

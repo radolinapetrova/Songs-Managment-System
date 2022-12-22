@@ -6,7 +6,6 @@ import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.UserRepo;
 
 import com.example.radify_be.security.CustomUser;
-import com.example.radify_be.security.PasswordEncoderConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

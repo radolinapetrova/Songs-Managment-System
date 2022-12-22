@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import jwt from 'jwt-decode';
+import './Playlist.css';
 import {Link} from "react-router-dom";
 
 
@@ -14,7 +14,7 @@ export default function GetAllPlaylists () {
 
 
     useEffect(() => {
-        if (window.sessionStorage.getItem('token')){
+        if (token){
 
             axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
             const claims = decode(token);
@@ -38,12 +38,20 @@ export default function GetAllPlaylists () {
     }
 
     const mapPlaylists = () => {
+
+        if (!playlists.length > 0){
+            return (
+                <div>
+                    No playlists!
+                </div>
+            )
+        }
         return (
-            <div className="playlists">
-                <p>Playlists</p>
+            <div className="userPl">
+                <p className="title">Playlists</p>
                 {playlists.map((song) => (
-                    <div key={song.id} className="songs">
-                        <Link to={"/playlist/" + song.id} className="playlist" >Title: {song.title}</Link>
+                    <div key={song.id} className="playlist">
+                        <Link to={"/playlist/" + song.id} className="singlePlaylist" >{song.title}</Link>
                     </div>
                 ))}
             </div>
