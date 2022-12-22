@@ -32,13 +32,11 @@ public class PlaylistRepoImpl implements PlaylistRepo {
 
 
     private PlaylistEntity playlistEntityConverter(Playlist playlist) {
-        //List<Integer> songs = playlist.getSongs().stream().map(Song::getId).collect(Collectors.toList());
 
        return PlaylistEntity.builder()
                 .id(playlist.getId())
                 .title(playlist.getTitle())
                 .isPublic(playlist.isPublic())
-                //.songs(songs.stream().map(id -> SongEntity.builder().id(id).build()).collect(Collectors.toList()))
                 .creator(UserEntity.builder().id(playlist.getCreator().getId()).build())
                 .dateOfCreation(convert(playlist.getDateOfCreation())).build();
     }

@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {redirect, useParams, useNavigate} from "react-router-dom";
 import axios from 'axios';
-import "./Playlist.css"
-import decode from "jwt-claims";
+import "./Playlist.css";
+
 
 export default function PlaylistInfo() {
+
 
     let {id} = useParams();
     const [playlist, setPlaylist] = useState({
@@ -13,6 +14,8 @@ export default function PlaylistInfo() {
         songs: [],
         creator: ""
     });
+
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -88,9 +91,13 @@ export default function PlaylistInfo() {
     }
 
 
+
     function deletePlaylist(){
+
         axios.delete(`http://localhost:8080/playlists/${id}`)
             .then(res => console.log(res.data))
+
+        navigate('/');
     }
 
     return (

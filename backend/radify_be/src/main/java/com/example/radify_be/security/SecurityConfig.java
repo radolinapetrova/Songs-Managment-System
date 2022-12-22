@@ -33,7 +33,7 @@ public class SecurityConfig {
         http.cors().and();
         http.csrf().disable(); //NOSONAR
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/login", "/users", "/songs/**", "/playlists/title/**", "/playlists/all/0").permitAll();
+        http.authorizeRequests().antMatchers("/login", "/users", "/songs/**", "/playlists/title/**", "/playlists/all/0", "/listeners/**").permitAll();
         http.authorizeRequests().antMatchers("/artists/**").hasAuthority("ADMIN");
         http.authorizeRequests().antMatchers("/playlists/**").hasAuthority("USER").anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration)));

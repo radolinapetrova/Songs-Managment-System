@@ -16,6 +16,5 @@ public interface SongRepo {
 
     List<Song> findAllByPlaylists(Integer id);
 
-
-
+    Song getById(Integer id);
 }

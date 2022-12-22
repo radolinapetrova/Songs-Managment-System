@@ -13,4 +13,6 @@ public interface SongService {
 
     List<Song> getAllPlaylistSongs(Integer id);
 
+    Song getById(Integer id);
+
 }

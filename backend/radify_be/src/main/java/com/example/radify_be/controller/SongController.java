@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SongController {
 
-    @Autowired SongService service;
+    private final SongService service;
 
     @PostMapping
     public ResponseEntity addSong(@RequestBody CreateSongRequest request) {
@@ -35,7 +35,7 @@ public class SongController {
     }
 
 
-    @GetMapping("{title}")
+    @GetMapping("title/{title}")
     public ResponseEntity getByTitle(@PathVariable(value = "title") String title) {
         return ResponseEntity.ok(service.getSongsByTitle(title));
     }
@@ -50,6 +50,17 @@ public class SongController {
             }
             return ResponseEntity.ok().body(songs);
 
+    }
+
+
+    @GetMapping("{id}")
+    public ResponseEntity getSongById(@PathVariable (value = "id") Integer id){
+        Song song = service.getById(id);
+        if (song != null){
+
+            return ResponseEntity.ok().body(song);
+        }
+        return ResponseEntity.ok().body("Nooooo");
     }
 
     private Song convert(CreateSongRequest request) {

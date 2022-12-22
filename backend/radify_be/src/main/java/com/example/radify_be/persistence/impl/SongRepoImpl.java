@@ -43,6 +43,11 @@ public class SongRepoImpl implements SongRepo {
         return SongEntity.builder().title(song.getTitle()).genre(song.getGenre()).seconds(song.getSeconds()).artists(artists).build();
     }
 
+    @Override
+    public  Song getById(Integer id) {
+        return songConverter(repo.findById(id).orElse(null));
+    }
+
 
     @Override
     public Song save(Song song){

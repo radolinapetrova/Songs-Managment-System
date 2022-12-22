@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import jwt from 'jwt-decode';
+import {Link} from "react-router-dom";
 
 var decode = require('jwt-claims');
 
@@ -22,7 +23,7 @@ export default function GetAllSongs() {
                 <p>Songs</p>
                 {songs.map((song) => (
                     <div key={song.id} className="playlist">
-                        <div className="song">Title: {song.title}</div>
+                        <Link to={"/song/" + song.id} className="song   " >Title: {song.title}</Link>
                     </div>
                 ))}
             </div>

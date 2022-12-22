@@ -27,7 +27,7 @@ public class ListenersEntity {
     private SongEntity song;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="user_id")
     private UserEntity listener;
 
     private String date;

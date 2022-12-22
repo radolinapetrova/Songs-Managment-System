@@ -5,6 +5,7 @@ import AuthPage from "./AuthPage";
 import Layout from "./Layout";
 import SongsPage from "./SongsPage";
 import PlaylistInfo from "../PlaylistInfo"
+import SongInfo from "../SongInfo";
 
 
 import {BrowserRouter, Route, Routes} from "react-router-dom";
@@ -21,6 +22,7 @@ export default function Navigation() {
                     <Route path="login" element={<AuthPage/>}/>
                     <Route path="songs" element={<SongsPage/>}/>
                     <Route path="playlist/:id" element={<PlaylistInfo/>}/>
+                    <Route path="song/:id" element={<SongInfo/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>

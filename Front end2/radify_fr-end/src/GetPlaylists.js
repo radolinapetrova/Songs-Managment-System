@@ -64,7 +64,7 @@ export default function GetPlaylists() {
                 <p>Playlists</p>
                 {playlistsArr.map((playlist) => (
                     <div key={playlist.id} className="playlist">
-                        <Link to={"/playlist/" + playlist.id} className="playlist" >Title: {playlist.title}</Link>
+                        <Link to={"/playlist/" + playlist.id} className="singlePlaylist" >Title: {playlist.title}</Link>
                     </div>
                 ))}
             </div>

@@ -37,4 +37,11 @@ public class SongServiceImpl implements SongService {
 
         return repository.findAll();
     }
+
+
+    @Override
+    public Song getById(Integer id){
+        return repository.getById(id);
+    }
+
 }
