@@ -39,7 +39,7 @@ public class PlaylistEntity {
     @Column(nullable = false)
     private String dateOfCreation;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @JoinTable(name="user_playlists",
     joinColumns = @JoinColumn(
@@ -52,7 +52,7 @@ public class PlaylistEntity {
     ))
     private List<UserEntity> users;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @JoinTable(name="playlist_songs",
             joinColumns = @JoinColumn(

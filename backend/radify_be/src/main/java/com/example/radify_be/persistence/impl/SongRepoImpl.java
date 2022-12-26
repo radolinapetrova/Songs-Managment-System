@@ -22,9 +22,9 @@ public class SongRepoImpl implements SongRepo {
     private final ArtistRepoImpl artistRepo;
 
 
-    private Song songConverter(SongEntity song){
+    public static Song songConverter(SongEntity song){
 
-        if(song.equals(null)){
+        if(song == null){
             return null;
         }
         List<Integer> artists = song.getArtists().stream().map(ArtistEntity::getId).collect(Collectors.toList());
@@ -74,8 +74,6 @@ public class SongRepoImpl implements SongRepo {
     @Override
     public List<Song> findAllByPlaylists(Integer id){
             List<Song> songs = new ArrayList<>();
-
-//        PlaylistEntity playlist = playlistRepo.findById(id).orElse(null);
 
             for(SongEntity s: repo.findAllByPlaylistsId(id)){
                 songs.add(songConverter(s));

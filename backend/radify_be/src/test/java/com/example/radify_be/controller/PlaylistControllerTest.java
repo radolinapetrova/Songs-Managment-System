@@ -1,7 +1,7 @@
 package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.PlaylistService;
-import com.example.radify_be.controller.requests.AddSongRequest;
+import com.example.radify_be.controller.requests.EditPlaylistSongsRequest;
 import com.example.radify_be.controller.requests.CreatePlaylistRequest;
 import com.example.radify_be.controller.requests.GetPlaylistsByTitleAndUser;
 import com.example.radify_be.domain.Playlist;
@@ -163,8 +163,8 @@ class PlaylistControllerTest {
 
 
     @Test
-    public void testAddSongToPlaylist_shoulReturnConfirmationMessage() throws Exception {
-      AddSongRequest addSongRequest = new AddSongRequest();
+    public void testAddSongToPlaylist_shouldReturnConfirmationMessage() throws Exception {
+      EditPlaylistSongsRequest addSongRequest = new EditPlaylistSongsRequest();
       addSongRequest.setPlaylistId(123);
       addSongRequest.setSongId(123);
       String content = (new ObjectMapper()).writeValueAsString(addSongRequest);

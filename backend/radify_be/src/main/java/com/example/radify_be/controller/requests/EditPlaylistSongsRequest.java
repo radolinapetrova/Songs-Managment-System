@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddSongRequest {
+public class EditPlaylistSongsRequest {
     Integer playlistId;
     Integer songId;
+    Integer userId;
 }

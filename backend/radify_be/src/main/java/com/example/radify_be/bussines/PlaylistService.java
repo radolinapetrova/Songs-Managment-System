@@ -1,6 +1,8 @@
 package com.example.radify_be.bussines;
 
 import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
+import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
+import com.example.radify_be.controller.requests.DeletePlaylistRequest;
 import com.example.radify_be.domain.Playlist;
 
 import java.util.List;
@@ -11,8 +13,8 @@ public interface PlaylistService {
     Playlist getPlaylistSongs(Integer playlistId);
 
     List<Playlist> getUserPlaylists(Integer id);
-    void deletePlaylist(Integer id) throws UnauthorizedAction;
-    void addSongToPlaylist(Integer playlist, Integer song) ;
+    void deletePlaylist(Integer playlist, Integer user) throws UnauthorizedAction, UnsuccessfulAction;
+    Playlist addSongToPlaylist(Integer playlist, Integer song, Integer user) throws UnauthorizedAction, UnsuccessfulAction;
 
     Playlist findById(Integer id);
 
@@ -20,5 +22,5 @@ public interface PlaylistService {
 
     List<Playlist> getAllPublicAndUser(Integer id);
 
-    void removeSongsFromPlaylist(Integer playlist, Integer song) ;
+    Playlist removeSongsFromPlaylist(Integer playlist, Integer song, Integer user) throws UnauthorizedAction, UnsuccessfulAction;
 }

@@ -1,11 +1,11 @@
 import React from "react";
-import Songs from '../Songs'
+import Filter from '../Filter'
 
 
 export default function Homepage() {
     return (
         <div>
-           <Songs/>
+           <Filter/>
         </div>
     )
 

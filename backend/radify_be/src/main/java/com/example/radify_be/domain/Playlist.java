@@ -1,5 +1,6 @@
 package com.example.radify_be.domain;
 
+import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +21,18 @@ public class Playlist {
     private User creator;
     private List<User> users;
     private List<Song> songs;
+
+    public void setTitle(String title) {
+        if (title == null){
+            throw new InvalidInputException();
+        }
+        this.title = title;
+    }
+
+    public void setCreator(User creator){
+        if(creator == null){
+            throw new InvalidInputException();
+        }
+        this.creator = creator;
+    }
 }

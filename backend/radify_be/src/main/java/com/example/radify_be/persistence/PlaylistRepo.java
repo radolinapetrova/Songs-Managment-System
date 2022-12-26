@@ -1,7 +1,6 @@
 package com.example.radify_be.persistence;
 
 import com.example.radify_be.domain.Playlist;
-import com.example.radify_be.domain.Song;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,9 +21,9 @@ public interface PlaylistRepo {
 
     List<Playlist> findByTitle(String title, Integer id);
 
-    void update(Integer playlistId, Integer songId);
+    Playlist update(Integer playlistId, Integer songId);
 
-    void delete(Integer playlistId, Integer songId);
+    Playlist deleteSong(Integer playlistId, Integer songId);
 
 
 

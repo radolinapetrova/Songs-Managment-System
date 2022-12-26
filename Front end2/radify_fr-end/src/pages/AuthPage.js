@@ -1,29 +1,24 @@
-import React, {useState, useEffect} from "react";
-import Register from "../Register";
-import "../Account.css";
-import Login from "./Login";
+import Register from "../auth/Register";
+import "../css/Account.css";
+import Login from "../auth/Login";
+import {useAuth} from "../auth/AuthProvider";
+import Account from "../Account";
 
 export default function AuthPage() {
 
-    const [isAuth, setIsAuth] = useState(false)
+    const {auth, setAuth} = useAuth();
 
-
-    useEffect(() => {
-        if (window.sessionStorage.getItem('token')) {
-            setIsAuth(true)
-        }
-    })
 
     function logout() {
         sessionStorage.clear()
-        setIsAuth(false)
+        setAuth(false)
     }
 
 
-    if (isAuth) {
+    if (auth) {
         return (
             <>
-                {/*<Account/>*/}
+                <Account/>
                 <button onClick={logout}>Logout</button>
             </>
         )

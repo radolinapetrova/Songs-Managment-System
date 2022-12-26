@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,10 +24,10 @@ public class SongController {
 
     @PostMapping
     public ResponseEntity addSong(@RequestBody CreateSongRequest request) {
-        return ResponseEntity.ok(service.createSong(convert(request)));
+        return ResponseEntity.ok().body(service.createSong(convert(request)));
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<List<Song>> getAllSongs(){
         List<Song> songs = service.getAllSongs();
         return ResponseEntity.ok().body(songs);

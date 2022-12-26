@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
-import {Form} from "react-router-dom";
-import "./Account.css"
+import "../css/Account.css"
 
 export default function Register() {
 
@@ -27,9 +26,6 @@ export default function Register() {
         finally {
 
         }
-
-
-
     };
 
 

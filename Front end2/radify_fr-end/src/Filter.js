@@ -2,33 +2,32 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import GetAllSongs from './GetAllSongs'
 import GetAllPlaylists from './GetAllPlaylists'
+import {Link, useNavigate} from "react-router-dom";
+import {useAuth} from "./auth/AuthProvider";
 
-export default function Songs() {
+export default function Filter() {
 
-    var decode = require('jwt-claims');
+    const {auth, claims} = useAuth();
 
     const [input, setInput] = useState("")
     const [songs, setSongs] = useState([])
     const [playlists, setPlaylists] = useState([])
-    const token = window.sessionStorage.getItem('token')
+    const [song, setSong] = useState(null)
 
     const [data, setData] = useState({
         title: input,
         user: ""
     })
-    let claims;
+
     let id = 0
 
     useEffect(() => {
-
-        if (token) {
-            claims = decode(token)
+        if (auth) {
             id = claims.id
         }
     }, [])
 
     useEffect(() => {
-        console.log("change")
         setData(prevState => ({
             ...prevState, title: input
         }))
@@ -37,18 +36,18 @@ export default function Songs() {
 
     const filter = () => {
         console.log(songs)
-        if (songs.length == 0 && playlists.length == 0) {
+        if (songs.length === 0 && playlists.length === 0) {
             return (<div>
                 <GetAllSongs/>
                 <GetAllPlaylists/>
             </div>)
-        } else if (songs.length == 0) {
+        } else if (songs.length === 0) {
             return (<div className="userPl">
                 {mapPlaylists()}
                 <p>No songs match the input</p>
             </div>)
 
-        } else if (playlists.length == 0) {
+        } else if (playlists.length === 0) {
             return (<div className="userPl">
                 {mapSongs()}
                 <p>No playlists match the input</p>
@@ -60,10 +59,7 @@ export default function Songs() {
             </div>)
 
         }
-
-
     }
-
 
     function getResults(e) {
         e.preventDefault()
@@ -87,10 +83,26 @@ export default function Songs() {
     const mapSongs = () => {
         return (<>
             <p className="title">Songs</p>
-            {songs.map((playlist) => (<div key={playlist.id} className="playlist">
-                <div className="idk">{playlist.title}</div>
+            {songs.map((song) => (<div key={song.id} className="playlist">
+                <Link to={"/song/" + song.id} className="singlePlaylist">{song.title}</Link>
+                <button value={song.id} onClick={getSong}>+</button>
             </div>))}
         </>)
+    }
+
+
+    let navigate = useNavigate()
+
+    function saveSong(id) {
+        sessionStorage.removeItem('song');
+        sessionStorage.setItem('song', id)
+    }
+
+    const getSong = async (e) => {
+        e.preventDefault()
+        setSong(e.target.value);
+        saveSong(e.target.value)
+        navigate("/playlists")
     }
 
 

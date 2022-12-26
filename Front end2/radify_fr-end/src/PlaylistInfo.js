@@ -1,17 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate, Link} from "react-router-dom";
 import axios from 'axios';
-import "./Playlist.css";
-import decode from "jwt-claims";
-
+import "./css/Playlist.css";
+import {useAuth} from "./auth/AuthProvider";
 
 export default function PlaylistInfo() {
 
-    let decode = require('jwt-claims');
-    const token = window.sessionStorage.getItem('token');
-    let claims = decode(token);
-
+    const {claims} = useAuth();
     let {id} = useParams();
+
+
+    const data = ({
+        userId: null,
+        playlistId: id,
+        songId: null
+    })
+
     const [playlist, setPlaylist] = useState({
         title: "",
         dateOfCreation: "",
@@ -48,8 +52,7 @@ export default function PlaylistInfo() {
 
     }
 
-
-    function getPlaylistSongs() {
+    function getSongs(){
         axios.get(`http://localhost:8080/songs/playlist/${id}`)
             .then(res => {
                 setPlaylist(prevState => ({
@@ -61,6 +64,28 @@ export default function PlaylistInfo() {
             }).catch(err => console.log(err))
     }
 
+    function getPlaylistSongs() {
+        if (sessionStorage.getItem('song')) {
+
+            data.songId = sessionStorage.getItem('song')
+            data.userId = claims.id
+            try{
+                axios.put("http://localhost:8080/playlists", data).then
+                (getSongs)
+                sessionStorage.removeItem('song')
+            }
+            catch(err){
+                if (err.response.status === 401){
+                    alert("why again????")
+                }
+            }
+
+        }
+        else{
+            getSongs()
+        }
+    }
+
 
     const mapSongs = () => {
         console.log(playlist)
@@ -70,12 +95,21 @@ export default function PlaylistInfo() {
                 {playlist.songs.map((song) => (
                     <div key={song.id} className="playlist">
                         <Link to={"/song/" + song.id} className="singlePlaylist">{song.title}</Link>
+                        <button value={song.id} onClick={deleteSong}>-</button>
                     </div>
                 ))}
             </div>
         )
     }
 
+    const deleteSong = async (e) => {
+        e.preventDefault()
+        data.songId = e.target.value
+        data.userId = claims.id
+        console.log(data)
+        axios.put('http://localhost:8080/playlists/remove', data)
+            .then(getSongs)
+    }
     function getPlaylistInfo() {
         return (
             <>
@@ -91,12 +125,12 @@ export default function PlaylistInfo() {
 
     function deletePlaylist() {
         if (claims.id == playlist.creator.id) {
-            axios.delete(`http://localhost:8080/playlists/${id}`)
+            axios.delete('http://localhost:8080/playlists', {data: {userId: claims.id, playlistId: id}})
                 .then(res => console.log(res.data))
 
-            navigate('/');
+            navigate('/playlists');
         } else {
-           alert("No..");
+            alert("No..");
         }
 
     }

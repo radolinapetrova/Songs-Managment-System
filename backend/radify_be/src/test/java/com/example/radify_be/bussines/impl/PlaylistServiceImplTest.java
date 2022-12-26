@@ -111,50 +111,50 @@ class PlaylistServiceImplTest {
     }
 
 
-    @org.junit.Test
-    void deletePlaylist_shouldReturnNull_whenCheckedForExistById() {
-        when(playlistRepoMock.findById(any(Integer.class)))
-                .thenReturn(null);
-        //playlist with id 1
-        service.deletePlaylist(1);
-        Playlist result = service.findById(1);
-        assertEquals(null, result);
-        assertDoesNotThrow(() -> service.deletePlaylist(1));
-    }
+//    @org.junit.Test
+//    void deletePlaylist_shouldReturnNull_whenCheckedForExistById() {
+//        when(playlistRepoMock.findById(any(Integer.class)))
+//                .thenReturn(null);
+//        //playlist with id 1
+//        service.deletePlaylist(1);
+//        Playlist result = service.findById(1);
+//        assertEquals(null, result);
+//        assertDoesNotThrow(() -> service.deletePlaylist(1));
+//    }
+//
+
+//    @org.junit.Test
+//    public void testDeletePlaylist_shoulSuccessfullyDeletePlaylist() throws RuntimeException {
+//        doNothing().when(playlistRepo).deleteById((Integer) org.mockito.Mockito.any());
+//        playlistServiceImpl.deletePlaylist(1);
+//        verify(playlistRepo).deleteById((Integer) org.mockito.Mockito.any());
+//    }
 
 
-    @org.junit.Test
-    public void testDeletePlaylist_shoulSuccessfullyDeletePlaylist() throws RuntimeException {
-        doNothing().when(playlistRepo).deleteById((Integer) org.mockito.Mockito.any());
-        playlistServiceImpl.deletePlaylist(1);
-        verify(playlistRepo).deleteById((Integer) org.mockito.Mockito.any());
-    }
 
+//    @org.junit.Test
+//    public void testAddSongToPlaylist_shoulAddSongsToThePlaylist() throws RuntimeException {
+//        doNothing().when(playlistRepo).update((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
+//        playlistServiceImpl.addSongToPlaylist(2, 2);
+//        verify(playlistRepo).update((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
+//    }
 
-
-    @org.junit.Test
-    public void testAddSongToPlaylist_shoulAddSongsToThePlaylist() throws RuntimeException {
-        doNothing().when(playlistRepo).update((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
-        playlistServiceImpl.addSongToPlaylist(2, 2);
-        verify(playlistRepo).update((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
-    }
-
-
-    @org.junit.Test
-    public void testAddSongToPlaylist_shouldThrowException_whenDataIsInvalid() throws RuntimeException {
-        doThrow(new RuntimeException()).when(playlistRepo)
-                .update((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
-        assertThrows(RuntimeException.class, () -> playlistServiceImpl.addSongToPlaylist(2, 2));
-        verify(playlistRepo).update((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
-    }
-
-
-    @org.junit.Test
-    public void testRemoveSongsFromPlaylist_shoulSuccessfullyDeleteTheSongs() {
-        doNothing().when(playlistRepo).delete((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
-        playlistServiceImpl.removeSongsFromPlaylist(1, 1);
-        verify(playlistRepo).delete((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
-    }
+//
+//    @org.junit.Test
+//    public void testAddSongToPlaylist_shouldThrowException_whenDataIsInvalid() throws RuntimeException {
+//        doThrow(new RuntimeException()).when(playlistRepo)
+//                .update((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
+//        assertThrows(RuntimeException.class, () -> playlistServiceImpl.addSongToPlaylist(2, 2));
+//        verify(playlistRepo).update((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
+//    }
+//
+//
+//    @org.junit.Test
+//    public void testRemoveSongsFromPlaylist_shoulSuccessfullyDeleteTheSongs() {
+//        doNothing().when(playlistRepo).delete((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
+//        playlistServiceImpl.removeSongsFromPlaylist(1, 1);
+//        verify(playlistRepo).delete((Integer) org.mockito.Mockito.any(), (Integer) org.mockito.Mockito.any());
+//    }
 
 
     @Test

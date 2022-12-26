@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import axios from 'axios';
-import "./Playlist.css"
+import "./css/Playlist.css"
 import decode from "jwt-claims";
 
 export default function SongInfo() {

@@ -1,6 +1,7 @@
 package com.example.radify_be.persistence;
 
 import com.example.radify_be.domain.Song;
+import com.example.radify_be.persistence.entities.SongEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,8 @@ public interface SongRepo {
     List<Song> findAll();
 
     List<Song> findAllByPlaylists(Integer id);
+
+
 
     Song getById(Integer id);
 }

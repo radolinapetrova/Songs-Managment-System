@@ -1,16 +1,18 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Homepage from "./Homepage";
 import Playlists from "./Playlists";
 import AuthPage from "./AuthPage";
 import Layout from "./Layout";
-import SongsPage from "./SongsPage";
+import Songs from "./Songs";
 import PlaylistInfo from "../PlaylistInfo"
 import SongInfo from "../SongInfo";
 
 
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 
+
 export default function Navigation() {
+
 
 
     return (
@@ -20,7 +22,7 @@ export default function Navigation() {
                     <Route index element={<Homepage/>}/>
                     <Route path="playlists" element={<Playlists/>}/>
                     <Route path="login" element={<AuthPage/>}/>
-                    <Route path="songs" element={<SongsPage/>}/>
+                    <Route path="songs" element={<Songs/>}/>
                     <Route path="playlist/:id" element={<PlaylistInfo/>}/>
                     <Route path="song/:id" element={<SongInfo/>}/>
                 </Route>

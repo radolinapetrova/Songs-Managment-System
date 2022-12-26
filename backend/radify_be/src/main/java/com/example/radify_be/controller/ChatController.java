@@ -1,27 +1,28 @@
-package com.example.radify_be.controller;
-
-
-
-import com.example.radify_be.domain.Message;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.stereotype.Controller;
-
-@Controller
-public class ChatController {
-
-    @MessageMapping("/chat.send")
-    @SendTo("/topic/public")
-    public Message sendMessage(@Payload final Message message){
-        return message;
-    }
-
-    @MessageMapping("/chat.newUser")
-    @SendTo("/topic/public")
-    public Message newUser(@Payload final Message message, SimpMessageHeaderAccessor headerAccessor){
-        headerAccessor.getSessionAttributes().put("username", message.getSender());
-        return message;
-    }
-}
+//package com.example.radify_be.controller;
+//
+//
+//import com.example.radify_be.domain.ChatMessage;
+//import lombok.AllArgsConstructor;
+//import org.springframework.messaging.handler.annotation.MessageMapping;
+//import org.springframework.messaging.handler.annotation.Payload;
+//import org.springframework.messaging.handler.annotation.SendTo;
+//import org.springframework.messaging.simp.SimpMessagingTemplate;
+//import org.springframework.stereotype.Controller;
+//
+//@Controller
+//@AllArgsConstructor
+//public class ChatController {
+////    private SimpMessagingTemplate template;
+////
+////    @MessageMapping("/message")
+////    @SendTo("/chatroom/public")
+////    public ChatMessage register(@Payload ChatMessage chatMessage) {
+////        return chatMessage;
+////    }
+////
+////    @MessageMapping("/private-message")
+////    public ChatMessage registerPrivateMessage(@Payload ChatMessage chatMessage) {
+////        template.convertAndSendToUser(chatMessage.getSender(), "/private", chatMessage);
+////        return chatMessage;
+////    }
+//}

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import './Playlist.css';
+import './css/Playlist.css';
 import {Link} from "react-router-dom";
 
-export default function GetPlaylists() {
+export default function GetUserPlaylists() {
     const [playlists, setPlaylists] = useState([]);
     let decode = require('jwt-claims');
 

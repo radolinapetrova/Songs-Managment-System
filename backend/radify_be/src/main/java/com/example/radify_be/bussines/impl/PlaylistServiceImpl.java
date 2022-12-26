@@ -1,6 +1,8 @@
 package com.example.radify_be.bussines.impl;
 
 import com.example.radify_be.bussines.PlaylistService;
+import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
+import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.persistence.PlaylistRepo;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +23,19 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public Playlist createPlaylist(Playlist playlist) {
-        return repo.save(playlist);
+    public Playlist createPlaylist(Playlist playlist) throws UnsuccessfulAction {
+
+        Playlist pl = null;
+        try {
+            pl = repo.save(playlist);
+        }
+        catch(IllegalArgumentException e){
+            throw new UnsuccessfulAction();
+        }
+        if (pl == null) {
+            throw new UnsuccessfulAction();
+        }
+        return pl;
     }
 
 
@@ -32,18 +45,45 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void deletePlaylist(Integer id) throws RuntimeException {
-        repo.deleteById(id);
+    public void deletePlaylist(Integer playlist, Integer user) throws UnauthorizedAction, UnsuccessfulAction {
+        if (repo.findById(playlist).getCreator().getId() != user) {
+            throw new UnauthorizedAction();
+        }
+        repo.deleteById(playlist);
+
+        //check if the playlist was successfully deleted
+        if (repo.existsById(playlist)) {
+            throw new UnsuccessfulAction();
+        }
     }
 
     @Override
-    public void addSongToPlaylist(Integer playlist, Integer song) throws RuntimeException {
-        repo.update(playlist, song);
+    public Playlist addSongToPlaylist(Integer playlist, Integer song, Integer user) throws UnauthorizedAction, UnsuccessfulAction {
+
+        if (repo.findById(playlist).getCreator().getId() != user) {
+            throw new UnauthorizedAction();
+        }
+        Playlist result = repo.update(playlist, song);
+
+        //check if the song was successfully added
+        if (!result.getSongs().stream().anyMatch(s -> s.getId() == song)) {
+            throw new UnsuccessfulAction();
+        }
+        return result;
     }
 
     @Override
-    public void removeSongsFromPlaylist(Integer playlist, Integer song) {
-        repo.delete(playlist, song);
+    public Playlist removeSongsFromPlaylist(Integer playlist, Integer song, Integer user) throws UnauthorizedAction, UnsuccessfulAction {
+        if (repo.findById(playlist).getCreator().getId() != user) {
+            throw new UnauthorizedAction();
+        }
+        Playlist result = repo.deleteSong(playlist, song);
+
+        //check if the song was successfully deleted
+        if (result.getSongs().stream().anyMatch(s -> s.getId() == song)) {
+            throw new UnsuccessfulAction();
+        }
+        return result;
     }
 
     @Override

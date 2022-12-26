@@ -1,50 +1,42 @@
-import React, {useState, useEffect, createContext} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import axios from "axios";
-import {Form} from "react-router-dom";
-import "../Account.css"
+import "../css/Account.css"
 import {useNavigate} from 'react-router-dom';
+import {useAuth} from "./AuthProvider";
 
+export default function LogIn() {
 
-
-
-export default function LogIn () {
-
-
-    var qs = require("qs");
+    const {setAuth, setClaims} = useAuth();
+    let decode = require('jwt-claims');
 
     const [data, setData] = useState({
         username: "",
         password: ""
     })
 
-    useEffect(() => {
-
-    }, [])
-
 
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const HandleSubmit = async (e) => {
 
             e.preventDefault();
 
             try {
-                console.log(data.username);
-                console.log(data.password);
                 const params = new URLSearchParams();
                 params.append('username', data.username);
                 params.append('password', data.password);
 
 
-                var res = await axios.post('http://localhost:8080/login', params
-                )
+                let res = await axios.post('http://localhost:8080/login', params)
                 sessionStorage.setItem("token", res.data.access_token)
-
-                navigate('/');
+                const token = res.data.access_token;
+                setClaims(decode(token));
+                setAuth(true);
+                navigate('/')
 
             } catch (err) {
                 if (err.response.status === 403) {
-                    alert("Unfortunately, it seems that, sadly, you have, regretably, entered wrong credentials :(");
+                    alert("Unfortunately, it seems that, sadly, you have, regrettably, entered wrong credentials :(");
                 } else {
                     alert("Idk what went wrong");
                 }
@@ -73,7 +65,7 @@ export default function LogIn () {
                                required/>
                     </div>
 
-                    <button onClick={handleSubmit}>Log in</button>
+                    <button onClick={HandleSubmit}>Log in</button>
 
                 </form>
 
@@ -84,3 +76,4 @@ export default function LogIn () {
         </div>
     );
 }
+

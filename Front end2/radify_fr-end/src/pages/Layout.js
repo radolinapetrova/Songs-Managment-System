@@ -1,29 +1,12 @@
 import {Outlet, Link} from "react-router-dom";
-import React, {useEffect, useState} from "react";
-import '../index.css';
-import {useNavigate} from 'react-router-dom';
-import decode from "jwt-claims";
+import '../css/index.css';
+import {useAuth} from "../auth/AuthProvider";
 
 const Layout = () => {
 
-    var decode = require('jwt-claims');
+    const {auth, claims} = useAuth();
 
-
-
-    const [isAuth, setIsAuth] = useState(false)
-
-    useEffect(() => {
-        if (window.sessionStorage.getItem('token')) {
-            setIsAuth(true)
-        } else {
-            setIsAuth(false)
-        }
-    })
-
-    if (isAuth) {
-        const token = window.sessionStorage.getItem('token');
-        const claims = decode(token);
-        console.log(claims.roles)
+    if (auth) {
         if(claims.roles[0] == ['USER']){
             return (
                 <div className="main">
@@ -54,15 +37,12 @@ const Layout = () => {
             <div className="main">
                 <nav>
                     <Link className="link" to="/">Home</Link>
-                    {/*<Link className="link" to="/playlists">Playlists</Link>*/}
                     <Link className="link" to="/login">Log in</Link>
                 </nav>
                 <Outlet/>
             </div>
         )
     }
-
-
 };
 
 export default Layout;

@@ -1,7 +1,10 @@
 package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.PlaylistService;
-import com.example.radify_be.controller.requests.AddSongRequest;
+import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
+import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
+import com.example.radify_be.controller.requests.DeletePlaylistRequest;
+import com.example.radify_be.controller.requests.EditPlaylistSongsRequest;
 import com.example.radify_be.controller.requests.GetPlaylistsByTitleAndUser;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.domain.User;
@@ -24,27 +27,49 @@ public class PlaylistController {
 
 
     @PostMapping
-    public ResponseEntity<String> createNewPlaylist(@RequestBody CreatePlaylistRequest request) {
-        //Creating a list for the users and adding the creator as the first one
+    public ResponseEntity<Playlist> createNewPlaylist(@RequestBody CreatePlaylistRequest request) {
 
-        User user = User.builder().id(request.getUserId()).build();
-
-        service.createPlaylist(convert(request, user, List.of(user)));
-        return ResponseEntity.status(HttpStatus.CREATED).body("Playlist created");
+        Playlist pl = null;
+        try{
+            pl = service.createPlaylist(convert(request));
+        }
+        catch(UnauthorizedAction e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+        }
+        catch (UnsuccessfulAction ex){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(pl);
     }
 
 
     @PutMapping
-    public ResponseEntity<String> addSongToPlaylist(@RequestBody AddSongRequest request) {
-        service.addSongToPlaylist(request.getPlaylistId(), request.getSongId());
-        return ResponseEntity.ok().body("Idk if it worked tbh");
+    public ResponseEntity<Playlist> addSongToPlaylist(@RequestBody EditPlaylistSongsRequest request) {
+        Playlist pl = null;
+        try{
+            pl = service.addSongToPlaylist(request.getPlaylistId(), request.getSongId(), request.getUserId());
+        }
+        catch(UnauthorizedAction e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+        }
+        catch (UnsuccessfulAction ex){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+        }
+        return ResponseEntity.ok().body(pl);
     }
 
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteSongsFromPlaylist(@RequestBody AddSongRequest request){
-        service.removeSongsFromPlaylist(request.getPlaylistId(), request.getSongId());
-        return ResponseEntity.ok().body("Idk if it worked tbh");
+    @PutMapping("/remove")
+    public ResponseEntity<Playlist> deleteSongsFromPlaylist(@RequestBody EditPlaylistSongsRequest request){
+        Playlist pl = null;
+        try{pl = service.removeSongsFromPlaylist(request.getPlaylistId(), request.getSongId(), request.getUserId());}
+        catch(UnauthorizedAction e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+        }
+        catch (UnsuccessfulAction ex){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+        }
+        return ResponseEntity.ok().body(pl);
     }
 
 
@@ -64,16 +89,18 @@ public class PlaylistController {
         return ResponseEntity.ok().body(playlist);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deletePlaylist(@PathVariable(value = "id") Integer id) {
+    @DeleteMapping()
+    public ResponseEntity<String> deletePlaylist(@RequestBody DeletePlaylistRequest request) {
         try {
-            service.deletePlaylist(id);
+            service.deletePlaylist(request.getPlaylistId(), request.getUserId());
             return ResponseEntity.ok().body("Successful deletion of the playlist");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
     }
 
+
+    //Gets all the public playlist and all the playlist with the authenticated user as a creator
     @GetMapping("all/{userId}")
     public ResponseEntity<List<Playlist>> getAllPlaylists(@PathVariable(value = "userId") Integer userId){
         List<Playlist> playlists = service.getAllPublicAndUser(userId);
@@ -94,8 +121,14 @@ public class PlaylistController {
         return ResponseEntity.ok().body(playlists);
     }
 
-    private Playlist convert(CreatePlaylistRequest request, User user, List<User> users) {
-        return Playlist.builder().title(request.getTitle()).isPublic(request.isPublic()).dateOfCreation(new java.util.Date()).songs(new ArrayList<>()).creator(user).users(users).build();
+    private Playlist convert(CreatePlaylistRequest request) {
+
+        //Creating a list for the users and adding the creator as the first one
+        Playlist pl = Playlist.builder().isPublic(request.isPublic()).dateOfCreation(new java.util.Date()).songs(new ArrayList<>()).build();
+        pl.setTitle(request.getTitle());
+        pl.setCreator(User.builder().id(request.getUserId()).build());
+        pl.setUsers(List.of(pl.getCreator()));
+        return pl;
     }
 
 }

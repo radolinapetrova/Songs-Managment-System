@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import "./Playlist.css"
-
+import "./css/Playlist.css"
+import {useAuth} from "./auth/AuthProvider";
 export default function CreatePlaylist() {
 
-    var decode = require('jwt-claims');
+    const {claims} = useAuth();
 
     const [data, setData] = useState({
         title: "",
@@ -12,22 +12,22 @@ export default function CreatePlaylist() {
         userId: 0
     })
 
+    const [playlist, setPlaylist] = useState("");
 
+
+        useEffect(() => {
+
+            const token = window.sessionStorage.getItem('token');
+            axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
+
+            setData(prevState => ({...prevState, userId: claims.id}))
+        }, [])
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-
-        const token = window.sessionStorage.getItem('token');
-        const claims = decode(token);
-
-        axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
-
-        setData(prevState => ({...prevState, userId: claims.id}))
-
         console.log(data)
-        axios.post("http://localhost:8080/playlists", data).then(res => console.log(res.data))
+        axios.post("http://localhost:8080/playlists", data).then(res => setPlaylist(res.data.title))
     }
 
 
