@@ -21,7 +21,7 @@ public interface PlaylistRepo {
 
     List<Playlist> findByTitle(String title, Integer id);
 
-    Playlist update(Integer playlistId, Integer songId);
+    Playlist addSong(Integer playlistId, Integer songId);
 
     Playlist deleteSong(Integer playlistId, Integer songId);
 

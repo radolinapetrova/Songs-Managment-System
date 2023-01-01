@@ -2,9 +2,11 @@ package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.SongService;
 import com.example.radify_be.controller.requests.CreateSongRequest;
+import com.example.radify_be.controller.requests.DeleteSongRequest;
 import com.example.radify_be.domain.Artist;
 import com.example.radify_be.domain.Song;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/songs")
 @CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
+@Slf4j
 public class SongController {
 
     private final SongService service;
@@ -28,7 +31,7 @@ public class SongController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Song>> getAllSongs(){
+    public ResponseEntity<List<Song>> getAllSongs() {
         List<Song> songs = service.getAllSongs();
         return ResponseEntity.ok().body(songs);
     }
@@ -42,20 +45,30 @@ public class SongController {
 
     @GetMapping("playlist/{id}")
     public ResponseEntity getPlaylistSongs(@PathVariable(value = "id") Integer id) {
-            List<Song> songs = service.getAllPlaylistSongs(id);
+        List<Song> songs = service.getAllPlaylistSongs(id);
 
-            if (songs.size() == 0){
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(":(");
-            }
-            return ResponseEntity.ok().body(songs);
+        log.info("Size is {}", songs.size());
+        if (songs.size() == 0) {
 
+            return ResponseEntity.ok().body(new ArrayList<Song>());
+        }
+        return ResponseEntity.ok().body(songs);
+
+    }
+
+    @DeleteMapping()
+    public ResponseEntity deleteSong(@RequestBody DeleteSongRequest request){
+        log.info("Hereee");
+        service.deleteSong(request.songId, request.getUserId());
+
+        return ResponseEntity.ok().body("Noice");
     }
 
 
     @GetMapping("{id}")
-    public ResponseEntity getSongById(@PathVariable (value = "id") Integer id){
+    public ResponseEntity getSongById(@PathVariable(value = "id") Integer id) {
         Song song = service.getById(id);
-        if (song != null){
+        if (song != null) {
 
             return ResponseEntity.ok().body(song);
         }

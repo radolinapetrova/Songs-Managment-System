@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import "../css/Account.css"
 import {useNavigate} from 'react-router-dom';
@@ -65,7 +65,7 @@ export default function LogIn() {
                                required/>
                     </div>
 
-                    <button onClick={HandleSubmit}>Log in</button>
+                    <button onClick={HandleSubmit} className="button">Log in</button>
 
                 </form>
 

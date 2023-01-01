@@ -6,7 +6,7 @@ import Account from "../Account";
 
 export default function AuthPage() {
 
-    const {auth, setAuth} = useAuth();
+    const {auth, setAuth, claims} = useAuth();
 
 
     function logout() {
@@ -16,12 +16,22 @@ export default function AuthPage() {
 
 
     if (auth) {
-        return (
-            <>
-                <Account/>
-                <button onClick={logout}>Logout</button>
-            </>
-        )
+        if (claims.roles[0] === 'ADMIN') {
+            return (
+                <>
+                    <button onClick={logout}>Logout</button>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <Account/>
+                    <button onClick={logout}>Logout</button>
+                </>
+            )
+        }
+
+
     } else {
         return (
             <div className="authForm">

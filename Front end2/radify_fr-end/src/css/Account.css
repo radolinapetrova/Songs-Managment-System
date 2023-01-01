@@ -5,7 +5,7 @@
 }
 
 .input > label {
-    background-color: grey;
+    color: white;
     padding: 5px;
     border-radius: 2px;
     margin: 10px;
@@ -27,7 +27,7 @@ form > input{
     margin-right: 200px;
     text-align: center;
     padding: 20px;
-    background-color: #B1ACAC;
+    background-color: #151414;
     margin: 20px;
 }
 
@@ -40,7 +40,7 @@ form > input{
     padding: 20px;
     margin-top: 30px;
     margin-bottom: 30px;
-    background-color: #B1ACAC;
+    background-color: #151414;
 }
 
 .account{
@@ -49,4 +49,24 @@ form > input{
 
 .authForm{
     display: flex;
+    margin: auto;
+}
+
+.button{
+    color: white;
+
+}
+
+.message{
+    color: white;
+}
+
+.accountInfo{
+    color: white;
+    width: 200px;
+    margin: auto;
+    background-color:  #151414;
+    padding: 20px;
+    margin-top: 50px;
+    display: block;
 }

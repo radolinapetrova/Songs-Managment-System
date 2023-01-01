@@ -17,7 +17,9 @@ public interface SongRepo {
 
     List<Song> findAllByPlaylists(Integer id);
 
-
+    void deleteById(Integer id);
 
     Song getById(Integer id);
+
+    List<Song> getAllByIdIn(List<Integer> ids);
 }

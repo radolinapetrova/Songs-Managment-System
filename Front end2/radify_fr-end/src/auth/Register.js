@@ -14,6 +14,7 @@ export default function Register() {
     const [msg, setMsg] = useState("")
 
     const handleSubmit = (e) => {
+
         e.preventDefault();
         try{
             axios.post("http://localhost:8080/users", data).then(res => setMsg(res.data));
@@ -64,10 +65,10 @@ export default function Register() {
                                onChange={(e) => setData(prevState => ({...prevState, password: e.target.value}))}
                                required/>
                     </div>
-                    <button onClick={handleSubmit}>Register</button>
+                    <button className="button" onClick={handleSubmit}>Register</button>
 
 
-                    <p>{msg}</p>
+                    <p className="message">{msg}</p>
 
                 </form>
 

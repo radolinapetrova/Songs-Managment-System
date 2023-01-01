@@ -50,7 +50,7 @@ public class PlaylistRepoImpl implements PlaylistRepo {
 
     private Playlist playlistConverter(PlaylistEntity playlist) {
 
-        //playlist.getSongs().get(1).getTitle();
+
 
         List<Integer> songs = playlist.getSongs().stream().map(SongEntity::getId).collect(Collectors.toList());
 
@@ -150,7 +150,7 @@ public class PlaylistRepoImpl implements PlaylistRepo {
 
 
     @Override
-    public Playlist update(Integer playlistId, Integer songId) {
+    public Playlist addSong(Integer playlistId, Integer songId) {
 
         PlaylistEntity playlist = repo.findById(playlistId).orElse(null);
         PlaylistEntity result = null;

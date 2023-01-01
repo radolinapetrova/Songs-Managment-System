@@ -32,4 +32,9 @@ public class ListenersController {
         service.save(request.getSong(), request.getUser());
         return ResponseEntity.ok().body("Mi good job ig");
     }
+
+    @GetMapping("/top")
+    public ResponseEntity getTopSongs(){
+        return ResponseEntity.ok().body( service.getTopSongs());
+    }
 }

@@ -17,4 +17,6 @@ public interface SongDBRepository extends JpaRepository<SongEntity, Integer>/*, 
 
     List<SongEntity> findAllByPlaylistsId(Integer id);
 
+    List<SongEntity> getAllByIdIn(List<Integer> id);
+
 }

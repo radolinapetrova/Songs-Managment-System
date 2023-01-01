@@ -11,7 +11,7 @@ export default function CreateSong() {
         title: "",
         seconds: "",
         genre: "",
-        artistIds: []
+        artistsIds: []
     })
     const [selectedArtist, setSelectedArtist] = useState([])
     const [value, setValue] = useState("")
@@ -30,12 +30,10 @@ export default function CreateSong() {
 
     const addSong = async (e) => {
         e.preventDefault()
-         setSelectedArtist(prevArray => [...prevArray, value])
-        console.log(selectedArtist)
-         setSong(prevState => ({...prevState, artistsIds: selectedArtist}))
+        song.artistsIds.push(value)
         console.log(song)
         axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
-       // axios.post("http://localhost:8080/songs", song).then(res => console.log(res))
+        axios.post("http://localhost:8080/songs", song).then(res => console.log(res))
         setSong(prevState => ({...prevState, artistsIds: []}))
     }
 

@@ -1,18 +1,19 @@
 import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import {useAuth} from "./auth/AuthProvider";
+import "./css/Account.css"
 
 export default function Account() {
 
-    let decode = require('jwt-claims');
     const token = window.sessionStorage.getItem('token');
     const {claims} = useAuth();
 
     const [user, setUser] = useState({
-        fName: "",
-        lName: "",
+        first_name: "",
+        last_name: "",
         username: "",
-        email: ""
+        email: "",
+        id: ""
     })
 
     useEffect(() => {
@@ -25,22 +26,23 @@ export default function Account() {
         axios.get(`http://localhost:8080/users/${claims.id}`).then(res =>
             setUser(prevState => ({
                 ...prevState,
-                fName: res.data.fname,
-                lName: res.data.lname,
+                first_name: res.data.fname,
+                last_name: res.data.lname,
                 username: res.data.account.username,
-                email: res.data.account.email
+                email: res.data.account.email,
+                id: claims.id
             }))
         )
     }
 
     const updateAccount = async (e) => {
         e.preventDefault()
-       // axios.put(`http://localhost:8080/users/${claims.id}`)
+        axios.put(`http://localhost:8080/users/account`, user).then(res => console.log(res.data))
     }
 
 
     return (
-        <div>
+        <div className="accountInfo">
             {<form>
                 <label>Email:</label>
                 <input value={user.email}
@@ -51,14 +53,14 @@ export default function Account() {
                        onChange={(e) => setUser(prevState => ({...prevState, username: e.target.value}))}/>
 
                 <label>First name:</label>
-                <input value={user.fName}
-                       onChange={(e) => setUser(prevState => ({...prevState, fName: e.target.value}))}/>
+                <input value={user.first_name}
+                       onChange={(e) => setUser(prevState => ({...prevState, first_name: e.target.value}))}/>
 
                 <label>Last name:</label>
-                <input value={user.lName}
-                       onChange={(e) => setUser(prevState => ({...prevState, lName: e.target.value}))}/>
+                <input value={user.last_name}
+                       onChange={(e) => setUser(prevState => ({...prevState, last_name: e.target.value}))}/>
 
-                <button>Edit account information</button>
+                <button onClick={updateAccount}>Edit account information</button>
             </form>}
         </div>
     )

@@ -47,11 +47,11 @@ export default function GetAllPlaylists () {
             )
         }
         return (
-            <div className="userPl">
-                <p className="title">Playlists</p>
+            <div className="group">
+                <p className="category">Playlists</p>
                 {playlists.map((song) => (
-                    <div key={song.id} className="playlist">
-                        <Link to={"/playlist/" + song.id} className="singlePlaylist" >{song.title}</Link>
+                    <div key={song.id} className="single">
+                        <Link to={"/playlist/" + song.id} className="title" >{song.title}</Link>
                     </div>
                 ))}
             </div>

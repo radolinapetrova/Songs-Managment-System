@@ -1,47 +1,42 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import axios from 'axios';
 import "./css/Playlist.css"
-import decode from "jwt-claims";
+import {useAuth} from "./auth/AuthProvider";
 
 export default function SongInfo() {
 
-    let decode = require('jwt-claims');
-    const token = window.sessionStorage.getItem('token');
-    const claims = decode(token);
-    const [response, setResponse] = useState("");
+
+    const {auth, claims} = useAuth();
 
     let {id} = useParams();
     const [song, setSong] = useState({
         title: "",
         genre: "",
         seconds: "",
-        artists: "",
+        artists: [],
         listeners: 0,
         yearlyListeners: 0
     });
 
 
-    const [data, setData] = useState({
-        user: claims.id,
-        song: id
-    })
-
     useEffect(() => {
         getSongInfo()
         getMonthlyListeners()
-        getYearlyListeners()
+
     }, [])
 
 
     function getSongInfo() {
         axios.get(`http://localhost:8080/songs/${id}`)
             .then(res => {
+                console.log(res.data)
                 setSong(prevState => ({
                     ...prevState,
                     title: res.data.title,
                     genre: res.data.genre,
-                    seconds: res.data.seconds
+                    seconds: res.data.seconds,
+                    artists: res.data.artists
                 }))
 
             }).catch(err => console.log(err))
@@ -64,36 +59,29 @@ export default function SongInfo() {
 
     }
 
+    const mapArtists = () => {
 
-    function getYearlyListeners() {
+        return (
+            <div>
+                <p className="category">Artists</p>
+                {song.artists.map((artist) => (
+                    <div key={artist.id} className="detail">
+                        <p className="label">{artist.fname}  { }  {artist.lname}</p>
+                    </div>
+                ))}
+            </div>
 
-
-        axios.get(`http://localhost:8080/listeners/year/${id}`)
-            .then(res => {
-
-                setSong(prevState => ({
-                    ...prevState,
-                    yearlyListeners: res.data
-                }))
-            })
-
-
+        )
     }
 
-
-    function getArtists() {
-        axios.get(`http://localhost:8080/songs/artists/${id}`)
-            .then(res => {
-                setSong(prevState => ({
-                    ...prevState,
-                    artists: res.data.artists
-                }))
-
-            }).catch(err => console.log(err))
-
-    }
 
     function playSong() {
+
+        const data = ({
+            user: claims.id,
+            song: id
+        })
+
         console.log(data);
         axios.post("http://localhost:8080/listeners", data)
             .then(res => {
@@ -101,7 +89,7 @@ export default function SongInfo() {
                     setSong(prevState => ({
                         ...prevState,
                         listeners: song.listeners + 1,
-                        yearlyListeners: song.yearlyListeners+1
+                        yearlyListeners: song.yearlyListeners + 1
                     }))
                 }
             })
@@ -109,16 +97,51 @@ export default function SongInfo() {
 
     }
 
+    if (auth && claims.roles[0] === "USER") {
+        return (
+            <div className="songInfo">
+                <div className="detail">
+                    <p className="label">Title:</p>
+                    <p>{song.title}</p>
+                </div>
+                <div className="detail">
+                    <p className="label">Genre:</p>
+                    <p>{song.genre}</p>
+                </div>
+                <div className="detail">
+                    <p className="label">Seconds:</p>
+                    <p>{song.seconds}</p>
+                </div>
+                <div className="detail">
+                    <p className="label">Monthly listeners:</p>
+                    <p>{song.listeners}</p>
+                </div>
+                <button onClick={playSong}>Play song</button>
+            </div>
+        )
+    } else {
+        return (
+            <div className="songInfo">
+                <div className="detail">
+                    <p className="label">Title:</p>
+                    <p>{song.title}</p>
+                </div>
+                <div className="detail">
+                    <p className="label">Genre:</p>
+                    <p>{song.genre}</p>
+                </div>
+                <div className="detail">
+                    <p className="label">Seconds:</p>
+                    <p>{song.seconds}</p>
+                </div>
+                <div className="detail">
+                    <p className="label">Monthly listeners:</p>
+                    <p>{song.listeners}</p>
+                </div>
+                {mapArtists()}
+            </div>
+        )
+    }
 
-    return (
-        <>
-            <p>Title: {song.title}</p>
-            <p>Genre: {song.genre}</p>
-            <p>Seconds: {song.seconds}</p>
-            <p>Monthly listeners: {song.listeners}</p>
-            <p>Yearly listeners: {song.yearlyListeners}</p>
 
-            <button onClick={playSong}>Play song</button>
-        </>
-    )
 }

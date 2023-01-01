@@ -3,12 +3,9 @@ package com.example.radify_be.controller;
 import com.example.radify_be.bussines.PlaylistService;
 import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
 import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
-import com.example.radify_be.controller.requests.DeletePlaylistRequest;
-import com.example.radify_be.controller.requests.EditPlaylistSongsRequest;
-import com.example.radify_be.controller.requests.GetPlaylistsByTitleAndUser;
+import com.example.radify_be.controller.requests.*;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.domain.User;
-import com.example.radify_be.controller.requests.CreatePlaylistRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +55,15 @@ public class PlaylistController {
         return ResponseEntity.ok().body(pl);
     }
 
+    @PutMapping("/details")
+    public ResponseEntity<Playlist> updatePlaylist(UpdatePlaylistRequest req){
+        try{
+            return ResponseEntity.ok().body(service.updatePlaylistInfo(req.getPlaylist(), req.getUser()));
+        }
+        catch(UnauthorizedAction er){
+            return ResponseEntity.ok().body(null);
+        }
+    }
 
     @PutMapping("/remove")
     public ResponseEntity<Playlist> deleteSongsFromPlaylist(@RequestBody EditPlaylistSongsRequest request){

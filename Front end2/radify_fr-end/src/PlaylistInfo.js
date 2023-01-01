@@ -3,24 +3,31 @@ import {useParams, useNavigate, Link} from "react-router-dom";
 import axios from 'axios';
 import "./css/Playlist.css";
 import {useAuth} from "./auth/AuthProvider";
+import Dialog from "./Dialog";
 
 export default function PlaylistInfo() {
 
     const {claims} = useAuth();
     let {id} = useParams();
 
-
+    const [dialog, setDialog] = useState({
+        message: "Are you sure you want to delete this playlist?",
+        isLoading: false
+    })
     const data = ({
         userId: null,
         playlistId: id,
         songId: null
     })
 
+    let access = null;
+
     const [playlist, setPlaylist] = useState({
         title: "",
         dateOfCreation: "",
         songs: [],
-        creator: ""
+        creator: "",
+        public: null
     });
 
     const navigate = useNavigate();
@@ -40,11 +47,19 @@ export default function PlaylistInfo() {
 
         axios.get(`http://localhost:8080/playlists/${id}`)
             .then(res => {
+                if(res.data.public){
+                    access = "public";
+                }
+                else{
+                    access = "private";
+                }
                 setPlaylist(prevState => ({
                     ...prevState,
                     title: res.data.title,
                     dateOfCreation: res.data.dateOfCreation,
-                    creator: res.data.creator
+                    creator: res.data.creator,
+                    public: access
+
                 }))
 
             }).catch(err => console.log(err))
@@ -52,7 +67,7 @@ export default function PlaylistInfo() {
 
     }
 
-    function getSongs(){
+    function getSongs() {
         axios.get(`http://localhost:8080/songs/playlist/${id}`)
             .then(res => {
                 setPlaylist(prevState => ({
@@ -69,33 +84,30 @@ export default function PlaylistInfo() {
 
             data.songId = sessionStorage.getItem('song')
             data.userId = claims.id
-            try{
+            try {
                 axios.put("http://localhost:8080/playlists", data).then
                 (getSongs)
                 sessionStorage.removeItem('song')
-            }
-            catch(err){
-                if (err.response.status === 401){
+            } catch (err) {
+                if (err.response.status === 401) {
                     alert("why again????")
                 }
             }
 
-        }
-        else{
+        } else {
             getSongs()
         }
     }
 
 
     const mapSongs = () => {
-        console.log(playlist)
+
         return (
-            <div className="songs">
-                <p>Playlist songs</p>
+            <div className="group">
                 {playlist.songs.map((song) => (
-                    <div key={song.id} className="playlist">
-                        <Link to={"/song/" + song.id} className="singlePlaylist">{song.title}</Link>
-                        <button value={song.id} onClick={deleteSong}>-</button>
+                    <div key={song.id} className="single">
+                        <Link to={"/song/" + song.id} className="title">{song.title}</Link>
+                        <button value={song.id} onClick={deleteSong} className="button">-</button>
                     </div>
                 ))}
             </div>
@@ -109,39 +121,71 @@ export default function PlaylistInfo() {
         console.log(data)
         axios.put('http://localhost:8080/playlists/remove', data)
             .then(getSongs)
+
+
+        return (
+            <div className="playlistsInfo">
+                {getPlaylistSongs()}
+                {mapSongs()}
+            </div>
+        )
     }
+
+
     function getPlaylistInfo() {
         return (
-            <>
-                <p className="title">Playlist info</p>
-
+            <div className="details">
                 <p>Title: {playlist.title}</p>
                 <p>Date: {playlist.dateOfCreation.substring(0, 10)}</p>
-            </>
+                <p>Access: {playlist.public}</p>
+                <button onClick={(e) => setDialog(prevState => ({...prevState, isLoading: true}))}
+                        className="deletePlaylist">Delete playlist
+                </button>
+
+            </div>
 
         )
     }
 
 
-    function deletePlaylist() {
-        if (claims.id == playlist.creator.id) {
-            axios.delete('http://localhost:8080/playlists', {data: {userId: claims.id, playlistId: id}})
-                .then(res => console.log(res.data))
+    const deletePlaylist = async () => {
 
-            navigate('/playlists');
+
+        if (claims.id == playlist.creator.id) {
+            try {
+
+                axios.delete('http://localhost:8080/playlists', {data: {userId: claims.id, playlistId: id}})
+                    .then(res => {
+                        if (res.status === 200){
+                            navigate("/playlists")
+                        }
+                    })
+
+
+            } catch (err) {
+                console.log(err.message)
+            }
+
+
         } else {
             alert("No..");
         }
 
     }
 
-    return (
 
-        <div className="info">
+    const confirmDeletion = (choose) => {
+        if (choose) {
+            deletePlaylist();
+        }
+        setDialog(prevState => ({...prevState, isLoading: false}))
+    };
+
+    return (
+        <div className="playlistInfo">
             {getPlaylistInfo()}
             {mapSongs()}
-
-            <button onClick={deletePlaylist}>Delete playlist</button>
+            {dialog.isLoading && <Dialog message={dialog.message} onDialog={confirmDeletion}/>}
         </div>
     )
 

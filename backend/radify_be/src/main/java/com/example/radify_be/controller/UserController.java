@@ -1,7 +1,10 @@
 package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.UserService;
+import com.example.radify_be.bussines.exceptions.InvalidInputException;
+import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
 import com.example.radify_be.controller.requests.UpdateUserRequest;
+import com.example.radify_be.controller.requests.UserResponse;
 import com.example.radify_be.domain.Account;
 import com.example.radify_be.domain.Role;
 import com.example.radify_be.domain.User;
@@ -28,10 +31,27 @@ public class UserController {
             userService.register(converter(userRequest));
             return ResponseEntity.ok().body("Account created");
         }
-        catch (Exception e){
+        catch (InvalidInputException e){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
 
+    }
+
+    @PutMapping("/account")
+    @ResponseBody
+    public ResponseEntity<String> updateUser(@RequestBody UpdateUserRequest request){
+        UserResponse user = null;
+        try{
+            user = responseConverter(userService.updateUser(updateConverter(request)));
+        }
+        catch(UnsuccessfulAction e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+        }
+        catch (InvalidInputException ex){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ex.getMessage());
+        }
+
+        return ResponseEntity.ok().body(user.toString());
     }
 
 
@@ -41,26 +61,31 @@ public class UserController {
             userService.deleteUser(id);
             return ResponseEntity.ok().body("Successful deletion of user");
         }
-        catch(Exception e){
+        catch(UnsuccessfulAction e){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity getUser(@PathVariable(value = "id")Integer id){
+    public ResponseEntity<User> getUser(@PathVariable(value = "id")Integer id){
         return ResponseEntity.ok().body(userService.getById(id));
     }
 
-    @PutMapping
-    public ResponseEntity updateUser(@RequestBody UpdateUserRequest request){
-        return null;
-    }
+
 
 
     private User converter(CreateUserRequest request){
         return User.builder()
                 .account(Account.builder().email(request.getEmail()).password(request.getPassword()).username(request.getUsername()).build())
                 .fName(request.getFirst_name()).lName(request.getLast_name()).role(Role.USER).build();
+    }
+
+    private User updateConverter(UpdateUserRequest request){
+        return User.builder().id(request.getId()).account(Account.builder().email(request.getEmail()).username(request.getUsername()).build()).fName(request.getFirst_name()).lName(request.getLast_name()).build();
+    }
+
+    private UserResponse responseConverter(User user){
+            return UserResponse.builder().fName(user.getFName()).lName(user.getLName()).email(user.getAccount().getEmail()).username(user.getAccount().getUsername()).build();
     }
 
 

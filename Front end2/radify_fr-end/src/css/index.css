@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #101010;
 }
 
 code {
@@ -14,11 +15,11 @@ code {
 
 .link{
   text-decoration: none;
-  color: black;
+  color: white;
   font-family: Verdana;
   margin: 20px;
   padding: 10px;
-  background-color: #646363;
+  font-size: 20px;
 }
 
 .link :hover{
@@ -26,6 +27,14 @@ code {
 }
 
 .main > nav{
-  background-color: #646363;
+  background-color: #1F1C1C;
   padding: 10px;
+  text-align: center;
+}
+
+.main > nav > .link:hover{
+  background-color: #554C4C;
+  padding: 10px;
+  text-align: center;
+  color: black;
 }

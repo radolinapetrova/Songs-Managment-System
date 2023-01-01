@@ -15,4 +15,8 @@ public interface SongService {
 
     Song getById(Integer id);
 
+    void deleteSong (Integer id, Integer user);
+
+    List<Song> getAllByIdIn(List<Integer> ids);
+
 }

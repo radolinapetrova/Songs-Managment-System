@@ -63,7 +63,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         if (repo.findById(playlist).getCreator().getId() != user) {
             throw new UnauthorizedAction();
         }
-        Playlist result = repo.update(playlist, song);
+        Playlist result = repo.addSong(playlist, song);
 
         //check if the song was successfully added
         if (!result.getSongs().stream().anyMatch(s -> s.getId() == song)) {
@@ -84,6 +84,15 @@ public class PlaylistServiceImpl implements PlaylistService {
             throw new UnsuccessfulAction();
         }
         return result;
+    }
+
+    @Override
+    public Playlist updatePlaylistInfo(Playlist pl, Integer user) throws UnauthorizedAction{
+
+        if (pl.getCreator().getId() != user){
+            throw new UnauthorizedAction();
+        }
+        return repo.save(pl);
     }
 
     @Override

@@ -23,4 +23,6 @@ public interface PlaylistService {
     List<Playlist> getAllPublicAndUser(Integer id);
 
     Playlist removeSongsFromPlaylist(Integer playlist, Integer song, Integer user) throws UnauthorizedAction, UnsuccessfulAction;
+
+    Playlist updatePlaylistInfo(Playlist pl, Integer user) throws UnauthorizedAction;
 }

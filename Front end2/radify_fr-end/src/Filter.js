@@ -4,6 +4,8 @@ import GetAllSongs from './GetAllSongs'
 import GetAllPlaylists from './GetAllPlaylists'
 import {Link, useNavigate} from "react-router-dom";
 import {useAuth} from "./auth/AuthProvider";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 
 export default function Filter() {
 
@@ -13,6 +15,7 @@ export default function Filter() {
     const [songs, setSongs] = useState([])
     const [playlists, setPlaylists] = useState([])
     const [song, setSong] = useState(null)
+    const [topSongs, setTopSongs] = useState([])
 
     const [data, setData] = useState({
         title: input,
@@ -22,6 +25,7 @@ export default function Filter() {
     let id = 0
 
     useEffect(() => {
+        axios.get("http://localhost:8080/listeners/top").then(res => setTopSongs(res.data))
         if (auth) {
             id = claims.id
         }
@@ -33,33 +37,46 @@ export default function Filter() {
         }))
     }, [input])
 
+    // function getTopSongs(){
+    //
+
+    //
+    //     return (
+    //         <div className="group">
+    //             <div className="title">Most listened songs for {year}</div>
+    //             {mapSongs(topSongs)}
+    //         </div>
+    //     )
+    // }
+
 
     const filter = () => {
         console.log(songs)
-        if (songs.length === 0 && playlists.length === 0) {
-            return (<div>
+        if ((songs.length === 0 && playlists.length === 0)) {
+            return (<div className="groups">
                 <GetAllSongs/>
                 <GetAllPlaylists/>
             </div>)
         } else if (songs.length === 0) {
-            return (<div className="userPl">
+            return (<div className="groups">
                 {mapPlaylists()}
                 <p>No songs match the input</p>
             </div>)
 
         } else if (playlists.length === 0) {
-            return (<div className="userPl">
-                {mapSongs()}
+            return (<div className="groups">
+                {mapSongs(songs)}
                 <p>No playlists match the input</p>
             </div>)
         } else {
-            return (<div className="userPl">
-                {mapSongs()}
+            return (<div className="groups">
+                {mapSongs(songs)}
                 {mapPlaylists()}
             </div>)
 
         }
     }
+
 
     function getResults(e) {
         e.preventDefault()
@@ -68,26 +85,50 @@ export default function Filter() {
         axios.get(`http://localhost:8080/songs/title/${input}`).then((res) => setSongs(res.data))
         axios.post('http://localhost:8080/playlists/title', data).then((res) => setPlaylists(res.data))
 
+
     }
 
 
     const mapPlaylists = () => {
-        return (<div className="pl">
-            <p className="title">Playlists</p>
-            {playlists.map((playlist) => (<div key={playlist.id} className="playlist">
-                <div className="idk">{playlist.title}</div>
+        return (<div className="group">
+            <p className="category">Playlists</p>
+            {playlists.map((playlist) => (<div key={playlist.id} className="single">
+                <Link to={"/playlist/" + playlist.id} className="title">{playlist.title}</Link>
             </div>))}
         </div>)
     }
 
-    const mapSongs = () => {
-        return (<>
-            <p className="title">Songs</p>
-            {songs.map((song) => (<div key={song.id} className="playlist">
-                <Link to={"/song/" + song.id} className="singlePlaylist">{song.title}</Link>
-                <button value={song.id} onClick={getSong}>+</button>
-            </div>))}
-        </>)
+    const getTop = () => {
+        const year = new Date().getFullYear()
+
+        if (topSongs != [])
+
+        return (<div className="group">
+            <p className="category">Top five songs for {year}</p>
+            {mapSongs(topSongs)}
+        </div>)
+    }
+
+    const mapSongs = (songs) => {
+        console.log(songs)
+
+        if (auth && claims.roles[0] === 'USER') {
+
+            return (<div className="group">
+                <p className="category">Songs</p>
+                {songs.map((song) => (<div key={song.id} className="single">
+                    <Link to={"/song/" + song.id} className="title">{song.title}</Link>
+                    <button value={song.id} onClick={getSong} className="button">+</button>
+                </div>))}
+            </div>)
+        } else {
+            return (<div className="group">
+                <p className="category">Songs</p>
+                {songs.map((song) => (<div key={song.id} className="single">
+                    <Link to={"/song/" + song.id} className="title">{song.title}</Link>
+                </div>))}
+            </div>)
+        }
     }
 
 
@@ -107,12 +148,13 @@ export default function Filter() {
 
 
     return (<div>
-        <div>
-            <input type="text" value={input} onChange={(e) => setInput(e.target.value)}/>
-            <button onClick={getResults}>Search</button>
+        <div className="searchbar">
+            <input type="text" value={input} placeholder="Search..." onChange={(e) => setInput(e.target.value)}/>
+            <FontAwesomeIcon icon={faMagnifyingGlass} onClick={getResults}/>
         </div>
 
         {filter()}
+        {getTop()}
     </div>)
 
 

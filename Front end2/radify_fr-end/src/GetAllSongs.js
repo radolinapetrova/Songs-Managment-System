@@ -2,10 +2,11 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './css/Playlist.css';
 import {Link, useNavigate} from "react-router-dom";
-
+import {useAuth} from "./auth/AuthProvider";
 
 export default function GetAllSongs() {
 
+    const {auth, claims} = useAuth();
     const [songs, setSongs] = useState([])
     const [song, setSong] = useState(null)
 
@@ -29,22 +30,50 @@ export default function GetAllSongs() {
         navigate("/playlists")
     }
 
-
-    const mapSongs = () => {
+    const deleteSong = async (e) => {
+        console.log("uhmmmmm")
+        e.preventDefault()
+        axios.delete('http://localhost:8080/songs', {data: {userId: claims.id, songId: e.target.value}})
+            .then(res => console.log(res.data))
         return (
-            <div className="userPl">{
-                <form>
-                    <p className="title">Songs</p>
-                    {songs.map((song) => (
-                        <div key={song.id} className="playlist">
-                            <Link to={"/song/" + song.id} className="singlePlaylist">{song.title}</Link>
-                            <button value={song.id} onClick={getSong}>+</button>
-                        </div>
-                    ))}
-                </form>}
-            </div>
+            mapSongs()
         )
     }
+
+
+
+    const mapSongs = () => {
+
+        if ( auth && claims.roles[0] === 'USER') {
+            return (<div className="group">
+                <p className="category">Songs</p>
+                {songs.map((song) => (<div key={song.id} className="single">
+                    <Link to={"/song/" + song.id} className="title">{song.title}</Link>
+                    <button value={song.id} onClick={getSong} className="button">+</button>
+                </div>))}
+            </div>)
+        } else {
+            if (auth){
+            return (<div className="group">
+                <p className="category">Songs</p>
+                {songs.map((song) => (<div key={song.id} className="single">
+                    <Link to={"/song/" + song.id} className="title">{song.title}</Link>
+                    <button value={song.id} onClick={deleteSong} className="button">-</button>
+                </div>))}
+            </div>)}
+            else{
+                return (<div className="group">
+                    <p className="category">Songs</p>
+                    {songs.map((song) => (<div key={song.id} className="single">
+                        <Link to={"/song/" + song.id} className="title">{song.title}</Link>
+
+                    </div>))}
+                </div>)
+            }
+
+        }
+    }
+
 
     function getSongs() {
         axios.get('http://localhost:8080/songs/all')
