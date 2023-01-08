@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.auth0:java-jwt:4.2.1'
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-    implementation 'org.springframework:spring-websocket:6.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket:3.0.1'
     implementation 'org.springframework:spring-messaging:6.0.2'
     testImplementation 'org.springframework.security:spring-security-test:5.5.1'
 
@@ -59,7 +59,21 @@ tasks.named('test') {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
+
+jacocoTestReport {
+    dependsOn test
+    reports{
+        xml.enabled(true)
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'

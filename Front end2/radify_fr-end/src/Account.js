@@ -2,11 +2,13 @@ import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import {useAuth} from "./auth/AuthProvider";
 import "./css/Account.css"
+import Dialog from "./Dialog";
+import {useNavigate} from "react-router-dom";
 
 export default function Account() {
 
     const token = window.sessionStorage.getItem('token');
-    const {claims} = useAuth();
+    const {claims, setClaims, setAuth} = useAuth();
 
     const [user, setUser] = useState({
         first_name: "",
@@ -15,6 +17,13 @@ export default function Account() {
         email: "",
         id: ""
     })
+
+    const [dialog, setDialog] = useState({
+        message: "Are you sure you want to delete your account?",
+        isLoading: false
+    })
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         getAccountDetails()
@@ -35,15 +44,39 @@ export default function Account() {
         )
     }
 
+    function logout() {
+        sessionStorage.clear()
+        setAuth(false)
+        setClaims(null)
+    }
+
     const updateAccount = async (e) => {
+        axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
         e.preventDefault()
         axios.put(`http://localhost:8080/users/account`, user).then(res => console.log(res.data))
     }
 
+    const deleteAccount = async (e) => {
+        axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
+
+        axios.delete(`http://localhost:8080/users/${claims.id}`).then(res => console.log(res.data))
+        logout()
+        navigate("/")
+
+    }
+
+    const confirmDeletion = (choose) => {
+
+        if (choose) {
+            deleteAccount();
+        }
+        setDialog(prevState => ({...prevState, isLoading: false}))
+    };
+
 
     return (
         <div className="accountInfo">
-            {<form>
+            {<div>
                 <label>Email:</label>
                 <input value={user.email}
                        onChange={(e) => setUser(prevState => ({...prevState, email: e.target.value}))}/>
@@ -61,7 +94,9 @@ export default function Account() {
                        onChange={(e) => setUser(prevState => ({...prevState, last_name: e.target.value}))}/>
 
                 <button onClick={updateAccount}>Edit account information</button>
-            </form>}
+                <button onClick={(e) => setDialog(prevState => ({...prevState, isLoading: true}))}>Delete account</button>
+                {dialog.isLoading && <Dialog message={dialog.message} onDialog={confirmDeletion}/>}
+            </div>}
         </div>
     )
 }

@@ -1,5 +1,5 @@
 package com.example.radify_be.domain;
 
-public enum MessageType {
+public enum Status {
     CONNECT, DISCONNECT, CHAT
 }

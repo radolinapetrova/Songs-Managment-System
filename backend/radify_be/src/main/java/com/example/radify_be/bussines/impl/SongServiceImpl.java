@@ -1,8 +1,9 @@
 package com.example.radify_be.bussines.impl;
 
 import com.example.radify_be.bussines.SongService;
+import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
-import com.example.radify_be.domain.Role;
+import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
 import com.example.radify_be.domain.Song;
 import com.example.radify_be.persistence.SongRepo;
 import com.example.radify_be.persistence.UserRepo;
@@ -22,18 +23,26 @@ public class SongServiceImpl implements SongService {
     private final UserRepo userRepo;
 
     @Override
-    public List<Song> getSongsByTitle(String title){
+    public List<Song> getSongsByTitle(String title) {
+        if (title == "") {
+            return repository.findAll();
+        }
         return repository.findAllByTitle(title);
     }
 
 
     @Override
-    public void deleteSong (Integer id, Integer user) throws UnauthorizedAction {
+    public void deleteSong(Integer id, Integer user) throws UnauthorizedAction, InvalidInputException {
 
-        log.info("Role is {}", userRepo.findById(user).getRole());
-        if (userRepo.findById(user).getRole() == Role.USER){
+//        log.info("Role is {}", userRepo.findById(user).getRole());
+        if (userRepo.findById(user).getRole().toString() != "ADMIN") {
             throw new UnauthorizedAction();
         }
+
+        if (!repository.existsById(id)){
+            throw new InvalidInputException();
+        }
+
         repository.deleteById(id);
     }
 
@@ -43,24 +52,27 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public Song createSong(Song song){
+    public Song createSong(Song song) {
         return repository.save(song);
     }
 
     @Override
-    public List<Song> getAllSongs(){
+    public List<Song> getAllSongs() {
         return repository.findAll();
     }
 
 
     @Override
-    public Song getById(Integer id){
+    public Song getById(Integer id) throws InvalidInputException {
+        if (!repository.existsById(id)){
+            throw new InvalidInputException();
+        }
         return repository.getById(id);
     }
 
     @Override
-    public List<Song> getAllByIdIn(List<Integer> ids){
-     return repository.getAllByIdIn(ids);
+    public List<Song> getAllByIdIn(List<Integer> ids) {
+        return repository.getAllByIdIn(ids);
     }
 
 }

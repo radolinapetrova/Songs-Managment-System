@@ -37,21 +37,8 @@ export default function Filter() {
         }))
     }, [input])
 
-    // function getTopSongs(){
-    //
-
-    //
-    //     return (
-    //         <div className="group">
-    //             <div className="title">Most listened songs for {year}</div>
-    //             {mapSongs(topSongs)}
-    //         </div>
-    //     )
-    // }
-
 
     const filter = () => {
-        console.log(songs)
         if ((songs.length === 0 && playlists.length === 0)) {
             return (<div className="groups">
                 <GetAllSongs/>
@@ -81,7 +68,6 @@ export default function Filter() {
     function getResults(e) {
         e.preventDefault()
 
-        console.log(data)
         axios.get(`http://localhost:8080/songs/title/${input}`).then((res) => setSongs(res.data))
         axios.post('http://localhost:8080/playlists/title', data).then((res) => setPlaylists(res.data))
 
@@ -110,7 +96,6 @@ export default function Filter() {
     }
 
     const mapSongs = (songs) => {
-        console.log(songs)
 
         if (auth && claims.roles[0] === 'USER') {
 

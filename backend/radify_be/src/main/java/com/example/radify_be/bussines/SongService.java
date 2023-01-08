@@ -1,5 +1,8 @@
 package com.example.radify_be.bussines;
 
+import com.example.radify_be.bussines.exceptions.InvalidInputException;
+import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
+import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
 import com.example.radify_be.domain.Song;
 
 import java.util.List;
@@ -13,9 +16,9 @@ public interface SongService {
 
     List<Song> getAllPlaylistSongs(Integer id);
 
-    Song getById(Integer id);
+    Song getById(Integer id) throws InvalidInputException;
 
-    void deleteSong (Integer id, Integer user);
+    void deleteSong (Integer id, Integer user)throws UnauthorizedAction, InvalidInputException;
 
     List<Song> getAllByIdIn(List<Integer> ids);
 

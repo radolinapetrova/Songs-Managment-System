@@ -25,6 +25,6 @@ public interface PlaylistRepo {
 
     Playlist deleteSong(Integer playlistId, Integer songId);
 
-
+    boolean ExistsByCreatorId(Integer id);
 
 }

@@ -33,6 +33,7 @@ public class PlaylistEntity {
 
 
     @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @OneToOne
     private UserEntity creator;
 

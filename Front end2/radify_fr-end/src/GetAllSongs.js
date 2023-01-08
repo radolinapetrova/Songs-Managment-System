@@ -17,6 +17,7 @@ export default function GetAllSongs() {
     }, [])
 
     let navigate = useNavigate()
+    const token = window.sessionStorage.getItem('token');
 
     function saveSong(id) {
         sessionStorage.removeItem('song');
@@ -31,7 +32,10 @@ export default function GetAllSongs() {
     }
 
     const deleteSong = async (e) => {
+
+        axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
         console.log("uhmmmmm")
+        console.log({userId: claims.id, songId: e.target.value})
         e.preventDefault()
         axios.delete('http://localhost:8080/songs', {data: {userId: claims.id, songId: e.target.value}})
             .then(res => console.log(res.data))

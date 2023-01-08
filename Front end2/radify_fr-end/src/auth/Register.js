@@ -13,18 +13,21 @@ export default function Register() {
     })
     const [msg, setMsg] = useState("")
 
-    const handleSubmit = (e) => {
+    const HandleSubmit = async (e) => {
 
         e.preventDefault();
-        try{
-            axios.post("http://localhost:8080/users", data).then(res => setMsg(res.data));
-        }
-        catch(err){
-            if(err.response.status === 417){
-                alert("Unfortunately, it seems that sadly, the information you provided is regretably already used :(")
+        try {
+            let res = await axios.post("http://localhost:8080/users", data);
+            // setMsg(res.data)
+
+        } catch (err) {
+            if (err.response.status === 417) {
+                setMsg("You have entered invalid data, which is quite unacceptable")
             }
-        }
-        finally {
+            if (err.response.status === 500) {
+                setMsg(err.response.data)
+            }
+        } finally {
 
         }
     };
@@ -65,7 +68,7 @@ export default function Register() {
                                onChange={(e) => setData(prevState => ({...prevState, password: e.target.value}))}
                                required/>
                     </div>
-                    <button className="button" onClick={handleSubmit}>Register</button>
+                    <button className="button" onClick={HandleSubmit}>Register</button>
 
 
                     <p className="message">{msg}</p>

@@ -1,7 +1,5 @@
 package com.example.radify_be.persistence.impl;
 
-import com.example.radify_be.bussines.impl.PlaylistServiceImpl;
-import com.example.radify_be.controller.requests.DeletePlaylistRequest;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.domain.Song;
 import com.example.radify_be.domain.User;
@@ -9,7 +7,6 @@ import com.example.radify_be.persistence.DBRepositories.PlaylistDBRepository;
 import com.example.radify_be.persistence.DBRepositories.SongDBRepository;
 import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
 import com.example.radify_be.persistence.PlaylistRepo;
-import com.example.radify_be.persistence.SongRepo;
 import com.example.radify_be.persistence.entities.PlaylistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import com.example.radify_be.persistence.entities.UserEntity;
@@ -35,8 +32,6 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     private final SongDBRepository songRepo;
 
 
-
-
     private PlaylistEntity playlistEntityConverter(Playlist playlist) {
 
         return PlaylistEntity.builder()
@@ -49,7 +44,6 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     }
 
     private Playlist playlistConverter(PlaylistEntity playlist) {
-
 
 
         List<Integer> songs = playlist.getSongs().stream().map(SongEntity::getId).collect(Collectors.toList());
@@ -86,10 +80,9 @@ public class PlaylistRepoImpl implements PlaylistRepo {
         List<UserEntity> users = List.of(userRepo.findById(entity.getCreator().getId()).orElse(null));
         entity.setUsers(users);
         Playlist result = null;
-        try{
-            result  = playlistConverter(repo.save(entity));
-        }
-        catch(IllegalArgumentException ex){
+        try {
+            result = playlistConverter(repo.save(entity));
+        } catch (IllegalArgumentException ex) {
             return null;
         }
         return result;
@@ -130,7 +123,7 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     @Override
     public Playlist findById(Integer id) {
         Optional<PlaylistEntity> playlist = repo.findById(id);
-        if(playlist!=(null)){
+        if (playlist != (null)) {
             return playlistConverter(playlist.orElse(PlaylistEntity.builder().build()));
         }
         return null;
@@ -153,19 +146,20 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     public Playlist addSong(Integer playlistId, Integer songId) {
 
         PlaylistEntity playlist = repo.findById(playlistId).orElse(null);
-        PlaylistEntity result = null;
+        PlaylistEntity result = new PlaylistEntity();
 
         SongEntity song = songRepo.findById(songId).orElse(null);
 
-        List<SongEntity> songs = playlist.getSongs();
 
-        if(playlist != null){
+        if (playlist != null) {
+
+            List<SongEntity> songs = playlist.getSongs();
             if (!songs.stream().anyMatch(s -> s.getId().equals(songId))) {
                 songs.add(song);
 
                 playlist.setSongs(songs);
 
-               result =  repo.save(playlist);
+                result = repo.save(playlist);
             }
         }
 
@@ -176,22 +170,34 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     @Override
     public Playlist deleteSong(Integer playlistId, Integer songId) {
         PlaylistEntity playlist = repo.findById(playlistId).orElse(null);
-        PlaylistEntity result = null;
+        PlaylistEntity result = new PlaylistEntity();
         SongEntity song = songRepo.findById(songId).orElse(null);
 
-        List<SongEntity> songs = playlist.getSongs();
 
-        if(playlist != null){
+        if (playlist != null) {
+            List<SongEntity> songs = playlist.getSongs();
+
             if (songs.stream().anyMatch(s -> s.getId().equals(songId))) {
                 songs.remove(song);
 
                 playlist.setSongs(songs);
 
-                result  = repo.save(playlist);
+                result = repo.save(playlist);
             }
         }
 
         return playlistConverter(result);
+    }
+
+
+    @Override
+    public boolean ExistsByCreatorId(Integer id){
+        UserEntity user = userRepo.findById(id).orElse(UserEntity.builder().id(0).build());
+
+        if(user == null){
+            return false;
+        }
+        return repo.existsPlaylistByCreator(user);
     }
 
 }

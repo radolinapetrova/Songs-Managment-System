@@ -9,6 +9,8 @@ export default function AuthPage() {
     const {auth, setAuth, claims} = useAuth();
 
 
+
+
     function logout() {
         sessionStorage.clear()
         setAuth(false)

@@ -1,15 +1,14 @@
 package com.example.radify_be.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatMessage {
     private String content;
-    private String Sender;
-
-    public enum MessageType{
-        CHAT, LEAVE, JOIN
-    }
+    private String sender;
+    private String receiver;
+    private String date;
+    private Status status;
 }

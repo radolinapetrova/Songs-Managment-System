@@ -22,4 +22,6 @@ public interface SongRepo {
     Song getById(Integer id);
 
     List<Song> getAllByIdIn(List<Integer> ids);
+
+    boolean existsById(Integer id);
 }

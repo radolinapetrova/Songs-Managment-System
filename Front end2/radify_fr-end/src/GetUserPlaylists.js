@@ -35,6 +35,7 @@ export default function GetUserPlaylists() {
             axios.get(`http://localhost:8080/playlists/user/${claims.id}`)
                 .then(res => {
                     setPlaylists(res.data)
+                    console.log(res.data)
                 }).catch(err => console.log(err))
         }
 

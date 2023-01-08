@@ -27,7 +27,7 @@ function Dialog({ message, onDialog}) {
                     borderRadius: "10px"
                 }}
             >
-                <h3 stlye={{ color: "#111", fontSize: "16px" }}>{message}</h3>
+                <h3 stlye={{ color: "#000", fontSize: "16px"}}>{message}</h3>
                 {/*<h1 style={{ color: "blue", fontSize: "24px" }}>{nameProduct}</h1>*/}
                 <div style={{ display: "flex", alignItems: "center" }}>
                     <button

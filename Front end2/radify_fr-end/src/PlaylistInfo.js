@@ -20,9 +20,10 @@ export default function PlaylistInfo() {
         songId: null
     })
 
-    let access = null;
+    const [access, setAccess] = useState()
 
     const [playlist, setPlaylist] = useState({
+        id: 0,
         title: "",
         dateOfCreation: "",
         songs: [],
@@ -30,7 +31,7 @@ export default function PlaylistInfo() {
         public: null
     });
 
-    const navigate = useNavigate();
+    const navigate = useNavigate("");
 
 
     useEffect(() => {
@@ -48,17 +49,18 @@ export default function PlaylistInfo() {
         axios.get(`http://localhost:8080/playlists/${id}`)
             .then(res => {
                 if(res.data.public){
-                    access = "public";
+                    setAccess("public");
                 }
                 else{
-                    access = "private";
+                    setAccess("private");
                 }
                 setPlaylist(prevState => ({
                     ...prevState,
+                    id: res.data.id,
                     title: res.data.title,
                     dateOfCreation: res.data.dateOfCreation,
                     creator: res.data.creator,
-                    public: access
+                    public: res.data.public
 
                 }))
 
@@ -131,16 +133,32 @@ export default function PlaylistInfo() {
         )
     }
 
+    const changeAccess = async (e) => {
+        // const token = window.sessionStorage.getItem('token');
+        // axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
+        // e.preventDefault()
+        // let changed = !playlist.public;
+        // setPlaylist(prevState => ({
+        //     ...prevState,
+        //     public: true}))
+        // console.log("Opsaa", playlist.public)
+        // const dat = ({playlist: playlist.id, user: claims.id, isPublic: playlist.public})
+        // console.log(dat)
+        // axios.put('http://localhost:8080/playlists/details', dat)
+        //     .then( res => console.log(res))
+    }
+
 
     function getPlaylistInfo() {
+        console.log(access)
         return (
             <div className="details">
                 <p>Title: {playlist.title}</p>
                 <p>Date: {playlist.dateOfCreation.substring(0, 10)}</p>
-                <p>Access: {playlist.public}</p>
+                <p>Access: {access}</p>
                 <button onClick={(e) => setDialog(prevState => ({...prevState, isLoading: true}))}
-                        className="deletePlaylist">Delete playlist
-                </button>
+                        className="deletePlaylist">Delete playlist</button>
+                <button className="deletePlaylist" onClick={changeAccess}>Change access</button>
 
             </div>
 

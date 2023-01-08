@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from 'axios';
-
+import './css/Playlist.css'
 
 export default function CreateSong() {
 
@@ -15,6 +15,7 @@ export default function CreateSong() {
     })
     const [selectedArtist, setSelectedArtist] = useState([])
     const [value, setValue] = useState("")
+    const [plusArtist, setPlusArtist] = useState(false)
 
     const [allArtists, setAllArtists] = useState([]);
 
@@ -49,36 +50,68 @@ export default function CreateSong() {
         return `${obj.fname} ${obj.lname}`
     }
 
+    function createForm() {
+        return (
+            <form>
+                <label>Title</label>
+                <input type="text" value={song.title}
+                       onChange={(e) => setSong(prevState => ({...prevState, title: e.target.value}))} required/>
+
+                <label>Seconds</label>
+                <input type="number" value={song.seconds}
+                       onChange={(e) => setSong(prevState => ({...prevState, seconds: e.target.value}))} required/>
+
+                <label>Genre</label>
+                <input type="text" value={song.genre}
+                       onChange={(e) => setSong(prevState => ({...prevState, genre: e.target.value}))} required/>
+
+                <label>Artists</label>
+
+                <input list="browsers" onSelect={getValue} name="browser"/>
+                <datalist id="browsers">
+                    {allArtists.map((a) => (
+                        <option key={a.id} className="artists" value={a.id}>{fullName(a)}</option>))}
+                </datalist>
+
+
+                <button onClick={setter}>Add artist</button>
+                <button onClick={addSong}>Add song</button>
+            </form>
+        )
+    }
+
+    const setter = (e) => {
+        e.preventDefault()
+        setPlusArtist(true)
+    }
+
+
+
+
+    const addArtist = () => {
+
+        console.log("before: " + plusArtist)
+        setPlusArtist("")
+        setPlusArtist(false)
+        console.log("after: " + plusArtist)
+        return (
+            <div>
+                {createForm()}
+                <input list="browsers" onSelect={getValue} name="browser"/>
+                <datalist id="browsers">
+                    {allArtists.filter(a => a.id != value.id).map((a) => (
+                        <option key={a.id} className="artists" value={a.id}>{fullName(a)}</option>))}
+                </datalist>
+            </div>
+        )
+    }
 
 
     return (
-        <div>
-            {
-                <form>
-                    <label>Title</label>
-                    <input type="text" value={song.title}
-                           onChange={(e) => setSong(prevState => ({...prevState, title: e.target.value}))} required/>
+        <div className="song-form">
+            {createForm()}
+            {(plusArtist && addArtist())}
 
-                    <label>Seconds</label>
-                    <input type="number" value={song.seconds}
-                           onChange={(e) => setSong(prevState => ({...prevState, seconds: e.target.value}))} required/>
-
-                    <label>Genre</label>
-                    <input type="text" value={song.genre}
-                           onChange={(e) => setSong(prevState => ({...prevState, genre: e.target.value}))} required/>
-
-                    <label>Artists</label>
-
-                    <input list="browsers"  onSelect={getValue} name="browser"/>
-                    <datalist id="browsers" >
-                        {allArtists.map((a) => (
-                            <option key={a.id} className="artists"  value={a.id}>{fullName(a)}</option>))}
-                    </datalist>
-
-
-                    <button onClick={addSong}>Add song</button>
-                </form>
-            }
         </div>
     )
 

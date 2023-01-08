@@ -10,6 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class UpdatePlaylistRequest {
 
-    Playlist playlist;
+    Integer playlist;
+    Boolean isPublic;
     Integer user;
 }

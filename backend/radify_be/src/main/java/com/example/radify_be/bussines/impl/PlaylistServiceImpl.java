@@ -1,17 +1,23 @@
 package com.example.radify_be.bussines.impl;
 
 import com.example.radify_be.bussines.PlaylistService;
+import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
 import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.persistence.PlaylistRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PlaylistServiceImpl implements PlaylistService {
 
 
@@ -23,24 +29,39 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public Playlist createPlaylist(Playlist playlist) throws UnsuccessfulAction {
+    public Playlist createPlaylist(Playlist playlist) throws UnsuccessfulAction, InvalidInputException {
+
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9_-]+$");
+        Matcher match = pattern.matcher(playlist.getTitle());
+
+        if (!match.matches()){
+            throw new InvalidInputException();
+        }
 
         Playlist pl = null;
-        try {
-            pl = repo.save(playlist);
-        }
-        catch(IllegalArgumentException e){
-            throw new UnsuccessfulAction();
-        }
+
+        pl = repo.save(playlist);
+
         if (pl == null) {
             throw new UnsuccessfulAction();
         }
         return pl;
     }
 
+    @Override
+    public boolean ExistsByCreatorId(Integer id){
+        return repo.ExistsByCreatorId(id);
+    }
+
 
     @Override
     public List<Playlist> getUserPlaylists(Integer id) {
+
+        boolean exists = ExistsByCreatorId(id);
+
+        if(!exists){
+            return new ArrayList<Playlist>();
+        }
         return repo.getAllByUserId(id);
     }
 
@@ -87,12 +108,18 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public Playlist updatePlaylistInfo(Playlist pl, Integer user) throws UnauthorizedAction{
-
-        if (pl.getCreator().getId() != user){
+    public Playlist updatePlaylistInfo(Playlist pl, Integer user) throws UnauthorizedAction , UnsuccessfulAction{
+        if (pl.getCreator().getId() != user) {
+            log.info("opsaaaa");
             throw new UnauthorizedAction();
         }
-        return repo.save(pl);
+
+        Playlist pl2 = repo.save(pl);
+
+        if (pl2 != pl){
+            throw new UnsuccessfulAction();
+        }
+        return pl2;
     }
 
     @Override
@@ -108,6 +135,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public List<Playlist> getAllByTitle(Integer id, String title) {
+
         return repo.findByTitle(title, id);
     }
 }

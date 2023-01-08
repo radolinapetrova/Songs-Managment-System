@@ -116,6 +116,7 @@ export default function SongInfo() {
                     <p className="label">Monthly listeners:</p>
                     <p>{song.listeners}</p>
                 </div>
+                {mapArtists()}
                 <button onClick={playSong}>Play song</button>
             </div>
         )

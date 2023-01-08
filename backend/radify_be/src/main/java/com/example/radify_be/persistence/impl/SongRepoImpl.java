@@ -79,6 +79,11 @@ public class SongRepoImpl implements SongRepo {
     }
 
     @Override
+    public boolean existsById(Integer id){
+        return repo.existsById(id);
+    }
+
+    @Override
     public List<Song> findAllByPlaylists(Integer id){
             List<Song> songs = new ArrayList<>();
             List<SongEntity> result = repo.findAllByPlaylistsId(id);

@@ -1,6 +1,7 @@
 package com.example.radify_be.bussines.impl;
 
 import com.example.radify_be.bussines.UserService;
+import com.example.radify_be.bussines.exceptions.DublicateDataException;
 import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
 import com.example.radify_be.domain.User;
@@ -9,13 +10,17 @@ import com.example.radify_be.persistence.UserRepo;
 import com.example.radify_be.security.CustomUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -49,12 +54,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void deleteUser(Integer id) throws UnsuccessfulAction {
-        repo.deleteById(id);
-
-        if (repo.existsById(id)) {
-            throw new UnsuccessfulAction();
+    public void deleteUser(Integer id) throws InvalidInputException {
+        if (!repo.existsById(id)) {
+            throw new InvalidInputException();
         }
+
+        repo.deleteById(id);
     }
 
     @Override
@@ -67,9 +72,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         User updated = repo.save(user);
 
-        log.info("Updated is {}", updated);
-        log.info("Og is {}", og);
-        log.info("Equals is {}", updated.equals(og));
         if (updated.equals(og)) {
             throw new UnsuccessfulAction();
         }
@@ -78,12 +80,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(User user) throws InvalidInputException {
+    public User register(User user) throws InvalidInputException, DublicateDataException {
         validateEmail(user.getAccount().getEmail());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
         User result = null;
-        result = repo.save(user);
+        try {
+            result = repo.save(user);
+            log.info("epa i tuka wa");
+        } catch (Exception e) {
+            log.info("Exc is {}", e.getClass());
+            throw new DublicateDataException();
+        }
+
         return result;
+
     }
 
 

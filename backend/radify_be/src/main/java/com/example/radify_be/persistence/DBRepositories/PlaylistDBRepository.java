@@ -2,6 +2,7 @@ package com.example.radify_be.persistence.DBRepositories;
 
 
 import com.example.radify_be.persistence.entities.PlaylistEntity;
+import com.example.radify_be.persistence.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,5 +31,6 @@ public interface PlaylistDBRepository extends JpaRepository<PlaylistEntity, Inte
 
 
 
+    boolean existsPlaylistByCreator(UserEntity creator);
 
 }

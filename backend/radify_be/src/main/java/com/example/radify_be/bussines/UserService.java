@@ -10,7 +10,7 @@ public interface UserService {
     void validateEmail(String email) throws InvalidInputException;
 
     User getById(Integer id);
-    void deleteUser(Integer id) throws UnsuccessfulAction;
+    void deleteUser(Integer id) throws InvalidInputException;
 
     User updateUser(User user) throws UnsuccessfulAction, InvalidInputException;
 

@@ -7,6 +7,7 @@ import com.example.radify_be.controller.requests.*;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.domain.User;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/playlists")
 @CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
+@Slf4j
 public class PlaylistController {
 
     private final PlaylistService service;
@@ -57,8 +59,12 @@ public class PlaylistController {
 
     @PutMapping("/details")
     public ResponseEntity<Playlist> updatePlaylist(UpdatePlaylistRequest req){
+        log.info("hereeee");
+        log.info("Playlist is {} ", req.getPlaylist());
+        log.info("Playlist is {} ", req.getIsPublic()   );
+        log.info("User is {} ", req.getUser());
         try{
-            return ResponseEntity.ok().body(service.updatePlaylistInfo(req.getPlaylist(), req.getUser()));
+            return ResponseEntity.ok().body(service.updatePlaylistInfo(Playlist.builder().id(req.getPlaylist()).isPublic(req.getIsPublic()).build(), req.getUser()));
         }
         catch(UnauthorizedAction er){
             return ResponseEntity.ok().body(null);
@@ -82,7 +88,7 @@ public class PlaylistController {
     @GetMapping("user/{id}")
     public ResponseEntity<List<Playlist>> getUserPlaylists(@PathVariable(value = "id") Integer id) {
         List<Playlist> playlists = service.getUserPlaylists(id);
-        return ResponseEntity.ok(playlists);
+        return ResponseEntity.ok().body(playlists);
     }
 
     @GetMapping("{id}")

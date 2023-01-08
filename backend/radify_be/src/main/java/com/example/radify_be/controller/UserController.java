@@ -1,6 +1,7 @@
 package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.UserService;
+import com.example.radify_be.bussines.exceptions.DublicateDataException;
 import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
 import com.example.radify_be.controller.requests.UpdateUserRequest;
@@ -10,6 +11,8 @@ import com.example.radify_be.domain.Role;
 import com.example.radify_be.domain.User;
 import com.example.radify_be.controller.requests.CreateUserRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @CrossOrigin("http://localhost:3000")
 @AllArgsConstructor
+@Slf4j
 public class UserController {
 
 
@@ -26,14 +30,17 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody CreateUserRequest userRequest) {
+    public ResponseEntity createUser(@RequestBody CreateUserRequest userRequest) {
         try {
-            userService.register(converter(userRequest));
-            return ResponseEntity.ok().body("Account created");
+            return ResponseEntity.ok().body(userService.register(converter(userRequest)));
         }
         catch (InvalidInputException e){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
+        catch(DublicateDataException ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+
 
     }
 
@@ -57,6 +64,7 @@ public class UserController {
 
     @DeleteMapping("{id}")
     public ResponseEntity deleteUser(@PathVariable(value = "id") Integer id){
+        log.info("hereee");
         try{
             userService.deleteUser(id);
             return ResponseEntity.ok().body("Successful deletion of user");

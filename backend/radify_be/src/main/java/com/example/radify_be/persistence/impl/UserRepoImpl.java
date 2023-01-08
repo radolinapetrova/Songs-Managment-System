@@ -4,8 +4,13 @@ import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
 import com.example.radify_be.persistence.UserRepo;
 import com.example.radify_be.persistence.converters.UserConverter;
+import com.example.radify_be.persistence.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpServerErrorException;
+
+import java.sql.SQLException;
 
 @Repository
 @RequiredArgsConstructor
@@ -14,12 +19,19 @@ public class UserRepoImpl implements UserRepo {
 
     @Override
     public User save(User user) {
-        return UserConverter.userConverter(repo.save(UserConverter.userEntityConverter(user)));
+        User result = new User();
+        try{
+            result =  UserConverter.userConverter(repo.save(UserConverter.userEntityConverter(user)));
+        }
+        catch (Exception e){
+
+        }
+        return result;
     }
 
     @Override
     public User findById(Integer id) {
-        return UserConverter.userConverter(repo.findById(id).orElse(null));
+        return UserConverter.userConverter(repo.findById(id).orElse(new UserEntity()));
     }
 
     @Override

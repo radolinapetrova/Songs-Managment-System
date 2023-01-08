@@ -6,6 +6,7 @@ import Layout from "./Layout";
 import Songs from "./Songs";
 import PlaylistInfo from "../PlaylistInfo"
 import SongInfo from "../SongInfo";
+import ChatRoom from "../ChatRoom";
 
 
 import {BrowserRouter, Route, Routes} from "react-router-dom";
@@ -25,6 +26,7 @@ export default function Navigation() {
                     <Route path="songs" element={<Songs/>}/>
                     <Route path="playlist/:id" element={<PlaylistInfo/>}/>
                     <Route path="song/:id" element={<SongInfo/>}/>
+                    <Route path="chat" element={<ChatRoom/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>
