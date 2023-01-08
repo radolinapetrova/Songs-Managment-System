@@ -35,7 +35,7 @@ public class SongServiceImpl implements SongService {
     public void deleteSong(Integer id, Integer user) throws UnauthorizedAction, InvalidInputException {
 
 //        log.info("Role is {}", userRepo.findById(user).getRole());
-        if (userRepo.findById(user).getRole().toString().equals("ADMIN")) {
+        if (!userRepo.findById(user).getRole().toString().equals("ADMIN")) {
             throw new UnauthorizedAction();
         }
 
