@@ -12,7 +12,6 @@ import com.example.radify_be.domain.User;
 import com.example.radify_be.controller.requests.CreateUserRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.asm.Advice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,9 +1,7 @@
 package com.example.radify_be.persistence.entities;
 
 
-import com.example.radify_be.domain.Account;
 import com.example.radify_be.domain.Role;
-import com.example.radify_be.domain.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Cascade;

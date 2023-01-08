@@ -1,6 +1,5 @@
 package com.example.radify_be.persistence.entities;
 
-import com.example.radify_be.domain.Artist;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

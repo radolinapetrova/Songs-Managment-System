@@ -6,11 +6,8 @@ import com.example.radify_be.persistence.UserRepo;
 import com.example.radify_be.persistence.converters.UserConverter;
 import com.example.radify_be.persistence.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.HttpServerErrorException;
 
-import java.sql.SQLException;
 
 @Repository
 @RequiredArgsConstructor

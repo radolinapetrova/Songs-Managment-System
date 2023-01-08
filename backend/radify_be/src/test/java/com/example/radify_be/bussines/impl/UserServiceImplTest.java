@@ -1,6 +1,5 @@
 package com.example.radify_be.bussines.impl;
 
-import antlr.CharScanner;
 import com.example.radify_be.bussines.exceptions.DublicateDataException;
 import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
@@ -8,27 +7,16 @@ import com.example.radify_be.domain.Account;
 import com.example.radify_be.domain.Role;
 import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.UserRepo;
-import com.example.radify_be.security.CustomUser;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
