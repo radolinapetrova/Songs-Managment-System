@@ -37,11 +37,11 @@ public class PlaylistServiceImplTest {
     @Test
     public void testCreatePlaylist_shouldReturnThePlaylist_whenSuccessful() throws UnsuccessfulAction, InvalidInputException {
         //ARRANGE
-        Playlist playlist = Playlist.builder().build();
+        Playlist playlist = Playlist.builder().title("heheh").build();
 
         //ACT
         when(playlistRepo.save(any(Playlist.class))).thenReturn(playlist);
-        Playlist result = playlistServiceImpl.createPlaylist(Playlist.builder().build());
+        Playlist result = playlistServiceImpl.createPlaylist(playlist);
 
         //ASSERT
         assertEquals(playlist, result);
@@ -86,6 +86,7 @@ public class PlaylistServiceImplTest {
         playlistList.add(pl2);
 
         //ACT
+        when(playlistRepo.ExistsByCreatorId(any(Integer.class))).thenReturn(true);
         when(playlistRepo.getAllByUserId(any(Integer.class))).thenReturn(playlistList);
         List<Playlist> result = playlistServiceImpl.getUserPlaylists(1);
 
