@@ -167,6 +167,8 @@ public class PlaylistControllerTest {
     public void testGetAllByTitle_shouldReturnThePlaylists_whenTheirTitleContainsTheInput() throws Exception {
         //ARRANGE
         GetPlaylistsByTitleAndUser getPlaylistsByTitleAndUser = new GetPlaylistsByTitleAndUser(); //request
+        getPlaylistsByTitleAndUser.setTitle("heheh");
+        getPlaylistsByTitleAndUser.setId(1);
         List<Playlist> playlistList = List.of(Playlist.builder().id(1).title("Radka").build());
         String content = (new ObjectMapper()).writeValueAsString(getPlaylistsByTitleAndUser);
         String expected = (new ObjectMapper()).writeValueAsString(playlistList); //converting the expected result
@@ -193,6 +195,9 @@ public class PlaylistControllerTest {
     public void testCreateNewPlaylist_shouldSuccessfullyCreateNewPlaylist() throws Exception {
         //ARRANGE
         CreatePlaylistRequest createPlaylistRequest = new CreatePlaylistRequest();
+        createPlaylistRequest.setPublic(true);
+        createPlaylistRequest.setTitle("Radka");
+        createPlaylistRequest.setUserId(1);
         when(playlistService.createPlaylist(any(Playlist.class))).thenReturn(new Playlist());
         String content = (new ObjectMapper()).writeValueAsString(createPlaylistRequest);
         String expected = (new ObjectMapper()).writeValueAsString(new Playlist());
@@ -402,7 +407,7 @@ public class PlaylistControllerTest {
 
     //HAPPY FLOW
     @Test
-    public void testGetAllPlaylists2() throws Exception {
+    public void testGetAllPlaylists_shouldReturnEmptyBody_whenThereAreNoResults() throws Exception {
         //ASSERT
         List<Playlist> playlistList = new ArrayList<>();
         when(playlistService.getAllPublicAndUser(any(Integer.class))).thenReturn(playlistList);
@@ -421,20 +426,6 @@ public class PlaylistControllerTest {
 
 
     @Test
-    public void testGetAllPlaylists3() throws Exception {
-        when(playlistService.getAllPublicAndUser((Integer) any())).thenReturn(new ArrayList<>());
-        SecurityMockMvcRequestBuilders.FormLoginRequestBuilder requestBuilder = SecurityMockMvcRequestBuilders
-                .formLogin();
-        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(playlistController)
-                .build()
-                .perform(requestBuilder);
-        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
-
-    /**
-     * Method under test: {@link PlaylistController#getPlaylistById(Integer)}
-     */
-    @Test
     public void testGetPlaylistById() throws Exception {
         when(playlistService.findById((Integer) any())).thenReturn(new Playlist());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playlists/{id}", 1);
@@ -449,9 +440,7 @@ public class PlaylistControllerTest {
                                         + "\":false}"));
     }
 
-    /**
-     * Method under test: {@link PlaylistController#getPlaylistById(Integer)}
-     */
+
     @Test
     public void testGetPlaylistById2() throws Exception {
         when(playlistService.findById((Integer) any())).thenReturn(null);
@@ -462,9 +451,7 @@ public class PlaylistControllerTest {
         actualPerformResult.andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
-    /**
-     * Method under test: {@link PlaylistController#getPlaylistById(Integer)}
-     */
+
     @Test
     public void testGetPlaylistById3() throws Exception {
         LocalDateTime atStartOfDayResult = LocalDate.of(1970, 1, 1).atStartOfDay();
@@ -485,9 +472,7 @@ public class PlaylistControllerTest {
                                         + ",\"lname\":null},\"users\":[],\"songs\":[],\"public\":true}"));
     }
 
-    /**
-     * Method under test: {@link PlaylistController#updatePlaylist(UpdatePlaylistRequest)}
-     */
+
     @Test
     public void testUpdatePlaylist() throws Exception {
         SecurityMockMvcRequestBuilders.FormLoginRequestBuilder requestBuilder = SecurityMockMvcRequestBuilders

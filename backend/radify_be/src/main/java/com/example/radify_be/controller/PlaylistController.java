@@ -25,7 +25,7 @@ public class PlaylistController {
 
 
     @PostMapping
-    public ResponseEntity<String> createNewPlaylist(@RequestBody CreatePlaylistRequest request) {
+    public ResponseEntity<Object> createNewPlaylist(@RequestBody CreatePlaylistRequest request) {
 
         Playlist pl = null;
         try{
@@ -37,7 +37,7 @@ public class PlaylistController {
         catch (UnsuccessfulAction ex){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ex.getMessage());
         }
-        return ResponseEntity.ok().body(pl.toString());
+        return ResponseEntity.ok().body(pl);
     }
 
 
