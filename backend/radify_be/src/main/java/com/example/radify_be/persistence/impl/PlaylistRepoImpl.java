@@ -7,10 +7,12 @@ import com.example.radify_be.persistence.DBRepositories.PlaylistDBRepository;
 import com.example.radify_be.persistence.DBRepositories.SongDBRepository;
 import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
 import com.example.radify_be.persistence.PlaylistRepo;
+import com.example.radify_be.persistence.UserRepo;
 import com.example.radify_be.persistence.entities.PlaylistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import com.example.radify_be.persistence.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.text.DateFormat;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class PlaylistRepoImpl implements PlaylistRepo {
 
     private final PlaylistDBRepository repo;
@@ -34,11 +37,14 @@ public class PlaylistRepoImpl implements PlaylistRepo {
 
     private PlaylistEntity playlistEntityConverter(Playlist playlist) {
 
+        UserEntity user = userRepo.findById(playlist.getCreator().getId()).orElse(null);
+
         return PlaylistEntity.builder()
                 .id(playlist.getId())
                 .title(playlist.getTitle())
                 .isPublic(playlist.isPublic())
-                .creator(UserEntity.builder().id(playlist.getCreator().getId()).build())
+                .creator(user)
+                .users(List.of(user))
                 .songs(new ArrayList<SongEntity>())
                 .dateOfCreation(convert(playlist.getDateOfCreation())).build();
     }
@@ -56,7 +62,6 @@ public class PlaylistRepoImpl implements PlaylistRepo {
                     .creator(User.builder().id(playlist.getCreator().getId()).build())
                     .dateOfCreation(convert(playlist.getDateOfCreation()))
                     .songs(songs.stream().map(id -> Song.builder().id(id).build()).collect(Collectors.toList()))
-                    //.songs(playlist.getSongs().stream().map(s -> SongRepoImpl.songConverter(s)).collect(Collectors.toList()))
                     .build();
 
         } catch (ParseException e) {
@@ -77,8 +82,7 @@ public class PlaylistRepoImpl implements PlaylistRepo {
     @Override
     public Playlist save(Playlist playlist) {
         PlaylistEntity entity = playlistEntityConverter(playlist);
-        List<UserEntity> users = List.of(userRepo.findById(entity.getCreator().getId()).orElse(null));
-        entity.setUsers(users);
+
         Playlist result = null;
         try {
             result = playlistConverter(repo.save(entity));

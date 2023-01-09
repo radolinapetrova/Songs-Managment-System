@@ -7,7 +7,6 @@ import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.persistence.PlaylistRepo;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PlaylistServiceImpl implements PlaylistService {
 
 
@@ -110,7 +108,6 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public Playlist updatePlaylistInfo(Playlist pl, Integer user) throws UnauthorizedAction , UnsuccessfulAction{
         if (pl.getCreator().getId() != user) {
-            log.info("opsaaaa");
             throw new UnauthorizedAction();
         }
 

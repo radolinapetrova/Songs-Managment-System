@@ -1,13 +1,13 @@
 package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.PlaylistService;
+import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
 import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
 import com.example.radify_be.controller.requests.*;
 import com.example.radify_be.domain.Playlist;
 import com.example.radify_be.domain.User;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,26 +19,25 @@ import java.util.List;
 @RequestMapping("/playlists")
 @CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
-@Slf4j
 public class PlaylistController {
 
     private final PlaylistService service;
 
 
     @PostMapping
-    public ResponseEntity<Playlist> createNewPlaylist(@RequestBody CreatePlaylistRequest request) {
+    public ResponseEntity<String> createNewPlaylist(@RequestBody CreatePlaylistRequest request) {
 
         Playlist pl = null;
         try{
             pl = service.createPlaylist(convert(request));
         }
-        catch(UnauthorizedAction e){
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+        catch(InvalidInputException e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
         catch (UnsuccessfulAction ex){
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ex.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(pl);
+        return ResponseEntity.ok().body(pl.toString());
     }
 
 
@@ -49,7 +48,7 @@ public class PlaylistController {
             pl = service.addSongToPlaylist(request.getPlaylistId(), request.getSongId(), request.getUserId());
         }
         catch(UnauthorizedAction e){
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         catch (UnsuccessfulAction ex){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
@@ -59,10 +58,6 @@ public class PlaylistController {
 
     @PutMapping("/details")
     public ResponseEntity<Playlist> updatePlaylist(UpdatePlaylistRequest req){
-        log.info("hereeee");
-        log.info("Playlist is {} ", req.getPlaylist());
-        log.info("Playlist is {} ", req.getIsPublic()   );
-        log.info("User is {} ", req.getUser());
         try{
             return ResponseEntity.ok().body(service.updatePlaylistInfo(Playlist.builder().id(req.getPlaylist()).isPublic(req.getIsPublic()).build(), req.getUser()));
         }
@@ -74,9 +69,11 @@ public class PlaylistController {
     @PutMapping("/remove")
     public ResponseEntity<Playlist> deleteSongsFromPlaylist(@RequestBody EditPlaylistSongsRequest request){
         Playlist pl = null;
-        try{pl = service.removeSongsFromPlaylist(request.getPlaylistId(), request.getSongId(), request.getUserId());}
+        try{
+            pl = service.removeSongsFromPlaylist(request.getPlaylistId(), request.getSongId(), request.getUserId());
+        }
         catch(UnauthorizedAction e){
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         catch (UnsuccessfulAction ex){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
@@ -106,8 +103,11 @@ public class PlaylistController {
         try {
             service.deletePlaylist(request.getPlaylistId(), request.getUserId());
             return ResponseEntity.ok().body("Successful deletion of the playlist");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+        } catch(UnauthorizedAction e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        catch (UnsuccessfulAction ex){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
         }
     }
 

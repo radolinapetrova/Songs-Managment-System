@@ -89,6 +89,9 @@ export default function GetUserPlaylists() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(data)
+        const token = window.sessionStorage.getItem('token');
+        axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
+
 
         try{
             axios.post("http://localhost:8080/playlists", data).then(getPlaylists)

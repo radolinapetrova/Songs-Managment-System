@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -37,12 +36,13 @@ class UserServiceImplTest {
     public void testGetById_shouldReturnTheUser() {
         //ARRANGE
         User user = new User();
-
-        //ACT
         when(userRepo.findById(any(Integer.class))).thenReturn(user);
 
+        //ACT
+        User result = userServiceImpl.getById(1);
+
         //ASSERT
-        assertSame(user, userServiceImpl.getById(1));
+        assertEquals(user, result);
         verify(userRepo).findById(any(Integer.class));
     }
 
@@ -50,9 +50,7 @@ class UserServiceImplTest {
     //UNHAPPY FLOW
     @Test
     public void testGetById_shouldThrowException_whenUserIdIsInvalid() {
-        //ARRANGE
-        User user = User.builder().id(2).build();
-        //ACT
+        //ARRANGE & ACT
         when(userRepo.findById(any(Integer.class))).thenThrow(new InvalidInputException());
 
         //ASSERT
@@ -81,9 +79,14 @@ class UserServiceImplTest {
     //HAPPY FLOW
     @Test
     public void testDeleteUser_shouldNotThrowException_whenTheDeletionWasUnsuccessful() throws InvalidInputException {
+        //ARRANGE
         when(userRepo.existsById(any(Integer.class))).thenReturn(true);
+
+        //ACT
         doNothing().when(userRepo).deleteById(any(Integer.class));
         userServiceImpl.deleteUser(1);
+
+        //ASSERT
         verify(userRepo).existsById(any(Integer.class));
         verify(userRepo).deleteById(any(Integer.class));
     }
@@ -91,7 +94,10 @@ class UserServiceImplTest {
     //UNHAPPY FLOW
     @Test
     public void testDeleteUser_shouldThrowException_whenTheIdIsInvalid() throws InvalidInputException {
+        //ARRANGE AND ACT
         when(userRepo.existsById(any(Integer.class))).thenReturn(false);
+
+        //ASSERT
         assertThrows(InvalidInputException.class, () -> userServiceImpl.deleteUser(1));
         verify(userRepo).existsById(any(Integer.class));
         verify(userRepo, never()).deleteById(any(Integer.class));
@@ -105,14 +111,11 @@ class UserServiceImplTest {
         //ARRANGE
         User user = User.builder().id(1).fName("Radka").lName("Piratka").role(Role.USER).account(Account.builder().username("radka").email("radka@gmail.com").password("1234").build()).build();
         User user2 = User.builder().id(1).fName("Radolina").lName("Petrova").account(Account.builder().username("radolina").email("radka@gmail.com").build()).build();
-
-
-        //ACT
         when(userRepo.findById(any(Integer.class))).thenReturn(user);
         when(userRepo.save(user2)).thenReturn(user2);
-        User result = userServiceImpl.updateUser(user2);
 
-        //ASSERT
+        //ACT & ASSERT
+        User result = userServiceImpl.updateUser(user2);
         assertEquals(user2, result);
         verify(userRepo).save(user2);
     }
@@ -124,13 +127,9 @@ class UserServiceImplTest {
         //ARRANGE
         User user = User.builder().id(1).fName("Radka").lName("Piratka").role(Role.USER).account(Account.builder().username("radka").email("radka@gmail.com").password("1234").build()).build();
         User user2 = User.builder().id(1).fName("Radolina").lName("Petrova").account(Account.builder().username("radolina").email("radka.com").build()).build();
-
-
-        //ACT
         when(userRepo.findById(any(Integer.class))).thenReturn(user);
-        assertThrows(InvalidInputException.class, () -> userServiceImpl.updateUser(user2));
 
-        //ASSERT
+        //ACT & ASSERT
         assertNotEquals(user2, userRepo.findById(1));
         verify(userRepo).findById(1);
         verify(userRepo, never()).save(any(User.class));
@@ -143,14 +142,12 @@ class UserServiceImplTest {
         //ARRANGE
         User user = User.builder().id(1).fName("Radka").lName("Piratka").role(Role.USER).account(Account.builder().username("radka").email("radka@gmail.com").password("1234").build()).build();
         User user2 = User.builder().id(1).fName("Radolina").lName("Petrova").account(Account.builder().username("radolina").email("radka@gmail.com").build()).build();
-
-
-        //ACT
         when(userRepo.findById(any(Integer.class))).thenReturn(user);
         when(userRepo.save(user2)).thenReturn(user);
-        assertThrows(UnsuccessfulAction.class, () -> userServiceImpl.updateUser(user2));
 
-        //ASSERT
+
+        //ACT & ASSERT
+        assertThrows(UnsuccessfulAction.class, () -> userServiceImpl.updateUser(user2));
         assertNotEquals(user2, userRepo.findById(any(Integer.class)));
         verify(userRepo, times(2)).findById(any(Integer.class));
     }
@@ -159,10 +156,10 @@ class UserServiceImplTest {
     public void testRegister_shouldRegisterTheUserSuccessfully() throws InvalidInputException, DublicateDataException {
         //ARRANGE
         User user = User.builder().id(1).fName("Radka").lName("Piratka").role(Role.USER).account(Account.builder().username("radka").email("radka@gmail.com").password("1234").build()).build();
-
-        //ACT
         when(userRepo.save(any(User.class))).thenReturn(user);
         when(passwordEncoder.encode(any(CharSequence.class))).thenReturn("1234");
+
+        //ACT
         User result = userServiceImpl.register(user);
 
         //ASSERT

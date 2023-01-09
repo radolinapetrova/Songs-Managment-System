@@ -18,7 +18,7 @@ export default function Register() {
         e.preventDefault();
         try {
             let res = await axios.post("http://localhost:8080/users", data);
-            // setMsg(res.data)
+            console.log(res.data)
 
         } catch (err) {
             if (err.response.status === 417) {

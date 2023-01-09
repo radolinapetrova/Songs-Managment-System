@@ -24,11 +24,11 @@ import java.util.Collection;
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-@PropertySource(value = {"classpath:application.properties"})
+//@PropertySource(value = {"application.properties"})
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
-    @Value("${jwt.secret}")
-    private String secret;
+//    @Value("${jwt.secret}")
+//    private String secret;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getServletPath().equals("/login")){
