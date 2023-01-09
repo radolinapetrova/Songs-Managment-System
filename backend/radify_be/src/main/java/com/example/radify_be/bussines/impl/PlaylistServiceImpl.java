@@ -29,7 +29,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public Playlist createPlaylist(Playlist playlist) throws UnsuccessfulAction, InvalidInputException {
 
-        Pattern pattern = Pattern.compile("[a-zA-Z0-9_-]+$");
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9_-]+$"); //NOSONAR
         Matcher match = pattern.matcher(playlist.getTitle());
 
         if (!match.matches()){
