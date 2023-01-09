@@ -7,7 +7,6 @@ import com.example.radify_be.persistence.SongRepo;
 import com.example.radify_be.persistence.entities.ArtistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-@Slf4j
 public class SongRepoImpl implements SongRepo {
 
     private final SongDBRepository repo;
@@ -87,8 +85,6 @@ public class SongRepoImpl implements SongRepo {
     public List<Song> findAllByPlaylists(Integer id){
             List<Song> songs = new ArrayList<>();
             List<SongEntity> result = repo.findAllByPlaylistsId(id);
-
-            log.info("Result is {}", result.size());
 
             if (result.size() == 0){
                 return new ArrayList<Song>();

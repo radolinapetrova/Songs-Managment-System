@@ -7,7 +7,6 @@ import com.example.radify_be.persistence.DBRepositories.PlaylistDBRepository;
 import com.example.radify_be.persistence.DBRepositories.SongDBRepository;
 import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
 import com.example.radify_be.persistence.PlaylistRepo;
-import com.example.radify_be.persistence.UserRepo;
 import com.example.radify_be.persistence.entities.PlaylistEntity;
 import com.example.radify_be.persistence.entities.SongEntity;
 import com.example.radify_be.persistence.entities.UserEntity;
