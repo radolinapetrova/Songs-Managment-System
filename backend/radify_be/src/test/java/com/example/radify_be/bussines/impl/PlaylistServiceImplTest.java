@@ -256,7 +256,7 @@ public class PlaylistServiceImplTest {
 
    //UNHAPPY FLOW
     @Test
-    public void testRemoveSongsFromPlaylist_shoudThrowException_whenTheUserIsNotAuthorized() throws UnauthorizedAction, UnsuccessfulAction {
+    public void testRemoveSongsFromPlaylist_shouldThrowException_whenTheUserIsNotAuthorized() throws UnauthorizedAction, UnsuccessfulAction {
         //ARRANGE
         Song song = Song.builder().id(1).build();
         Playlist playlist = Playlist.builder().id(1).creator(User.builder().id(1).build()).songs(List.of(song)).build();
@@ -277,16 +277,19 @@ public class PlaylistServiceImplTest {
     @Test
     public void testUpdatePlaylistInfo_shouldUpdateThePlaylistSuccessfully() throws UnauthorizedAction, UnsuccessfulAction {
         //ARRANGE
-        Playlist pl = Playlist.builder().id(1).title("title1").creator(User.builder().id(1).build()).build();
-        Playlist pl2 = Playlist.builder().id(1).title("title2").creator(User.builder().id(1).build()).build();
+        User user = User.builder().id(1).build();
+        Playlist pl = Playlist.builder().id(1).title("title1").creator(user).build();
+        Playlist pl2 = Playlist.builder().id(1).title("title2").creator(user).build();
 
         //ACT
         when(playlistRepo.save(any(Playlist.class))).thenReturn(pl2);
+        when(playlistRepo.findById(any(Integer.class))).thenReturn(pl);
         Playlist result = playlistServiceImpl.updatePlaylistInfo(pl2, 1);
 
         //ASSERT
         assertNotEquals(pl, result);
         verify(playlistRepo).save(any(Playlist.class));
+        verify(playlistRepo).findById(any(Integer.class));
     }
 
 
@@ -294,15 +297,18 @@ public class PlaylistServiceImplTest {
     @Test
     public void testUpdatePlaylistInfo_shouldThrowException_whenThePlaylistWasNotUpdatedSuccessully() throws UnauthorizedAction, UnsuccessfulAction {
         //ARRANGE
-        Playlist pl = Playlist.builder().id(1).title("title1").creator(User.builder().id(1).build()).build();
-        Playlist pl2 = Playlist.builder().id(1).title("title2").creator(User.builder().id(1).build()).build();
+        User user = User.builder().id(1).build();
+        Playlist pl = Playlist.builder().id(1).title("title1").creator(user).build();
+        Playlist pl2 = Playlist.builder().id(1).title("title2").creator(user).build();
 
         //ACT
         when(playlistRepo.save(any(Playlist.class))).thenReturn(pl);
+        when(playlistRepo.findById(any(Integer.class))).thenReturn(pl);
         assertThrows(UnsuccessfulAction.class, () -> playlistServiceImpl.updatePlaylistInfo(pl2, 1));
 
         //ASSERT
         verify(playlistRepo).save(any(Playlist.class));
+        verify(playlistRepo).findById(any(Integer.class));
     }
 
 
@@ -310,13 +316,17 @@ public class PlaylistServiceImplTest {
     @Test
     public void testUpdatePlaylistInfo_shouldThrowException_whenUserHasNoAuthority() throws UnauthorizedAction {
         //ARRANGE
-        Playlist pl2 = Playlist.builder().id(1).title("title2").creator(User.builder().id(1).build()).build();
+        User user = User.builder().id(1).build();
+        Playlist pl = Playlist.builder().id(1).title("title1").creator(user).build();
+        Playlist pl2 = Playlist.builder().id(1).title("title2").creator(user).build();
 
         //ACT
+        when(playlistRepo.findById(any(Integer.class))).thenReturn(pl);
         assertThrows(UnauthorizedAction.class, () -> playlistServiceImpl.updatePlaylistInfo(pl2, 2));
 
         //ASSERT
         verify(playlistRepo, never()).save(any(Playlist.class));
+        verify(playlistRepo).findById(any(Integer.class));
     }
 
 
