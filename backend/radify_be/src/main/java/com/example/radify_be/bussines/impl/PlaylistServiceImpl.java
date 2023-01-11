@@ -107,9 +107,12 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public Playlist updatePlaylistInfo(Playlist pl, Integer user) throws UnauthorizedAction , UnsuccessfulAction{
-        if (pl.getCreator().getId() != user) {
+        Playlist old = findById(pl.getId());
+
+        if (old.getCreator().getId() != user) {
             throw new UnauthorizedAction();
         }
+        old.setPublic(pl.isPublic());
 
         Playlist pl2 = repo.save(pl);
 

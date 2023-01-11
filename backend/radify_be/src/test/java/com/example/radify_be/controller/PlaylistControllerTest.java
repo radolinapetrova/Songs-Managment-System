@@ -4,11 +4,9 @@ import com.example.radify_be.bussines.PlaylistService;
 import com.example.radify_be.bussines.exceptions.InvalidInputException;
 import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
 import com.example.radify_be.bussines.exceptions.UnsuccessfulAction;
-import com.example.radify_be.controller.requests.CreatePlaylistRequest;
-import com.example.radify_be.controller.requests.DeletePlaylistRequest;
-import com.example.radify_be.controller.requests.EditPlaylistSongsRequest;
-import com.example.radify_be.controller.requests.GetPlaylistsByTitleAndUser;
+import com.example.radify_be.controller.requests.*;
 import com.example.radify_be.domain.Playlist;
+import com.example.radify_be.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
@@ -412,6 +410,42 @@ import static org.mockito.Mockito.*;
                 //ASSERT
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(""));
+    }
+
+
+    //HAPPY FLOW
+    @Test
+    public void testGetPlaylistById_shouldSuccessfullyReturnThePlaylist() throws Exception {
+        //ARRANGE
+        when(playlistService.findById(any(Integer.class))).thenReturn(new Playlist());
+        String expected = (new ObjectMapper()).writeValueAsString(new Playlist());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playlists/{id}", 1);
+
+        //ACT
+        MockMvcBuilders.standaloneSetup(playlistController)
+                .build()
+                .perform(requestBuilder)
+        //ASSERT
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(expected));
+    }
+
+
+    //UNHAPPY FLOW
+    @Test
+    public void testGetPlaylistById_shouldReturnEmptyBodyWhenThereIsNoSuchPlaylist() throws Exception {
+        //ARRANGE
+        when(playlistService.findById(any(Integer.class))).thenReturn(null);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playlists/{id}", 1);
+
+        //ACT
+        MockMvcBuilders.standaloneSetup(playlistController)
+                .build()
+                .perform(requestBuilder)
+        //ASSERT
+                .andExpect(MockMvcResultMatchers.status().is(417));
     }
 
 

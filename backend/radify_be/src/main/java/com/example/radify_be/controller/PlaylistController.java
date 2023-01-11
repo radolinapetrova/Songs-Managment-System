@@ -58,8 +58,9 @@ public class PlaylistController {
 
     @PutMapping("/details")
     public ResponseEntity<Playlist> updatePlaylist(UpdatePlaylistRequest req){
+        Playlist pl = service.updatePlaylistInfo(Playlist.builder().id(req.getPlaylist()).isPublic(req.isPublic()).build(), req.getUser());
         try{
-            return ResponseEntity.ok().body(service.updatePlaylistInfo(Playlist.builder().id(req.getPlaylist()).isPublic(req.getIsPublic()).build(), req.getUser()));
+            return ResponseEntity.ok().body(pl);
         }
         catch(UnauthorizedAction er){
             return ResponseEntity.ok().body(null);
@@ -93,7 +94,7 @@ public class PlaylistController {
         Playlist playlist = service.findById(id);
 
         if (playlist == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
         }
         return ResponseEntity.ok().body(playlist);
     }
