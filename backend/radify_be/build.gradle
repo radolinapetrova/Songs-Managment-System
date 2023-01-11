@@ -74,14 +74,4 @@ jacoco {
 }
 
 
-sonarqube {
-    properties {
-        property 'sonar.projectName', 'Radify'
-        property 'sonar.projectKey', 'radify'
-        property 'sonar.core.codeCoveragePlugin', 'jacoco'
-        property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco.xml"
-    }
-}
-
-test.finalizedBy jacocoTestReport
 
