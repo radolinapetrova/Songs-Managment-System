@@ -22,7 +22,7 @@ test:
      - .\gradlew test
 
 sonarqube:
-   stage: .post
+   stage: test
    script:
       - cd backend/radify_be
       - .\gradlew sonarqube
