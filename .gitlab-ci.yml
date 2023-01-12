@@ -26,3 +26,9 @@ sonarqube:
    script:
       - cd backend/radify_be
       - .\gradlew sonarqube
+
+deploy:
+    stage: deploy
+    script:
+        - cd backend/radify_be
+        - docker compose up -d --build
