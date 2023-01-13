@@ -9,6 +9,7 @@ stages:
   - build
   - test
   - .post
+  - deploy
 
 build:
    stage: build 
@@ -22,7 +23,7 @@ test:
      - .\gradlew test
 
 sonarqube:
-   stage: .post
+   stage: test
    script:
       - cd backend/radify_be
       - .\gradlew sonarqube
