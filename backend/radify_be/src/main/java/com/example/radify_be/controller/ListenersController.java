@@ -20,9 +20,9 @@ public class ListenersController {
         return ResponseEntity.ok().body(service.getMonthlyListeners(id));
     }
 
-    @GetMapping("year/{id}")
-    public ResponseEntity getYearlyListeners(@PathVariable (value = "id") Integer id){
-        return ResponseEntity.ok().body(service.getYearlyListeners(id));
+    @GetMapping("avg/{id}")
+    public ResponseEntity getAvgListeners(@PathVariable (value = "id") Integer id){
+        return ResponseEntity.ok().body(service.getAvgListeners(id));
     }
 
 

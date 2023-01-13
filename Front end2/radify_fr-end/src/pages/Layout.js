@@ -13,7 +13,7 @@ const Layout = () => {
                     <nav className="nav">
                         <Link className="link" to="/">Home</Link>
                         <Link className="link" to="/playlists">Playlists</Link>
-                        <Link className="link" to="/login">Log in</Link>
+                        <Link className="link" name="account_link" id="account_link" to="/account">Account</Link>
                         <Link className="link" to="/chat">Chat</Link>
                     </nav>
                     <Outlet/>
@@ -25,7 +25,7 @@ const Layout = () => {
                     <nav>
                         <Link className="link" to="/">Home</Link>
                         <Link className="link" to="/songs">Songs</Link>
-                        <Link className="link" to="/login">Log in</Link>
+                        <Link className="link" to="/account">Account</Link>
                     </nav>
                     <Outlet/>
                 </div>
@@ -38,7 +38,7 @@ const Layout = () => {
             <div className="main">
                 <nav>
                     <Link className="link" to="/">Home</Link>
-                    <Link className="link" to="/login">Log in</Link>
+                    <Link className="link" id="login_link" to="/login">Log in</Link>
                 </nav>
                 <Outlet/>
             </div>

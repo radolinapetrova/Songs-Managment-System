@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -24,7 +25,6 @@ import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepo repo;
@@ -65,7 +65,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setRole(og.getRole());
         user.getAccount().setPassword(og.getAccount().getPassword());
 
-        User updated = repo.save(user);
+        User updated = null;
+
+        try{
+             updated = repo.save(user);
+        }
+        catch(Exception e){
+
+        }
 
         if (updated.equals(og)) {
             throw new UnsuccessfulAction();
@@ -76,20 +83,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User register(User user) throws InvalidInputException, DublicateDataException {
-        validateEmail(user.getAccount().getEmail());
+
+        try{
+            validateEmail(user.getAccount().getEmail());
+        }
+        catch(InvalidInputException e){
+            throw e;
+        }
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
         User result = null;
         try {
             result = repo.save(user);
-            log.info("epa i tuka wa");
         } catch (Exception e) {
-            log.info("Exc is {}", e.getClass());
             throw new DublicateDataException();
         }
 
         return result;
 
     }
+
 
 
     @Override

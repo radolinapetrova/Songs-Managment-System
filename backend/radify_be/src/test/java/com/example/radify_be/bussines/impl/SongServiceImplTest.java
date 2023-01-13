@@ -181,7 +181,6 @@ public class SongServiceImplTest {
         Song song = new Song();
 
         //ACT
-        when(songRepo.existsById(any(Integer.class))).thenReturn(true);
         when(songRepo.getById(any(Integer.class))).thenReturn(song);
         Song result = songServiceImpl.getById(1);
 
@@ -194,12 +193,11 @@ public class SongServiceImplTest {
     @Test
     public void testGetById_shouldThrowExceptionWhenInputIsInvalid() throws InvalidInputException{
         //ACT
-        when(songRepo.existsById(any(Integer.class))).thenReturn(false);
+        when(songRepo.getById(any(Integer.class))).thenReturn(null);
         assertThrows(InvalidInputException.class, () -> songServiceImpl.getById(1));
 
         //ASSERT
-        verify(songRepo, never()).getById(any(Integer.class));
-        verify(songRepo).existsById(any(Integer.class));
+        verify(songRepo).getById(any(Integer.class));
     }
 
 
@@ -211,7 +209,7 @@ public class SongServiceImplTest {
 
         //ACT
         when(songRepo.getAllByIdIn(any(List.class))).thenReturn(songList);
-        List<Song> result = songServiceImpl.getAllByIdIn(new ArrayList<Integer>());
+        List<Song> result = songServiceImpl.getAllByIdIn(new ArrayList<>());
 
         //ASSERT
         assertSame(songList, result);

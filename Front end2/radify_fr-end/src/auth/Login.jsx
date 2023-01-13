@@ -14,6 +14,8 @@ export default function LogIn() {
         password: ""
     })
 
+    const [message, setMessage] = useState("");
+
 
     const navigate = useNavigate();
 
@@ -28,17 +30,17 @@ export default function LogIn() {
 
 
                 let res = await axios.post('http://localhost:8080/login', params)
+                console.log(res.data)
                 sessionStorage.setItem("token", res.data.access_token)
                 const token = res.data.access_token;
                 setClaims(decode(token));
                 setAuth(true);
                 navigate('/')
-
             } catch (err) {
-                if (err.response.status === 403) {
-                    alert("Unfortunately, it seems that, sadly, you have, regrettably, entered wrong credentials :(");
+                if (err.response.status === 403 || err.response.status === 401 ) {
+                    setMessage("Unfortunately, it seems that, sadly, you have, regrettably, entered wrong credentials :(");
                 } else {
-                    alert("Idk what went wrong");
+                    setMessage("Idk what went wrong");
                 }
             } finally {
 
@@ -53,26 +55,23 @@ export default function LogIn() {
                 <form className="login">
                     <div className="input">
                         <label>Username </label>
-                        <input type="text" value={data.username}
+                        <input type="text" value={data.username} name="login_username"
                                onChange={(e) => setData(prevState => ({...prevState, username: e.target.value}))}
                                required/>
                     </div>
 
                     <div className="input">
                         <label>Password </label>
-                        <input type="password" value={data.password}
+                        <input type="password" value={data.password} name="login_password"
                                onChange={(e) => setData(prevState => ({...prevState, password: e.target.value}))}
                                required/>
                     </div>
 
-                    <button onClick={HandleSubmit} className="button">Log in</button>
+                    <button onClick={HandleSubmit} name="loginButton" className="button">Log in</button>
+                    <p className="message" name="login_message">{message}</p>
 
                 </form>
-
-
             }
-
-
         </div>
     );
 }

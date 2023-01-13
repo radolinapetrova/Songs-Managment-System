@@ -23,8 +23,8 @@ public class ListenersServiceImpl implements ListenersService {
     }
 
     @Override
-    public long getYearlyListeners(Integer id){
-        return repo.getYearlyListeners(id);
+    public long getAvgListeners(Integer id){
+        return repo.getAvgListeners(id);
     }
 
     @Override

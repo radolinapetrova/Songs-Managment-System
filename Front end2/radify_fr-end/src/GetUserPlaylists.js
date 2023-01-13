@@ -66,7 +66,7 @@ export default function GetUserPlaylists() {
                 <form className="createPlaylist">
                     <div>
                         <label>Title </label>
-                        <input type="text"
+                        <input type="text" id="title_input"
                                onChange={(e) => setData(prevState => ({...prevState, title: e.target.value}))}
                                required/>
                     </div>
@@ -76,7 +76,7 @@ export default function GetUserPlaylists() {
                         <label>Public </label>
                     </div>
                     <div>
-                        <input type="radio" name="public"
+                        <input type="radio" name="public" id="public_input"
                                onChange={(e) => setData(prevState => ({...prevState, isPublic: false}))} required/>
                         <label>Private </label>
                     </div>

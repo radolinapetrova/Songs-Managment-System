@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @CrossOrigin("http://localhost:3000")
 @AllArgsConstructor
-@Slf4j
 public class UserController {
 
 
@@ -30,8 +29,13 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity createUser(@RequestBody CreateUserRequest userRequest) {
+
         try {
-            return ResponseEntity.ok().body(userService.register(converter(userRequest)));
+            User user = userService.register(converter(userRequest));
+            if (user == null){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User with this credentials already exists!");
+            }
+            return ResponseEntity.ok().body(user);
         }
         catch (InvalidInputException e){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
@@ -63,7 +67,6 @@ public class UserController {
 
     @DeleteMapping("{id}")
     public ResponseEntity deleteUser(@PathVariable(value = "id") Integer id){
-        log.info("hereee");
         try{
             userService.deleteUser(id);
             return ResponseEntity.ok().body("Successful deletion of user");

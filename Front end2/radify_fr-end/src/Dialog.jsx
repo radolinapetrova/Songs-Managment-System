@@ -27,13 +27,13 @@ function Dialog({ message, onDialog}) {
                     borderRadius: "10px"
                 }}
             >
-                <h3 stlye={{ color: "#000", fontSize: "16px"}}>{message}</h3>
+                <h3 stlye={{ color: "#010101", fontSize: "16px"}}>{message}</h3>
                 {/*<h1 style={{ color: "blue", fontSize: "24px" }}>{nameProduct}</h1>*/}
                 <div style={{ display: "flex", alignItems: "center" }}>
-                    <button
+                    <button name="yes_button"
                         onClick={() => onDialog(true)}
                         style={{
-                            background: "red",
+                            background: "green",
                             color: "white",
                             padding: "10px",
                             marginRight: "4px",
@@ -43,10 +43,10 @@ function Dialog({ message, onDialog}) {
                     >
                         Yes
                     </button>
-                    <button
+                    <button name="no_button"
                         onClick={() => onDialog(false)}
                         style={{
-                            background: "green",
+                            background: "red",
                             color: "white",
                             padding: "10px",
                             marginLeft: "4px",

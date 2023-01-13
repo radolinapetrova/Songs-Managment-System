@@ -43,14 +43,8 @@ public class ListenersRepoImpl implements ListenersRepo {
     }
 
     @Override
-    public long getYearlyListeners(Integer id) {
-        Date date = new Date();
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Integer yearInt = localDate.getYear();
-
-        String year = Integer.toString(yearInt);
-
-        return repo.getYearlyCount(year, id);
+    public long getAvgListeners(Integer id) {
+        return repo.getAvgCount(id);
     }
 
     @Override

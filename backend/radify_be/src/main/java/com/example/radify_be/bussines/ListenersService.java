@@ -9,7 +9,7 @@ public interface ListenersService {
 
     void save(Integer song, Integer user);
 
-    long getYearlyListeners(Integer id);
+    long getAvgListeners(Integer id);
 
     List<Song>  getTopSongs();
 }

@@ -33,7 +33,7 @@ public class PlaylistEntity {
 
 
     @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
-//    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @OneToOne
     private UserEntity creator;
 
@@ -41,7 +41,7 @@ public class PlaylistEntity {
     private String dateOfCreation;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+//    @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @JoinTable(name="user_playlists",
     joinColumns = @JoinColumn(
             name = "playlist_id",

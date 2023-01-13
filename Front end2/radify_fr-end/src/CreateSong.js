@@ -5,7 +5,12 @@ import './css/Playlist.css'
 export default function CreateSong() {
 
     const token = window.sessionStorage.getItem('token');
+    const [numArtists, setNumArtists] = useState(1);
 
+    const handleAddArtist = (e) => {
+        e.preventDefault()
+        setNumArtists(numArtists + 1);
+    }
 
     const [song, setSong] = useState({
         title: "",
@@ -13,9 +18,7 @@ export default function CreateSong() {
         genre: "",
         artistsIds: []
     })
-    const [selectedArtist, setSelectedArtist] = useState([])
-    const [value, setValue] = useState("")
-    const [plusArtist, setPlusArtist] = useState(false)
+    const [value, setValue] = useState([])
 
     const [allArtists, setAllArtists] = useState([]);
 
@@ -31,16 +34,22 @@ export default function CreateSong() {
 
     const addSong = async (e) => {
         e.preventDefault()
-        song.artistsIds.push(value)
+        for (let i = 0; i < value.length; i++){
+            song.artistsIds.push(value[i])
+        }
         console.log(song)
         axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
-        axios.post("http://localhost:8080/songs", song).then(res => console.log(res))
+         axios.post("http://localhost:8080/songs", song).then(res => console.log(res))
         setSong(prevState => ({...prevState, artistsIds: []}))
     }
 
-    const getValue = async (e) => {
+    const getValue =  (e) => {
         e.preventDefault()
-        setValue(e.target.value);
+        if (Number.isInteger(parseInt(e.target.value))){
+            value.push(e.target.value);
+        }
+
+        console.log(value)
     }
 
     function fullName(obj) {
@@ -49,6 +58,7 @@ export default function CreateSong() {
         }
         return `${obj.fname} ${obj.lname}`
     }
+
 
     function createForm() {
         return (
@@ -67,50 +77,33 @@ export default function CreateSong() {
 
                 <label>Artists</label>
 
-                <input list="browsers" onSelect={getValue} name="browser"/>
-                <datalist id="browsers">
-                    {allArtists.map((a) => (
-                        <option key={a.id} className="artists" value={a.id}>{fullName(a)}</option>))}
-                </datalist>
+
+                {Array.from({ length: numArtists }, (_, i) => (
+                    <div key={i}>
+                        <input key={i} list="browsers" onSelect={getValue} name="browser"/>
+                        <datalist id="browsers">
+                            {allArtists.map((a) => (
+                                <option key={a.id} className="artists" value={a.id}>{fullName(a)}</option>))}
+                        </datalist>
+                    </div>
+                ))}
 
 
-                <button onClick={setter}>Add artist</button>
+
+
+
+                <button onClick={handleAddArtist}>Add artist</button>
                 <button onClick={addSong}>Add song</button>
             </form>
         )
     }
 
-    const setter = (e) => {
-        e.preventDefault()
-        setPlusArtist(true)
-    }
-
-
-
-
-    const addArtist = () => {
-
-        console.log("before: " + plusArtist)
-        setPlusArtist("")
-        setPlusArtist(false)
-        console.log("after: " + plusArtist)
-        return (
-            <div>
-                {createForm()}
-                <input list="browsers" onSelect={getValue} name="browser"/>
-                <datalist id="browsers">
-                    {allArtists.filter(a => a.id != value.id).map((a) => (
-                        <option key={a.id} className="artists" value={a.id}>{fullName(a)}</option>))}
-                </datalist>
-            </div>
-        )
-    }
 
 
     return (
         <div className="song-form">
             {createForm()}
-            {(plusArtist && addArtist())}
+            {/*{(plusArtist && addArtist())}*/}
 
         </div>
     )

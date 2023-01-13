@@ -1,12 +1,16 @@
 package com.example.radify_be.persistence.impl;
 
+import com.example.radify_be.bussines.exceptions.DublicateDataException;
 import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.DBRepositories.UserDBRepository;
 import com.example.radify_be.persistence.UserRepo;
 import com.example.radify_be.persistence.converters.UserConverter;
 import com.example.radify_be.persistence.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
+
+import java.lang.reflect.InvocationTargetException;
 
 
 @Repository
@@ -16,7 +20,7 @@ public class UserRepoImpl implements UserRepo {
 
     @Override
     public User save(User user) {
-        User result = new User();
+        User result = null;
         try{
             result =  UserConverter.userConverter(repo.save(UserConverter.userEntityConverter(user)));
         }
@@ -25,6 +29,7 @@ public class UserRepoImpl implements UserRepo {
         }
         return result;
     }
+
 
     @Override
     public User findById(Integer id) {

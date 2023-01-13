@@ -9,15 +9,24 @@ import com.example.radify_be.domain.User;
 import com.example.radify_be.persistence.UserRepo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -30,6 +39,8 @@ class UserServiceImplTest {
 
     @InjectMocks
     private UserServiceImpl userServiceImpl;
+
+
 
     //HAPPY FLOW
     @Test
@@ -59,6 +70,8 @@ class UserServiceImplTest {
     }
 
 
+
+
     //HAPPY FLOW
     @Test
     public void testValidateEmail_shouldNotThrowException_whenEmailIsValid() throws InvalidInputException {
@@ -74,6 +87,8 @@ class UserServiceImplTest {
         assertThrows(InvalidInputException.class, () -> userServiceImpl.validateEmail("radka.p@"));
         assertThrows(InvalidInputException.class, () -> userServiceImpl.validateEmail("radka.gmail.com"));
     }
+
+
 
 
     //HAPPY FLOW
@@ -152,6 +167,10 @@ class UserServiceImplTest {
         verify(userRepo, times(2)).findById(any(Integer.class));
     }
 
+
+
+
+
     @Test
     public void testRegister_shouldRegisterTheUserSuccessfully() throws InvalidInputException, DublicateDataException {
         //ARRANGE
@@ -195,6 +214,10 @@ class UserServiceImplTest {
         assertThrows(DublicateDataException.class, () -> userServiceImpl.register(user));
         verify(userRepo).save(any(User.class));
     }
+
+
+
+
 
 //    @Test
 //    public void testLoadUserByUsername5() throws UsernameNotFoundException {

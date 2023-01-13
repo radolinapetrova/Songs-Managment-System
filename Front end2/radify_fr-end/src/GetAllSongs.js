@@ -28,20 +28,8 @@ export default function GetAllSongs() {
         e.preventDefault()
         setSong(e.target.value);
        saveSong(e.target.value)
+
         navigate("/playlists")
-    }
-
-    const deleteSong = async (e) => {
-
-        axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
-        console.log("uhmmmmm")
-        console.log({userId: claims.id, songId: e.target.value})
-        e.preventDefault()
-        axios.delete('http://localhost:8080/songs', {data: {userId: claims.id, songId: e.target.value}})
-            .then(res => console.log(res.data))
-        return (
-            mapSongs()
-        )
     }
 
 
@@ -62,7 +50,6 @@ export default function GetAllSongs() {
                 <p className="category">Songs</p>
                 {songs.map((song) => (<div key={song.id} className="single">
                     <Link to={"/song/" + song.id} className="title">{song.title}</Link>
-                    <button value={song.id} onClick={deleteSong} className="button">-</button>
                 </div>))}
             </div>)}
             else{
@@ -80,11 +67,12 @@ export default function GetAllSongs() {
 
 
     function getSongs() {
+        console.log("herreee")
         axios.get('http://localhost:8080/songs/all')
             .then(res => {
-                setSongs(res.data)
+                 setSongs(res.data)
             }).catch(err => console.log(err))
-
+console.log(songs)
 
     }
 

@@ -16,13 +16,14 @@ export default function SongInfo() {
         seconds: "",
         artists: [],
         listeners: 0,
-        yearlyListeners: 0
+        avgListeners: 0
     });
 
 
     useEffect(() => {
         getSongInfo()
         getMonthlyListeners()
+        getAvgListeners()
 
     }, [])
 
@@ -44,8 +45,6 @@ export default function SongInfo() {
     }
 
     function getMonthlyListeners() {
-
-
         axios.get(`http://localhost:8080/listeners/${id}`)
             .then(res => {
 
@@ -55,8 +54,18 @@ export default function SongInfo() {
                 }))
                 console.log(song.listeners)
             })
+    }
 
+    function getAvgListeners() {
+        axios.get(`http://localhost:8080/listeners/avg/${id}`)
+            .then(res => {
 
+                setSong(prevState => ({
+                    ...prevState,
+                    avgListeners: res.data
+                }))
+                console.log(song.listeners)
+            })
     }
 
     const mapArtists = () => {
@@ -88,8 +97,7 @@ export default function SongInfo() {
                 if (res.status == 200) {
                     setSong(prevState => ({
                         ...prevState,
-                        listeners: song.listeners + 1,
-                        yearlyListeners: song.yearlyListeners + 1
+                        listeners: song.listeners + 1
                     }))
                 }
             })
@@ -115,6 +123,10 @@ export default function SongInfo() {
                 <div className="detail">
                     <p className="label">Monthly listeners:</p>
                     <p>{song.listeners}</p>
+                </div>
+                <div className="detail">
+                    <p className="label">Average monthly listeners:</p>
+                    <p>{song.avgListeners}</p>
                 </div>
                 {mapArtists()}
                 <button onClick={playSong}>Play song</button>

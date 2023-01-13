@@ -23,7 +23,7 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public List<Song> getSongsByTitle(String title) {
-        if (title.equals("")){
+        if (title.equals("") || title == null){
             return repository.findAll();
         }
         return repository.findAllByTitle(title);
@@ -33,7 +33,6 @@ public class SongServiceImpl implements SongService {
     @Override
     public void deleteSong(Integer id, Integer user) throws UnauthorizedAction, InvalidInputException {
 
-//        log.info("Role is {}", userRepo.findById(user).getRole());
         if (!userRepo.findById(user).getRole().toString().equals("ADMIN")) {
             throw new UnauthorizedAction();
         }
@@ -63,10 +62,12 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public Song getById(Integer id) throws InvalidInputException {
-        if (!repository.existsById(id)){
+
+        Song song = repository.getById(id);
+        if (song == null){
             throw new InvalidInputException();
         }
-        return repository.getById(id);
+        return song;
     }
 
     @Override

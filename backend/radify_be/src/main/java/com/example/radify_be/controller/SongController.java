@@ -1,13 +1,17 @@
 package com.example.radify_be.controller;
 
 import com.example.radify_be.bussines.SongService;
+import com.example.radify_be.bussines.exceptions.InvalidInputException;
+import com.example.radify_be.bussines.exceptions.UnauthorizedAction;
 import com.example.radify_be.controller.requests.CreateSongRequest;
 import com.example.radify_be.controller.requests.DeleteSongRequest;
 import com.example.radify_be.domain.Artist;
 import com.example.radify_be.domain.Song;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -57,26 +61,44 @@ public class SongController {
 
     @DeleteMapping()
     public ResponseEntity deleteSong(@RequestBody DeleteSongRequest request){
-        log.info("Hereee");
-        service.deleteSong(request.songId, request.getUserId());
-
-        return ResponseEntity.ok().body("Noice");
+        try{
+            service.deleteSong(request.songId, request.getUserId());
+            return ResponseEntity.ok().body("Noice");
+        }
+        catch(UnauthorizedAction e){
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+        catch (InvalidInputException ex){
+            return ResponseEntity.status(417).body(ex.getMessage());
+        }
     }
 
 
     @GetMapping("{id}")
     public ResponseEntity getSongById(@PathVariable(value = "id") Integer id) {
-        Song song = service.getById(id);
-        if (song != null) {
 
-            return ResponseEntity.ok().body(song);
+
+        try{
+            return ResponseEntity.ok().body(service.getById(id));
         }
-        return ResponseEntity.ok().body("Nooooo");
+        catch (InvalidInputException e){
+            return ResponseEntity.status(417).body(e.getMessage());
+        }
+
     }
 
-    private Song convert(CreateSongRequest request) {
-        List<Artist> artists = request.getArtistsIds().stream().map(id -> Artist.builder().id(id).build()).collect(Collectors.toList());
 
-        return Song.builder().title(request.getTitle()).genre(request.getGenre()).seconds(request.getSeconds()).artists(artists).build();
+    public Song convert(CreateSongRequest request) {
+        try{
+            List<Artist> artists = request.getArtistsIds().stream().map(id -> Artist.builder().id(id).build()).collect(Collectors.toList());
+
+            Song song =  Song.builder().title(request.getTitle()).genre(request.getGenre()).seconds(request.getSeconds()).artists(artists).build();
+
+            return song;
+        }
+        catch(NullPointerException e){
+           throw new InvalidInputException();
+        }
+
     }
 }

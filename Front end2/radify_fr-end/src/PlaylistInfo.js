@@ -134,18 +134,21 @@ export default function PlaylistInfo() {
     }
 
     const changeAccess = async (e) => {
-        // const token = window.sessionStorage.getItem('token');
-        // axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
-        // e.preventDefault()
-        // let changed = !playlist.public;
-        // setPlaylist(prevState => ({
-        //     ...prevState,
-        //     public: true}))
-        // console.log("Opsaa", playlist.public)
-        // const dat = ({playlist: playlist.id, user: claims.id, isPublic: playlist.public})
-        // console.log(dat)
-        // axios.put('http://localhost:8080/playlists/details', dat)
-        //     .then( res => console.log(res))
+        const token = window.sessionStorage.getItem('token');
+        axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
+        e.preventDefault()
+        let changed = !playlist.public;
+        setPlaylist(prevState => ({
+            ...prevState,
+            public: true}))
+        const dat =
+            ({
+                playlist: playlist.id,
+                user: claims.id,
+                isPublic: changed
+            })
+        axios.put('http://localhost:8080/playlists/details', dat)
+            .then( res => console.log(res))
     }
 
 

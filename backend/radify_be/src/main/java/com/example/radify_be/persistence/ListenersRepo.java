@@ -6,6 +6,6 @@ public interface ListenersRepo {
     long getMonthlyListeners(Integer id);
     void save(Integer song, Integer user);
 
-    long getYearlyListeners(Integer id);
+    long getAvgListeners(Integer id);
     List<Long> getTopSongs();
 }

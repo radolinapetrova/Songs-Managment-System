@@ -2,6 +2,7 @@ package com.example.radify_be.persistence.impl;
 
 import com.example.radify_be.domain.Artist;
 import com.example.radify_be.domain.Song;
+import com.example.radify_be.persistence.ArtistRepo;
 import com.example.radify_be.persistence.DBRepositories.SongDBRepository;
 import com.example.radify_be.persistence.SongRepo;
 import com.example.radify_be.persistence.entities.ArtistEntity;
@@ -19,7 +20,7 @@ public class SongRepoImpl implements SongRepo {
 
     private final SongDBRepository repo;
 
-    private final ArtistRepoImpl artistRepo;
+    private final ArtistRepo artistRepo;
 
 
     public static Song songConverter(SongEntity song){
@@ -54,6 +55,7 @@ public class SongRepoImpl implements SongRepo {
     public Song save(Song song){
         return songConverter(repo.save(songEntityConverter(song)));
     }
+
 
     @Override
     public void deleteById(Integer id){

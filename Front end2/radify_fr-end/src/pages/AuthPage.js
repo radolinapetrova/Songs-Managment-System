@@ -11,30 +11,7 @@ export default function AuthPage() {
 
 
 
-    function logout() {
-        sessionStorage.clear()
-        setAuth(false)
-    }
-
-
-    if (auth) {
-        if (claims.roles[0] === 'ADMIN') {
-            return (
-                <>
-                    <button onClick={logout}>Logout</button>
-                </>
-            )
-        } else {
-            return (
-                <>
-                    <Account/>
-                    <button onClick={logout}>Logout</button>
-                </>
-            )
-        }
-
-
-    } else {
+    if (!auth) {
         return (
             <div className="authForm">
                 <div><Login/></div>
